@@ -8,7 +8,8 @@ export const Route = createFileRoute('/tools/image-format')({
       { title: 'Image format · WebTools' },
       {
         name: 'description',
-        content: 'Convert images between PNG, JPEG, and WebP in the browser.',
+        content:
+          'Convert HEIC to JPG, PNG, or WebP — plus PNG ↔ JPEG ↔ WebP — in the browser.',
       },
     ],
   }),

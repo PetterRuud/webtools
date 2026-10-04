@@ -7,14 +7,20 @@ import { Slider } from '#/components/ui/slider'
 import {
   OUTPUT_FORMATS,
   convertImageFormat,
+  createSourcePreviewUrl,
   formatBytes,
+  looksLikeHeic,
   outputFileName,
   type OutputFormat,
 } from '#/lib/imageFormat'
 
+const ACCEPT =
+  'image/*,.heic,.heif,image/heic,image/heif,image/heic-sequence,image/heif-sequence'
+
 export function ImageFormatTool() {
   const [file, setFile] = useState<File | null>(null)
   const [sourceUrl, setSourceUrl] = useState<string | null>(null)
+  const [previewBusy, setPreviewBusy] = useState(false)
   const [format, setFormat] = useState<OutputFormat>('webp')
   const [quality, setQuality] = useState(0.9)
   const [output, setOutput] = useState<Blob | null>(null)
@@ -27,15 +33,40 @@ export function ImageFormatTool() {
 
   const selected = OUTPUT_FORMATS.find((item) => item.id === format)!
   const lossy = selected.lossy
+  const heicSource = Boolean(file && looksLikeHeic(file))
 
   useEffect(() => {
     if (!file) {
       setSourceUrl(null)
+      setPreviewBusy(false)
       return
     }
-    const url = URL.createObjectURL(file)
-    setSourceUrl(url)
-    return () => URL.revokeObjectURL(url)
+
+    let activeUrl: string | null = null
+    let cancelled = false
+    setPreviewBusy(true)
+    setSourceUrl(null)
+
+    void createSourcePreviewUrl(file)
+      .then((url) => {
+        if (cancelled) {
+          URL.revokeObjectURL(url)
+          return
+        }
+        activeUrl = url
+        setSourceUrl(url)
+      })
+      .catch(() => {
+        if (!cancelled) setSourceUrl(null)
+      })
+      .finally(() => {
+        if (!cancelled) setPreviewBusy(false)
+      })
+
+    return () => {
+      cancelled = true
+      if (activeUrl) URL.revokeObjectURL(activeUrl)
+    }
   }, [file])
 
   useEffect(() => {
@@ -49,7 +80,10 @@ export function ImageFormatTool() {
   }, [output])
 
   const downloadName = useMemo(
-    () => (file ? outputFileName(file.name, format) : `converted.${selected.extension}`),
+    () =>
+      file
+        ? outputFileName(file.name, format)
+        : `converted.${selected.extension}`,
     [file, format, selected.extension],
   )
 
@@ -58,6 +92,9 @@ export function ImageFormatTool() {
     setOutput(null)
     setDims(null)
     setError(null)
+    if (next && looksLikeHeic(next)) {
+      setFormat('jpeg')
+    }
   }
 
   async function convert() {
@@ -97,14 +134,15 @@ export function ImageFormatTool() {
           <input
             id="format-file"
             type="file"
-            accept="image/*"
+            accept={ACCEPT}
             className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground hover:file:bg-primary/85"
             onChange={(event) => onPick(event.target.files?.[0] ?? null)}
           />
           {file ? (
             <p className="m-0 text-xs text-muted-foreground">
               {file.name} · {formatBytes(file.size)}
-              {file.type ? ` · ${file.type}` : ''}
+              {file.type ? ` · ${file.type}` : heicSource ? ' · HEIC' : ''}
+              {heicSource ? ' · decoded locally' : ''}
             </p>
           ) : null}
         </div>
@@ -119,7 +157,11 @@ export function ImageFormatTool() {
           </div>
         ) : (
           <p className="m-0 rounded-lg border border-dashed border-border px-3 py-8 text-center text-sm text-muted-foreground">
-            Choose an image
+            {previewBusy
+              ? 'Decoding HEIC preview…'
+              : file
+                ? 'Preview unavailable'
+                : 'PNG, JPEG, WebP, or HEIC'}
           </p>
         )}
 
@@ -170,7 +212,11 @@ export function ImageFormatTool() {
         ) : null}
 
         <div className="flex flex-wrap gap-2">
-          <Button type="button" onClick={() => void convert()} disabled={busy || !file}>
+          <Button
+            type="button"
+            onClick={() => void convert()}
+            disabled={busy || !file}
+          >
             {busy ? 'Converting…' : `Convert to ${selected.label}`}
           </Button>
           <Button
