@@ -14,11 +14,13 @@ import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsBoxShadowRouteImport } from './routes/tools/box-shadow'
 import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
 import { Route as ToolsCodeScreenshotRouteImport } from './routes/tools/code-screenshot'
+import { Route as ToolsCrontabRouteImport } from './routes/tools/crontab'
 import { Route as ToolsCssGridRouteImport } from './routes/tools/css-grid'
 import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
 import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
 import { Route as ToolsFaviconRouteImport } from './routes/tools/favicon'
 import { Route as ToolsFlexboxRouteImport } from './routes/tools/flexbox'
+import { Route as ToolsGitCommandsRouteImport } from './routes/tools/git-commands'
 import { Route as ToolsHexRgbaRouteImport } from './routes/tools/hex-rgba'
 import { Route as ToolsHttpStatusRouteImport } from './routes/tools/http-status'
 import { Route as ToolsImageCompressRouteImport } from './routes/tools/image-compress'
@@ -34,6 +36,7 @@ import { Route as ToolsNineSliceRouteImport } from './routes/tools/nine-slice'
 import { Route as ToolsQrcodeRouteImport } from './routes/tools/qrcode'
 import { Route as ToolsRandomRouteImport } from './routes/tools/random'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
+import { Route as ToolsSitemapRouteImport } from './routes/tools/sitemap'
 import { Route as ToolsSvgEditorRouteImport } from './routes/tools/svg-editor'
 import { Route as ToolsTailwindCheatSheetRouteImport } from './routes/tools/tailwind-cheat-sheet'
 import { Route as ToolsTextCleanerRouteImport } from './routes/tools/text-cleaner'
@@ -68,6 +71,11 @@ const ToolsCodeScreenshotRoute = ToolsCodeScreenshotRouteImport.update({
   path: '/tools/code-screenshot',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsCrontabRoute = ToolsCrontabRouteImport.update({
+  id: '/tools/crontab',
+  path: '/tools/crontab',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsCssGridRoute = ToolsCssGridRouteImport.update({
   id: '/tools/css-grid',
   path: '/tools/css-grid',
@@ -91,6 +99,11 @@ const ToolsFaviconRoute = ToolsFaviconRouteImport.update({
 const ToolsFlexboxRoute = ToolsFlexboxRouteImport.update({
   id: '/tools/flexbox',
   path: '/tools/flexbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsGitCommandsRoute = ToolsGitCommandsRouteImport.update({
+  id: '/tools/git-commands',
+  path: '/tools/git-commands',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsHexRgbaRoute = ToolsHexRgbaRouteImport.update({
@@ -168,6 +181,11 @@ const ToolsRegexRoute = ToolsRegexRouteImport.update({
   path: '/tools/regex',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsSitemapRoute = ToolsSitemapRouteImport.update({
+  id: '/tools/sitemap',
+  path: '/tools/sitemap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsSvgEditorRoute = ToolsSvgEditorRouteImport.update({
   id: '/tools/svg-editor',
   path: '/tools/svg-editor',
@@ -215,11 +233,13 @@ export interface FileRoutesByFullPath {
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
+  '/tools/crontab': typeof ToolsCrontabRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
+  '/tools/git-commands': typeof ToolsGitCommandsRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
@@ -235,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
@@ -250,11 +271,13 @@ export interface FileRoutesByTo {
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
+  '/tools/crontab': typeof ToolsCrontabRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
+  '/tools/git-commands': typeof ToolsGitCommandsRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
@@ -270,6 +293,7 @@ export interface FileRoutesByTo {
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
@@ -286,11 +310,13 @@ export interface FileRoutesById {
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
+  '/tools/crontab': typeof ToolsCrontabRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
+  '/tools/git-commands': typeof ToolsGitCommandsRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
@@ -306,6 +332,7 @@ export interface FileRoutesById {
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
@@ -323,11 +350,13 @@ export interface FileRouteTypes {
     | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
+    | '/tools/crontab'
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
     | '/tools/favicon'
     | '/tools/flexbox'
+    | '/tools/git-commands'
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
@@ -343,6 +372,7 @@ export interface FileRouteTypes {
     | '/tools/qrcode'
     | '/tools/random'
     | '/tools/regex'
+    | '/tools/sitemap'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
@@ -358,11 +388,13 @@ export interface FileRouteTypes {
     | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
+    | '/tools/crontab'
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
     | '/tools/favicon'
     | '/tools/flexbox'
+    | '/tools/git-commands'
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
@@ -378,6 +410,7 @@ export interface FileRouteTypes {
     | '/tools/qrcode'
     | '/tools/random'
     | '/tools/regex'
+    | '/tools/sitemap'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
@@ -393,11 +426,13 @@ export interface FileRouteTypes {
     | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
+    | '/tools/crontab'
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
     | '/tools/favicon'
     | '/tools/flexbox'
+    | '/tools/git-commands'
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
@@ -413,6 +448,7 @@ export interface FileRouteTypes {
     | '/tools/qrcode'
     | '/tools/random'
     | '/tools/regex'
+    | '/tools/sitemap'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
@@ -429,11 +465,13 @@ export interface RootRouteChildren {
   ToolsBoxShadowRoute: typeof ToolsBoxShadowRoute
   ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
   ToolsCodeScreenshotRoute: typeof ToolsCodeScreenshotRoute
+  ToolsCrontabRoute: typeof ToolsCrontabRoute
   ToolsCssGridRoute: typeof ToolsCssGridRoute
   ToolsCsvJsonRoute: typeof ToolsCsvJsonRoute
   ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
   ToolsFaviconRoute: typeof ToolsFaviconRoute
   ToolsFlexboxRoute: typeof ToolsFlexboxRoute
+  ToolsGitCommandsRoute: typeof ToolsGitCommandsRoute
   ToolsHexRgbaRoute: typeof ToolsHexRgbaRoute
   ToolsHttpStatusRoute: typeof ToolsHttpStatusRoute
   ToolsImageCompressRoute: typeof ToolsImageCompressRoute
@@ -449,6 +487,7 @@ export interface RootRouteChildren {
   ToolsQrcodeRoute: typeof ToolsQrcodeRoute
   ToolsRandomRoute: typeof ToolsRandomRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
+  ToolsSitemapRoute: typeof ToolsSitemapRoute
   ToolsSvgEditorRoute: typeof ToolsSvgEditorRoute
   ToolsTailwindCheatSheetRoute: typeof ToolsTailwindCheatSheetRoute
   ToolsTextCleanerRoute: typeof ToolsTextCleanerRoute
@@ -496,6 +535,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsCodeScreenshotRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/crontab': {
+      id: '/tools/crontab'
+      path: '/tools/crontab'
+      fullPath: '/tools/crontab'
+      preLoaderRoute: typeof ToolsCrontabRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/css-grid': {
       id: '/tools/css-grid'
       path: '/tools/css-grid'
@@ -529,6 +575,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/flexbox'
       fullPath: '/tools/flexbox'
       preLoaderRoute: typeof ToolsFlexboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/git-commands': {
+      id: '/tools/git-commands'
+      path: '/tools/git-commands'
+      fullPath: '/tools/git-commands'
+      preLoaderRoute: typeof ToolsGitCommandsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/hex-rgba': {
@@ -636,6 +689,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsRegexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/sitemap': {
+      id: '/tools/sitemap'
+      path: '/tools/sitemap'
+      fullPath: '/tools/sitemap'
+      preLoaderRoute: typeof ToolsSitemapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/svg-editor': {
       id: '/tools/svg-editor'
       path: '/tools/svg-editor'
@@ -701,11 +761,13 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsBoxShadowRoute: ToolsBoxShadowRoute,
   ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
   ToolsCodeScreenshotRoute: ToolsCodeScreenshotRoute,
+  ToolsCrontabRoute: ToolsCrontabRoute,
   ToolsCssGridRoute: ToolsCssGridRoute,
   ToolsCsvJsonRoute: ToolsCsvJsonRoute,
   ToolsDnsLookupRoute: ToolsDnsLookupRoute,
   ToolsFaviconRoute: ToolsFaviconRoute,
   ToolsFlexboxRoute: ToolsFlexboxRoute,
+  ToolsGitCommandsRoute: ToolsGitCommandsRoute,
   ToolsHexRgbaRoute: ToolsHexRgbaRoute,
   ToolsHttpStatusRoute: ToolsHttpStatusRoute,
   ToolsImageCompressRoute: ToolsImageCompressRoute,
@@ -721,6 +783,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsQrcodeRoute: ToolsQrcodeRoute,
   ToolsRandomRoute: ToolsRandomRoute,
   ToolsRegexRoute: ToolsRegexRoute,
+  ToolsSitemapRoute: ToolsSitemapRoute,
   ToolsSvgEditorRoute: ToolsSvgEditorRoute,
   ToolsTailwindCheatSheetRoute: ToolsTailwindCheatSheetRoute,
   ToolsTextCleanerRoute: ToolsTextCleanerRoute,
@@ -733,3 +796,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

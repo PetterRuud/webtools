@@ -40,9 +40,12 @@ export type ToolLink = {
     | '/tools/http-status'
     | '/tools/mime'
     | '/tools/jwt'
+    | '/tools/crontab'
     | '/tools/tailwind-cheat-sheet'
+    | '/tools/git-commands'
     | '/tools/xml-json'
     | '/tools/tip-calculator'
+    | '/tools/sitemap'
   name: string
   shortName: string
   blurb: string
@@ -194,6 +197,27 @@ export const TOOLS: ToolLink[] = [
       'snippet',
       'image',
       'export',
+    ],
+  },
+  {
+    to: '/tools/git-commands',
+    name: 'Git commands',
+    shortName: 'Git',
+    blurb: 'Forensics cheatsheet + builders.',
+    category: 'text',
+    keywords: [
+      'git',
+      'log',
+      'shortlog',
+      'churn',
+      'authors',
+      'bugs',
+      'hotfix',
+      'revert',
+      'velocity',
+      'cheat sheet',
+      'commands',
+      'cli',
     ],
   },
   {
@@ -508,6 +532,25 @@ export const TOOLS: ToolLink[] = [
     ],
   },
   {
+    to: '/tools/sitemap',
+    name: 'Sitemap generator',
+    shortName: 'Sitemap',
+    blurb: 'URL list → sitemap.xml.',
+    category: 'web',
+    keywords: [
+      'sitemap',
+      'xml',
+      'seo',
+      'urls',
+      'urlset',
+      'lastmod',
+      'changefreq',
+      'priority',
+      'robots',
+      'web',
+    ],
+  },
+  {
     to: '/tools/mime',
     name: 'MIME types',
     shortName: 'MIME',
@@ -525,6 +568,24 @@ export const TOOLS: ToolLink[] = [
       'web',
       'browser',
       'network',
+    ],
+  },
+  {
+    to: '/tools/crontab',
+    name: 'Crontab builder',
+    shortName: 'Cron',
+    blurb: 'Build, decode, next runs.',
+    category: 'web',
+    keywords: [
+      'cron',
+      'crontab',
+      'schedule',
+      'scheduler',
+      'expression',
+      'job',
+      'timer',
+      'interval',
+      'web',
     ],
   },
 ]
