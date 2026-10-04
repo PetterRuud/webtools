@@ -22,6 +22,7 @@ export type ToolLink = {
     | '/tools/favicon'
     | '/tools/svg-editor'
     | '/tools/nine-slice'
+    | '/tools/transparent'
     | '/tools/json-formatter'
     | '/tools/csv-json'
     | '/tools/regex'
@@ -185,6 +186,25 @@ export const TOOLS: ToolLink[] = [
       'tile',
       'stretch',
       'image',
+    ],
+  },
+  {
+    to: '/tools/transparent',
+    name: 'Transparent',
+    shortName: 'Alpha',
+    blurb: 'White+black pair → PNG alpha (Node/sharp).',
+    category: 'image',
+    keywords: [
+      'transparent',
+      'alpha',
+      'png',
+      'sharp',
+      'white',
+      'black',
+      'background',
+      'matte',
+      'image',
+      'node',
     ],
   },
   {

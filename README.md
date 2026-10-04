@@ -32,7 +32,7 @@ Wrangler config: `wrangler.jsonc` (Worker name `webtools`). Authenticate with `n
 
 ## Auth / Access
 
-Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker. Clerk optional later.
+Not wired yet. Access is only planned for future **private R2 file hosting** — not required for Transparent or the rest of the site now.
 
 ## Tools
 
@@ -46,6 +46,7 @@ Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker.
 | `/tools/image-format` | Convert PNG ↔ JPEG ↔ WebP (canvas) |
 | `/tools/svg-editor` | Paste/edit SVG, live preview, minify, PNG/SVG export |
 | `/tools/nine-slice` | 9-slice guides + sample panel, multi-size preview, border-image CSS + PNG slices |
+| `/tools/transparent` | White+black pair → PNG alpha (**Node + sharp**; see below) |
 | `/tools/json-formatter` | Pretty / minify / validate JSON |
 | `/tools/regex` | Pattern + flags + match highlights |
 | `/tools/base64` | UTF-8-safe encode / decode |
@@ -57,10 +58,18 @@ Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker.
 | `/tools/http-status` | Searchable HTTP status reference |
 | `/tools/tailwind-cheat-sheet` | Searchable Tailwind utility cheat sheet |
 
-## Transparent (local source)
+## Transparent (Node + sharp)
 
-`tools/transparent/` is the imported Express + **sharp** app. Run it separately with pnpm (`pnpm web` in that folder). It is **not** mounted on Workers Isolates — sharp needs Node/Containers later. The hub lists it honestly as local/source.
+UI lives at **`/tools/transparent`** in the hub shell.
+
+| Runtime | Processing |
+| --- | --- |
+| `npm run dev` / `vite preview` | **Works** — Vite Node middleware handles `POST /api/transparent/extract` with sharp |
+| `npm run transparent` | **Works** — optional Express sidecar on port **3847** (`POST /api/extract`) |
+| Cloudflare Workers Isolates | **UI loads; extract returns 501** — native sharp cannot load in Isolates |
+
+Shared code: `src/lib/transparent/`. Containers only if a Node path is not enough later.
 
 ## Out of scope (for now)
 
-Private R2 file hosting, Access/Clerk, Cloudflare Images, edge Transparent.
+Private R2 file hosting, Access/Clerk, Cloudflare Images, Isolates-native Transparent.

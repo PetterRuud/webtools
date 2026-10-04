@@ -1,22 +1,36 @@
-# Transparent
+# Transparent (Node API)
 
-Recover PNG alpha from a pair of photos of the same subject on white and black backgrounds.
+Alpha extraction from a white/black photo pair. Processing lives in `src/lib/transparent/` (sharp). The hub UI is `/tools/transparent`.
 
-## Run locally
+## Prefer the hub
 
 ```bash
-pnpm install
-pnpm web
+# from repo root
+npm install
+npm run dev
+# → http://127.0.0.1:43127/tools/transparent
+# POST /api/transparent/extract is handled by Vite Node middleware (sharp)
 ```
 
-Open http://localhost:3847 (or set `PORT`).
+## Optional Express sidecar
 
-## API
+```bash
+# from repo root
+npm run transparent
+# → POST http://localhost:3847/api/extract
+```
 
-`POST /api/extract` — multipart fields `white` and `black`; returns `image/png`.
+Or from this folder (own deps): `pnpm install && pnpm web`.
 
-Optional form fields: `trimInputs`, `trimThreshold`, crop (`cropLeft`/`cropTop`/`cropWidth`/`cropHeight`), resize (`resizeWidth`/`resizeHeight`/`resizeFit`/`resizeNoUpscale`), `trimResult`, `trimResultThreshold`.
+## Workers
 
-## Note
+Cloudflare Workers Isolates **cannot** load native sharp. Deployed hub UI still loads; extract returns **501** with that note. Containers later only if a Node path is not enough.
 
-Imported from `~/Developer/transparent` on Mac (copy; original left in place). No prior git history. Server-side **sharp** — not Workers Isolates–compatible without a Containers rewrite or alternate pipeline.
+## Shared modules
+
+| Path | Role |
+| --- | --- |
+| `src/lib/transparent/extract.ts` | Two-pass alpha |
+| `src/lib/transparent/imagePrep.ts` | Crop / resize / trim |
+| `src/lib/transparent/process.ts` | Orchestration |
+| `vite-plugins/transparentApi.ts` | Dev/preview Node middleware |

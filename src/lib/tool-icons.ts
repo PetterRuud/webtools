@@ -1,6 +1,7 @@
 import {
   AppWindowMacIcon,
   BinaryIcon,
+  BlendIcon,
   BracesIcon,
   CropIcon,
   EraserIcon,
@@ -44,6 +45,7 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/favicon': AppWindowMacIcon,
   '/tools/svg-editor': VectorSquareIcon,
   '/tools/nine-slice': LayoutGridIcon,
+  '/tools/transparent': BlendIcon,
   '/tools/hex-rgba': PaletteIcon,
   '/tools/flexbox': StretchHorizontalIcon,
   '/tools/box-shadow': LayersIcon,

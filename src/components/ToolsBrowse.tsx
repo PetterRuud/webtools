@@ -1,6 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { ImageIcon, SearchIcon, XIcon } from 'lucide-react'
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { SearchIcon, XIcon } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import {
@@ -21,17 +21,6 @@ import {
 } from '#/lib/tools'
 
 type CategoryFilter = ToolCategoryId | 'all'
-
-function matchesTransparent(query: string, category: CategoryFilter) {
-  if (category !== 'all' && category !== 'image') return false
-  const normalized = query.trim().toLowerCase()
-  if (!normalized) return true
-  const haystack =
-    'transparent placeholder png sharp local container image images tools/transparent'
-  return normalized
-    .split(/\s+/)
-    .every((token) => haystack.includes(token))
-}
 
 export function ToolsBrowse() {
   const [query, setQuery] = useState('')
@@ -68,9 +57,7 @@ export function ToolsBrowse() {
     () => groupToolsByCategory(visibleTools),
     [visibleTools],
   )
-  const showTransparent = matchesTransparent(query, category)
-  const hasResults =
-    new Set(visibleTools.map((tool) => tool.to)).size > 0 || showTransparent
+  const hasResults = new Set(visibleTools.map((tool) => tool.to)).size > 0
 
   return (
     <section className="flex flex-col gap-4">
@@ -155,18 +142,12 @@ export function ToolsBrowse() {
               key={group.category.id}
               label={group.category.label}
               tools={group.tools}
-              footer={
-                group.category.id === 'image' && showTransparent ? (
-                  <TransparentNote />
-                ) : null
-              }
             />
           ))}
         </div>
       ) : (
         <div className="flex flex-col gap-4">
           <ToolGrid tools={visibleTools} />
-          {showTransparent ? <TransparentNote /> : null}
         </div>
       )}
     </section>
@@ -202,11 +183,9 @@ function CategoryChip({
 function CategoryGroup({
   label,
   tools,
-  footer = null,
 }: {
   label: string
   tools: ToolLink[]
-  footer?: ReactNode
 }) {
   return (
     <div className="flex flex-col gap-3">
@@ -214,7 +193,6 @@ function CategoryGroup({
         {label}
       </h3>
       <ToolGrid tools={tools} />
-      {footer}
     </div>
   )
 }
@@ -260,36 +238,5 @@ function ToolGrid({ tools }: { tools: ToolLink[] }) {
         )
       })}
     </ul>
-  )
-}
-
-function TransparentNote() {
-  return (
-    <Item
-      variant="outline"
-      size="xs"
-      className="flex-nowrap items-center border-dashed border-border/80 bg-card/30 py-2"
-    >
-      <ItemMedia
-        variant="icon"
-        className="size-7 translate-y-0 self-center rounded-md bg-mist text-primary"
-      >
-        <ImageIcon aria-hidden />
-      </ItemMedia>
-      <ItemContent className="min-w-0 gap-0">
-        <ItemTitle className="font-heading w-full justify-between gap-2 text-ink">
-          Transparent
-          <span className="rounded-md bg-muted px-1.5 py-0.5 text-[0.7rem] font-medium text-muted-foreground">
-            Local
-          </span>
-        </ItemTitle>
-        <ItemDescription className="line-clamp-1 text-xs leading-4">
-          <code className="rounded bg-muted px-1 py-0.5 text-[0.75rem]">
-            tools/transparent/
-          </code>{' '}
-          — local only (sharp).
-        </ItemDescription>
-      </ItemContent>
-    </Item>
   )
 }
