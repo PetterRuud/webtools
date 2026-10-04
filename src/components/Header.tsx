@@ -1,5 +1,5 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { MenuIcon } from 'lucide-react'
+import { CodeIcon, MenuIcon } from 'lucide-react'
 import { useState } from 'react'
 import { ModeToggle } from '#/components/mode-toggle'
 import {
@@ -49,8 +49,9 @@ export default function Header() {
             <BreadcrumbItem className="min-w-0">
               <BreadcrumbLink
                 render={<Link to="/" />}
-                className="font-heading text-lg tracking-tight text-ink no-underline transition-opacity hover:opacity-80 hover:text-ink"
+                className="font-heading inline-flex items-center gap-1.5 text-lg tracking-tight text-ink no-underline transition-opacity hover:opacity-80 hover:text-ink"
               >
+                <CodeIcon className="size-5 shrink-0" aria-hidden />
                 WebTools
               </BreadcrumbLink>
             </BreadcrumbItem>
@@ -65,8 +66,9 @@ export default function Header() {
       ) : (
         <Link
           to="/"
-          className="font-heading text-lg tracking-tight text-ink no-underline transition-opacity hover:opacity-80"
+          className="font-heading inline-flex items-center gap-1.5 text-lg tracking-tight text-ink no-underline transition-opacity hover:opacity-80"
         >
+          <CodeIcon className="size-5 shrink-0" aria-hidden />
           WebTools
         </Link>
       )}
