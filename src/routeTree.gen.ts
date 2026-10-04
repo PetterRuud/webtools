@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsHexRgbaRouteImport } from './routes/tools/hex-rgba'
 import { Route as ToolsImageCompressRouteImport } from './routes/tools/image-compress'
+import { Route as ToolsImageFormatRouteImport } from './routes/tools/image-format'
 import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-formatter'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
 import { Route as ToolsTextDiffRouteImport } from './routes/tools/text-diff'
@@ -37,6 +38,11 @@ const ToolsImageCompressRoute = ToolsImageCompressRouteImport.update({
   path: '/tools/image-compress',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsImageFormatRoute = ToolsImageFormatRouteImport.update({
+  id: '/tools/image-format',
+  path: '/tools/image-format',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsJsonFormatterRoute = ToolsJsonFormatterRouteImport.update({
   id: '/tools/json-formatter',
   path: '/tools/json-formatter',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/tools/base64': typeof ToolsBase64Route
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
+  '/tools/image-format': typeof ToolsImageFormatRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
@@ -67,6 +74,7 @@ export interface FileRoutesByTo {
   '/tools/base64': typeof ToolsBase64Route
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
+  '/tools/image-format': typeof ToolsImageFormatRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
@@ -77,6 +85,7 @@ export interface FileRoutesById {
   '/tools/base64': typeof ToolsBase64Route
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
+  '/tools/image-format': typeof ToolsImageFormatRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
@@ -88,6 +97,7 @@ export interface FileRouteTypes {
     | '/tools/base64'
     | '/tools/hex-rgba'
     | '/tools/image-compress'
+    | '/tools/image-format'
     | '/tools/json-formatter'
     | '/tools/regex'
     | '/tools/text-diff'
@@ -97,6 +107,7 @@ export interface FileRouteTypes {
     | '/tools/base64'
     | '/tools/hex-rgba'
     | '/tools/image-compress'
+    | '/tools/image-format'
     | '/tools/json-formatter'
     | '/tools/regex'
     | '/tools/text-diff'
@@ -106,6 +117,7 @@ export interface FileRouteTypes {
     | '/tools/base64'
     | '/tools/hex-rgba'
     | '/tools/image-compress'
+    | '/tools/image-format'
     | '/tools/json-formatter'
     | '/tools/regex'
     | '/tools/text-diff'
@@ -116,6 +128,7 @@ export interface RootRouteChildren {
   ToolsBase64Route: typeof ToolsBase64Route
   ToolsHexRgbaRoute: typeof ToolsHexRgbaRoute
   ToolsImageCompressRoute: typeof ToolsImageCompressRoute
+  ToolsImageFormatRoute: typeof ToolsImageFormatRoute
   ToolsJsonFormatterRoute: typeof ToolsJsonFormatterRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
   ToolsTextDiffRoute: typeof ToolsTextDiffRoute
@@ -151,6 +164,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsImageCompressRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/image-format': {
+      id: '/tools/image-format'
+      path: '/tools/image-format'
+      fullPath: '/tools/image-format'
+      preLoaderRoute: typeof ToolsImageFormatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/json-formatter': {
       id: '/tools/json-formatter'
       path: '/tools/json-formatter'
@@ -180,6 +200,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsBase64Route: ToolsBase64Route,
   ToolsHexRgbaRoute: ToolsHexRgbaRoute,
   ToolsImageCompressRoute: ToolsImageCompressRoute,
+  ToolsImageFormatRoute: ToolsImageFormatRoute,
   ToolsJsonFormatterRoute: ToolsJsonFormatterRoute,
   ToolsRegexRoute: ToolsRegexRoute,
   ToolsTextDiffRoute: ToolsTextDiffRoute,

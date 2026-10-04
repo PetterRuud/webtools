@@ -2,6 +2,7 @@ export type ToolLink = {
   to:
     | '/tools/hex-rgba'
     | '/tools/image-compress'
+    | '/tools/image-format'
     | '/tools/json-formatter'
     | '/tools/regex'
     | '/tools/base64'
@@ -23,7 +24,13 @@ export const TOOLS: ToolLink[] = [
     to: '/tools/image-compress',
     name: 'Image compress',
     shortName: 'Compress',
-    blurb: 'Shrink a photo in the browser. Nothing leaves this device.',
+    blurb: 'Crop, scale, and quality — shrink a photo in the browser.',
+  },
+  {
+    to: '/tools/image-format',
+    name: 'Image format',
+    shortName: 'Format',
+    blurb: 'Convert between PNG, JPEG, and WebP. Same size; new format.',
   },
   {
     to: '/tools/json-formatter',
