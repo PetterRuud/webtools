@@ -448,7 +448,6 @@ export function RandomTool() {
     return () => {
       clearSpinTimer()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only init
   }, [])
 
   const showVisual =
