@@ -3,9 +3,7 @@ export type ToolCategoryId =
   | 'image'
   | 'color'
   | 'encode'
-  | 'network'
-  | 'browser'
-  | 'http'
+  | 'web'
 
 export type ToolCategory = {
   id: ToolCategoryId
@@ -50,9 +48,7 @@ export const TOOL_CATEGORIES: ToolCategory[] = [
   { id: 'image', label: 'Images' },
   { id: 'color', label: 'Color / CSS / Layout' },
   { id: 'encode', label: 'Encode' },
-  { id: 'network', label: 'Network' },
-  { id: 'browser', label: 'Browser' },
-  { id: 'http', label: 'HTTP' },
+  { id: 'web', label: 'Web' },
 ]
 
 export const TOOLS: ToolLink[] = [
@@ -298,23 +294,47 @@ export const TOOLS: ToolLink[] = [
     name: 'IP lookup',
     shortName: 'IP',
     blurb: 'Your IP or any address.',
-    category: 'network',
-    keywords: ['ip', 'lookup', 'geo', 'asn', 'network', 'address'],
+    category: 'web',
+    keywords: [
+      'ip',
+      'lookup',
+      'geo',
+      'asn',
+      'network',
+      'address',
+      'web',
+      'http',
+      'browser',
+    ],
   },
   {
     to: '/tools/dns-lookup',
     name: 'DNS lookup',
     shortName: 'DNS',
     blurb: 'A, AAAA, MX, TXT via DoH.',
-    category: 'network',
-    keywords: ['dns', 'lookup', 'doh', 'a', 'aaaa', 'mx', 'txt', 'cname', 'ns'],
+    category: 'web',
+    keywords: [
+      'dns',
+      'lookup',
+      'doh',
+      'a',
+      'aaaa',
+      'mx',
+      'txt',
+      'cname',
+      'ns',
+      'network',
+      'web',
+      'http',
+      'browser',
+    ],
   },
   {
     to: '/tools/browser-info',
     name: 'Browser info',
     shortName: 'Browser',
     blurb: 'UA, viewport, storage flags.',
-    category: 'browser',
+    category: 'web',
     keywords: [
       'browser',
       'user agent',
@@ -323,6 +343,9 @@ export const TOOLS: ToolLink[] = [
       'localStorage',
       'navigator',
       'device',
+      'web',
+      'http',
+      'network',
     ],
   },
   {
@@ -330,15 +353,25 @@ export const TOOLS: ToolLink[] = [
     name: 'HTTP status',
     shortName: 'Status',
     blurb: 'Searchable status codes.',
-    category: 'http',
-    keywords: ['http', 'status', 'code', '404', '500', 'response'],
+    category: 'web',
+    keywords: [
+      'http',
+      'status',
+      'code',
+      '404',
+      '500',
+      'response',
+      'web',
+      'browser',
+      'network',
+    ],
   },
   {
     to: '/tools/mime',
     name: 'MIME types',
     shortName: 'MIME',
     blurb: 'Extension ↔ Content-Type.',
-    category: 'http',
+    category: 'web',
     keywords: [
       'mime',
       'content-type',
@@ -347,6 +380,10 @@ export const TOOLS: ToolLink[] = [
       'media type',
       'mimetype',
       'file type',
+      'http',
+      'web',
+      'browser',
+      'network',
     ],
   },
 ]
