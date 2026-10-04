@@ -235,7 +235,8 @@ function serializeNode(node: Node, indent: string, depth: number): string {
     (VOID_SVG.has(tag) || el.childNodes.length === 0)
 
   if (selfClose) {
-    return `${pad}<${tag}${attrBlock} />`
+    if (attrs.length <= 1) return `${pad}<${tag}${attrBlock} />`
+    return `${pad}<${tag}${attrBlock}/>`
   }
 
   if (children.length === 0) {
