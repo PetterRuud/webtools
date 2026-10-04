@@ -167,13 +167,21 @@ export function formatBorderImageCss(options: {
     `.nine-slice {`,
     `  border-style: solid;`,
     `  border-width: ${width};`,
-    `  border-image-source: url("${fileName}");`,
-    `  border-image-slice: ${slice};`,
-    `  border-image-width: ${width};`,
-    `  border-image-repeat: ${repeat};`,
+    `  border-image: url("${fileName}") ${slice} / ${width} / 0 ${repeat};`,
+    `  padding: ${width};`,
     `}`,
   ].join('\n')
 }
+
+/** Sensible guides for the shipped sample panel (20px frame). */
+export const SAMPLE_SLICE_MARGINS: SliceMargins = {
+  left: 20,
+  right: 20,
+  top: 20,
+  bottom: 20,
+}
+
+export const SAMPLE_PANEL_FILE_NAME = 'nine-slice-panel.png'
 
 export async function loadImageFromFile(file: File): Promise<HTMLImageElement> {
   const url = URL.createObjectURL(file)
