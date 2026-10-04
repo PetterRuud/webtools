@@ -22,6 +22,7 @@ export type ToolLink = {
     | '/tools/image-format'
     | '/tools/favicon'
     | '/tools/svg-editor'
+    | '/tools/nine-slice'
     | '/tools/json-formatter'
     | '/tools/csv-json'
     | '/tools/regex'
@@ -151,6 +152,25 @@ export const TOOLS: ToolLink[] = [
       'xml',
       'icon',
       'png',
+    ],
+  },
+  {
+    to: '/tools/nine-slice',
+    name: '9-slicer',
+    shortName: '9-slice',
+    blurb: 'Guides, preview, border-image CSS.',
+    category: 'image',
+    keywords: [
+      'nine',
+      '9-slice',
+      '9slice',
+      'slice',
+      'border-image',
+      'ui',
+      'scale',
+      'tile',
+      'stretch',
+      'image',
     ],
   },
   {
