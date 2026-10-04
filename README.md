@@ -43,6 +43,7 @@ Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker.
 | `/tools/flexbox` | Flexbox playground — direction, wrap, justify, align, gap |
 | `/tools/image-compress` | Client-side compress + scale + crop |
 | `/tools/image-format` | Convert PNG ↔ JPEG ↔ WebP (canvas) |
+| `/tools/svg-editor` | Paste/edit SVG, live preview, minify, PNG/SVG export |
 | `/tools/json-formatter` | Pretty / minify / validate JSON |
 | `/tools/regex` | Pattern + flags + match highlights |
 | `/tools/base64` | UTF-8-safe encode / decode |

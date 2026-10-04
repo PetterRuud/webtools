@@ -21,6 +21,7 @@ export type ToolLink = {
     | '/tools/image-compress'
     | '/tools/image-format'
     | '/tools/favicon'
+    | '/tools/svg-editor'
     | '/tools/json-formatter'
     | '/tools/csv-json'
     | '/tools/regex'
@@ -124,6 +125,23 @@ export const TOOLS: ToolLink[] = [
     blurb: 'PNG / ICO pack + HTML.',
     category: 'image',
     keywords: ['favicon', 'icon', 'ico', 'apple-touch', 'png', 'image'],
+  },
+  {
+    to: '/tools/svg-editor',
+    name: 'SVG editor',
+    shortName: 'SVG',
+    blurb: 'Source, preview, minify, export.',
+    category: 'image',
+    keywords: [
+      'svg',
+      'vector',
+      'minify',
+      'prettify',
+      'viewbox',
+      'xml',
+      'icon',
+      'png',
+    ],
   },
   {
     to: '/tools/hex-rgba',

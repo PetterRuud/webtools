@@ -26,6 +26,7 @@ import { Route as ToolsIpLookupRouteImport } from './routes/tools/ip-lookup'
 import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-formatter'
 import { Route as ToolsJwtRouteImport } from './routes/tools/jwt'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
+import { Route as ToolsSvgEditorRouteImport } from './routes/tools/svg-editor'
 import { Route as ToolsTextCleanerRouteImport } from './routes/tools/text-cleaner'
 import { Route as ToolsTextDiffRouteImport } from './routes/tools/text-diff'
 
@@ -114,6 +115,11 @@ const ToolsRegexRoute = ToolsRegexRouteImport.update({
   path: '/tools/regex',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsSvgEditorRoute = ToolsSvgEditorRouteImport.update({
+  id: '/tools/svg-editor',
+  path: '/tools/svg-editor',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsTextCleanerRoute = ToolsTextCleanerRouteImport.update({
   id: '/tools/text-cleaner',
   path: '/tools/text-cleaner',
@@ -143,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/tools/json-formatter'
     | '/tools/jwt'
     | '/tools/regex'
+    | '/tools/svg-editor'
     | '/tools/text-cleaner'
     | '/tools/text-diff'
   fileRoutesByTo: FileRoutesByTo
@@ -230,6 +240,7 @@ export interface FileRouteTypes {
     | '/tools/json-formatter'
     | '/tools/jwt'
     | '/tools/regex'
+    | '/tools/svg-editor'
     | '/tools/text-cleaner'
     | '/tools/text-diff'
   id:
@@ -251,6 +262,7 @@ export interface FileRouteTypes {
     | '/tools/json-formatter'
     | '/tools/jwt'
     | '/tools/regex'
+    | '/tools/svg-editor'
     | '/tools/text-cleaner'
     | '/tools/text-diff'
   fileRoutesById: FileRoutesById
@@ -273,6 +285,7 @@ export interface RootRouteChildren {
   ToolsJsonFormatterRoute: typeof ToolsJsonFormatterRoute
   ToolsJwtRoute: typeof ToolsJwtRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
+  ToolsSvgEditorRoute: typeof ToolsSvgEditorRoute
   ToolsTextCleanerRoute: typeof ToolsTextCleanerRoute
   ToolsTextDiffRoute: typeof ToolsTextDiffRoute
 }
@@ -398,6 +411,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsRegexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/svg-editor': {
+      id: '/tools/svg-editor'
+      path: '/tools/svg-editor'
+      fullPath: '/tools/svg-editor'
+      preLoaderRoute: typeof ToolsSvgEditorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/text-cleaner': {
       id: '/tools/text-cleaner'
       path: '/tools/text-cleaner'
@@ -433,6 +453,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsJsonFormatterRoute: ToolsJsonFormatterRoute,
   ToolsJwtRoute: ToolsJwtRoute,
   ToolsRegexRoute: ToolsRegexRoute,
+  ToolsSvgEditorRoute: ToolsSvgEditorRoute,
   ToolsTextCleanerRoute: ToolsTextCleanerRoute,
   ToolsTextDiffRoute: ToolsTextDiffRoute,
 }

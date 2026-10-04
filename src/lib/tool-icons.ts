@@ -17,6 +17,7 @@ import {
   StretchHorizontalIcon,
   TableIcon,
   TextSelectIcon,
+  VectorSquareIcon,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 import type { ToolLink } from '#/lib/tools'
@@ -35,6 +36,7 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/image-compress': ImageIcon,
   '/tools/image-format': ImagesIcon,
   '/tools/favicon': AppWindowMacIcon,
+  '/tools/svg-editor': VectorSquareIcon,
   '/tools/hex-rgba': PaletteIcon,
   '/tools/flexbox': StretchHorizontalIcon,
   '/tools/box-shadow': LayersIcon,
