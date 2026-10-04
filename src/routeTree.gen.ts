@@ -27,6 +27,7 @@ import { Route as ToolsImageCompressRouteImport } from './routes/tools/image-com
 import { Route as ToolsImageCropRouteImport } from './routes/tools/image-crop'
 import { Route as ToolsImageFormatRouteImport } from './routes/tools/image-format'
 import { Route as ToolsImageResizeRouteImport } from './routes/tools/image-resize'
+import { Route as ToolsImageSquareRouteImport } from './routes/tools/image-square'
 import { Route as ToolsIpLookupRouteImport } from './routes/tools/ip-lookup'
 import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-formatter'
 import { Route as ToolsJwtRouteImport } from './routes/tools/jwt'
@@ -137,6 +138,11 @@ const ToolsImageFormatRoute = ToolsImageFormatRouteImport.update({
 const ToolsImageResizeRoute = ToolsImageResizeRouteImport.update({
   id: '/tools/image-resize',
   path: '/tools/image-resize',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsImageSquareRoute = ToolsImageSquareRouteImport.update({
+  id: '/tools/image-square',
+  path: '/tools/image-square',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsIpLookupRoute = ToolsIpLookupRouteImport.update({
@@ -265,6 +271,7 @@ export interface FileRoutesByFullPath {
   '/tools/image-crop': typeof ToolsImageCropRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
   '/tools/image-resize': typeof ToolsImageResizeRoute
+  '/tools/image-square': typeof ToolsImageSquareRoute
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
@@ -306,6 +313,7 @@ export interface FileRoutesByTo {
   '/tools/image-crop': typeof ToolsImageCropRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
   '/tools/image-resize': typeof ToolsImageResizeRoute
+  '/tools/image-square': typeof ToolsImageSquareRoute
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
@@ -348,6 +356,7 @@ export interface FileRoutesById {
   '/tools/image-crop': typeof ToolsImageCropRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
   '/tools/image-resize': typeof ToolsImageResizeRoute
+  '/tools/image-square': typeof ToolsImageSquareRoute
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
@@ -391,6 +400,7 @@ export interface FileRouteTypes {
     | '/tools/image-crop'
     | '/tools/image-format'
     | '/tools/image-resize'
+    | '/tools/image-square'
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
     | '/tools/jwt'
@@ -432,6 +442,7 @@ export interface FileRouteTypes {
     | '/tools/image-crop'
     | '/tools/image-format'
     | '/tools/image-resize'
+    | '/tools/image-square'
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
     | '/tools/jwt'
@@ -473,6 +484,7 @@ export interface FileRouteTypes {
     | '/tools/image-crop'
     | '/tools/image-format'
     | '/tools/image-resize'
+    | '/tools/image-square'
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
     | '/tools/jwt'
@@ -515,6 +527,7 @@ export interface RootRouteChildren {
   ToolsImageCropRoute: typeof ToolsImageCropRoute
   ToolsImageFormatRoute: typeof ToolsImageFormatRoute
   ToolsImageResizeRoute: typeof ToolsImageResizeRoute
+  ToolsImageSquareRoute: typeof ToolsImageSquareRoute
   ToolsIpLookupRoute: typeof ToolsIpLookupRoute
   ToolsJsonFormatterRoute: typeof ToolsJsonFormatterRoute
   ToolsJwtRoute: typeof ToolsJwtRoute
@@ -664,6 +677,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/image-resize'
       fullPath: '/tools/image-resize'
       preLoaderRoute: typeof ToolsImageResizeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/image-square': {
+      id: '/tools/image-square'
+      path: '/tools/image-square'
+      fullPath: '/tools/image-square'
+      preLoaderRoute: typeof ToolsImageSquareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/ip-lookup': {
@@ -835,6 +855,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsImageCropRoute: ToolsImageCropRoute,
   ToolsImageFormatRoute: ToolsImageFormatRoute,
   ToolsImageResizeRoute: ToolsImageResizeRoute,
+  ToolsImageSquareRoute: ToolsImageSquareRoute,
   ToolsIpLookupRoute: ToolsIpLookupRoute,
   ToolsJsonFormatterRoute: ToolsJsonFormatterRoute,
   ToolsJwtRoute: ToolsJwtRoute,

@@ -20,6 +20,7 @@ export type ToolLink = {
     | '/tools/image-crop'
     | '/tools/image-resize'
     | '/tools/image-format'
+    | '/tools/image-square'
     | '/tools/favicon'
     | '/tools/svg-editor'
     | '/tools/nine-slice'
@@ -307,6 +308,27 @@ export const TOOLS: ToolLink[] = [
       'heif',
       'iphone',
       'format',
+    ],
+  },
+  {
+    to: '/tools/image-square',
+    name: 'Square & round',
+    shortName: 'Square',
+    blurb: 'Pad to square + rounded corners.',
+    category: 'image',
+    keywords: [
+      'image',
+      'square',
+      'pad',
+      'padding',
+      'round',
+      'rounded',
+      'corners',
+      'border-radius',
+      'radius',
+      'png',
+      'avatar',
+      'icon',
     ],
   },
   {
