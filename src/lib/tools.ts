@@ -1,4 +1,11 @@
-export type ToolCategoryId = 'text' | 'image' | 'color' | 'encode'
+export type ToolCategoryId =
+  | 'text'
+  | 'image'
+  | 'color'
+  | 'encode'
+  | 'network'
+  | 'browser'
+  | 'http'
 
 export type ToolCategory = {
   id: ToolCategoryId
@@ -14,6 +21,11 @@ export type ToolLink = {
     | '/tools/regex'
     | '/tools/base64'
     | '/tools/text-diff'
+    | '/tools/ip-lookup'
+    | '/tools/dns-lookup'
+    | '/tools/browser-info'
+    | '/tools/http-status'
+    | '/tools/jwt'
   name: string
   shortName: string
   blurb: string
@@ -26,6 +38,9 @@ export const TOOL_CATEGORIES: ToolCategory[] = [
   { id: 'image', label: 'Images' },
   { id: 'color', label: 'Color' },
   { id: 'encode', label: 'Encode' },
+  { id: 'network', label: 'Network' },
+  { id: 'browser', label: 'Browser' },
+  { id: 'http', label: 'HTTP' },
 ]
 
 export const TOOLS: ToolLink[] = [
@@ -84,6 +99,54 @@ export const TOOLS: ToolLink[] = [
     blurb: 'UTF-8 encode / decode.',
     category: 'encode',
     keywords: ['base64', 'encode', 'decode', 'utf-8', 'b64'],
+  },
+  {
+    to: '/tools/jwt',
+    name: 'JWT',
+    shortName: 'JWT',
+    blurb: 'Decode / encode. Secrets stay local.',
+    category: 'encode',
+    keywords: ['jwt', 'token', 'encode', 'decode', 'hs256', 'json web token'],
+  },
+  {
+    to: '/tools/ip-lookup',
+    name: 'IP lookup',
+    shortName: 'IP',
+    blurb: 'Your IP or any address.',
+    category: 'network',
+    keywords: ['ip', 'lookup', 'geo', 'asn', 'network', 'address'],
+  },
+  {
+    to: '/tools/dns-lookup',
+    name: 'DNS lookup',
+    shortName: 'DNS',
+    blurb: 'A, AAAA, MX, TXT via DoH.',
+    category: 'network',
+    keywords: ['dns', 'lookup', 'doh', 'a', 'aaaa', 'mx', 'txt', 'cname', 'ns'],
+  },
+  {
+    to: '/tools/browser-info',
+    name: 'Browser info',
+    shortName: 'Browser',
+    blurb: 'UA, viewport, storage flags.',
+    category: 'browser',
+    keywords: [
+      'browser',
+      'user agent',
+      'viewport',
+      'cookies',
+      'localStorage',
+      'navigator',
+      'device',
+    ],
+  },
+  {
+    to: '/tools/http-status',
+    name: 'HTTP status',
+    shortName: 'Status',
+    blurb: 'Searchable status codes.',
+    category: 'http',
+    keywords: ['http', 'status', 'code', '404', '500', 'response'],
   },
 ]
 

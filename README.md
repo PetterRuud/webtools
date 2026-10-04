@@ -34,11 +34,11 @@ Wrangler config: `wrangler.jsonc` (Worker name `webtools`). Authenticate with `n
 
 Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker. Clerk optional later.
 
-## Tools in this slice
+## Tools
 
 | Route | Notes |
 | --- | --- |
-| `/` | Hub |
+| `/` | Hub (search + categories) |
 | `/tools/hex-rgba` | Client-only hex, rgba, hsl/hsla, hwb, oklch |
 | `/tools/image-compress` | Client-side compress + scale + crop |
 | `/tools/image-format` | Convert PNG ↔ JPEG ↔ WebP (canvas) |
@@ -46,6 +46,11 @@ Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker.
 | `/tools/regex` | Pattern + flags + match highlights |
 | `/tools/base64` | UTF-8-safe encode / decode |
 | `/tools/text-diff` | Side-by-side or unified line diff |
+| `/tools/jwt` | Decode / encode (HS256 or none); secrets stay local |
+| `/tools/ip-lookup` | Your IP or any address (Worker → ipwho.is) |
+| `/tools/dns-lookup` | DNS over HTTPS via cloudflare-dns.com |
+| `/tools/browser-info` | UA, viewport, languages, storage flags |
+| `/tools/http-status` | Searchable HTTP status reference |
 
 ## Transparent (local source)
 

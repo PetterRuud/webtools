@@ -2,8 +2,13 @@ import { Link } from '@tanstack/react-router'
 import {
   BinaryIcon,
   BracesIcon,
+  GlobeIcon,
+  HashIcon,
   ImageIcon,
   ImagesIcon,
+  KeyRoundIcon,
+  MonitorSmartphoneIcon,
+  NetworkIcon,
   PaletteIcon,
   RegexIcon,
   SearchIcon,
@@ -39,6 +44,11 @@ const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/image-format': ImagesIcon,
   '/tools/hex-rgba': PaletteIcon,
   '/tools/base64': BinaryIcon,
+  '/tools/jwt': KeyRoundIcon,
+  '/tools/ip-lookup': NetworkIcon,
+  '/tools/dns-lookup': GlobeIcon,
+  '/tools/browser-info': MonitorSmartphoneIcon,
+  '/tools/http-status': HashIcon,
 }
 
 type CategoryFilter = ToolCategoryId | 'all'

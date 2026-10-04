@@ -11,10 +11,15 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
+import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
+import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
 import { Route as ToolsHexRgbaRouteImport } from './routes/tools/hex-rgba'
+import { Route as ToolsHttpStatusRouteImport } from './routes/tools/http-status'
 import { Route as ToolsImageCompressRouteImport } from './routes/tools/image-compress'
 import { Route as ToolsImageFormatRouteImport } from './routes/tools/image-format'
+import { Route as ToolsIpLookupRouteImport } from './routes/tools/ip-lookup'
 import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-formatter'
+import { Route as ToolsJwtRouteImport } from './routes/tools/jwt'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
 import { Route as ToolsTextDiffRouteImport } from './routes/tools/text-diff'
 
@@ -28,9 +33,24 @@ const ToolsBase64Route = ToolsBase64RouteImport.update({
   path: '/tools/base64',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsBrowserInfoRoute = ToolsBrowserInfoRouteImport.update({
+  id: '/tools/browser-info',
+  path: '/tools/browser-info',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsDnsLookupRoute = ToolsDnsLookupRouteImport.update({
+  id: '/tools/dns-lookup',
+  path: '/tools/dns-lookup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsHexRgbaRoute = ToolsHexRgbaRouteImport.update({
   id: '/tools/hex-rgba',
   path: '/tools/hex-rgba',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsHttpStatusRoute = ToolsHttpStatusRouteImport.update({
+  id: '/tools/http-status',
+  path: '/tools/http-status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsImageCompressRoute = ToolsImageCompressRouteImport.update({
@@ -43,9 +63,19 @@ const ToolsImageFormatRoute = ToolsImageFormatRouteImport.update({
   path: '/tools/image-format',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsIpLookupRoute = ToolsIpLookupRouteImport.update({
+  id: '/tools/ip-lookup',
+  path: '/tools/ip-lookup',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsJsonFormatterRoute = ToolsJsonFormatterRouteImport.update({
   id: '/tools/json-formatter',
   path: '/tools/json-formatter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsJwtRoute = ToolsJwtRouteImport.update({
+  id: '/tools/jwt',
+  path: '/tools/jwt',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsRegexRoute = ToolsRegexRouteImport.update({
@@ -62,20 +92,30 @@ const ToolsTextDiffRoute = ToolsTextDiffRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
+  '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
+  '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
+  '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
+  '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
+  '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
+  '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
+  '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
+  '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
@@ -83,10 +123,15 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
+  '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
+  '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
+  '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
+  '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
@@ -95,30 +140,45 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/tools/base64'
+    | '/tools/browser-info'
+    | '/tools/dns-lookup'
     | '/tools/hex-rgba'
+    | '/tools/http-status'
     | '/tools/image-compress'
     | '/tools/image-format'
+    | '/tools/ip-lookup'
     | '/tools/json-formatter'
+    | '/tools/jwt'
     | '/tools/regex'
     | '/tools/text-diff'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/tools/base64'
+    | '/tools/browser-info'
+    | '/tools/dns-lookup'
     | '/tools/hex-rgba'
+    | '/tools/http-status'
     | '/tools/image-compress'
     | '/tools/image-format'
+    | '/tools/ip-lookup'
     | '/tools/json-formatter'
+    | '/tools/jwt'
     | '/tools/regex'
     | '/tools/text-diff'
   id:
     | '__root__'
     | '/'
     | '/tools/base64'
+    | '/tools/browser-info'
+    | '/tools/dns-lookup'
     | '/tools/hex-rgba'
+    | '/tools/http-status'
     | '/tools/image-compress'
     | '/tools/image-format'
+    | '/tools/ip-lookup'
     | '/tools/json-formatter'
+    | '/tools/jwt'
     | '/tools/regex'
     | '/tools/text-diff'
   fileRoutesById: FileRoutesById
@@ -126,10 +186,15 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ToolsBase64Route: typeof ToolsBase64Route
+  ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
+  ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
   ToolsHexRgbaRoute: typeof ToolsHexRgbaRoute
+  ToolsHttpStatusRoute: typeof ToolsHttpStatusRoute
   ToolsImageCompressRoute: typeof ToolsImageCompressRoute
   ToolsImageFormatRoute: typeof ToolsImageFormatRoute
+  ToolsIpLookupRoute: typeof ToolsIpLookupRoute
   ToolsJsonFormatterRoute: typeof ToolsJsonFormatterRoute
+  ToolsJwtRoute: typeof ToolsJwtRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
   ToolsTextDiffRoute: typeof ToolsTextDiffRoute
 }
@@ -150,11 +215,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsBase64RouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/browser-info': {
+      id: '/tools/browser-info'
+      path: '/tools/browser-info'
+      fullPath: '/tools/browser-info'
+      preLoaderRoute: typeof ToolsBrowserInfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/dns-lookup': {
+      id: '/tools/dns-lookup'
+      path: '/tools/dns-lookup'
+      fullPath: '/tools/dns-lookup'
+      preLoaderRoute: typeof ToolsDnsLookupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/hex-rgba': {
       id: '/tools/hex-rgba'
       path: '/tools/hex-rgba'
       fullPath: '/tools/hex-rgba'
       preLoaderRoute: typeof ToolsHexRgbaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/http-status': {
+      id: '/tools/http-status'
+      path: '/tools/http-status'
+      fullPath: '/tools/http-status'
+      preLoaderRoute: typeof ToolsHttpStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/image-compress': {
@@ -171,11 +257,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsImageFormatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/ip-lookup': {
+      id: '/tools/ip-lookup'
+      path: '/tools/ip-lookup'
+      fullPath: '/tools/ip-lookup'
+      preLoaderRoute: typeof ToolsIpLookupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/json-formatter': {
       id: '/tools/json-formatter'
       path: '/tools/json-formatter'
       fullPath: '/tools/json-formatter'
       preLoaderRoute: typeof ToolsJsonFormatterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/jwt': {
+      id: '/tools/jwt'
+      path: '/tools/jwt'
+      fullPath: '/tools/jwt'
+      preLoaderRoute: typeof ToolsJwtRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/regex': {
@@ -198,10 +298,15 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ToolsBase64Route: ToolsBase64Route,
+  ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
+  ToolsDnsLookupRoute: ToolsDnsLookupRoute,
   ToolsHexRgbaRoute: ToolsHexRgbaRoute,
+  ToolsHttpStatusRoute: ToolsHttpStatusRoute,
   ToolsImageCompressRoute: ToolsImageCompressRoute,
   ToolsImageFormatRoute: ToolsImageFormatRoute,
+  ToolsIpLookupRoute: ToolsIpLookupRoute,
   ToolsJsonFormatterRoute: ToolsJsonFormatterRoute,
+  ToolsJwtRoute: ToolsJwtRoute,
   ToolsRegexRoute: ToolsRegexRoute,
   ToolsTextDiffRoute: ToolsTextDiffRoute,
 }
