@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/crontab')({
 
 function CrontabPage() {
   return (
-    <ToolShell title="Crontab builder">
+    <ToolShell>
       <CrontabTool />
     </ToolShell>
   )

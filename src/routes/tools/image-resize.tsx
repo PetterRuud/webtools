@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/image-resize')({
 
 function ImageResizePage() {
   return (
-    <ToolShell title="Image resize">
+    <ToolShell>
       <ImageResizeTool />
     </ToolShell>
   )

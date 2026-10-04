@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/image-compress')({
 
 function ImageCompressPage() {
   return (
-    <ToolShell title="Image compress">
+    <ToolShell>
       <ImageCompressTool />
     </ToolShell>
   )

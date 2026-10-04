@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/svg-editor')({
 
 function SvgEditorPage() {
   return (
-    <ToolShell title="SVG editor">
+    <ToolShell>
       <SvgEditorTool />
     </ToolShell>
   )

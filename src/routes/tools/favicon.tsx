@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/favicon')({
 
 function FaviconPage() {
   return (
-    <ToolShell title="Favicon generator">
+    <ToolShell>
       <FaviconGeneratorTool />
     </ToolShell>
   )

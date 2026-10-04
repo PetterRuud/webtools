@@ -17,7 +17,7 @@ export const Route = createFileRoute('/tools/markdown')({
 
 function MarkdownPage() {
   return (
-    <ToolShell title="Markdown">
+    <ToolShell>
       <MarkdownTool />
     </ToolShell>
   )

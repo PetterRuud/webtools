@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/box-shadow')({
 
 function BoxShadowPage() {
   return (
-    <ToolShell title="Box shadow">
+    <ToolShell>
       <BoxShadowTool />
     </ToolShell>
   )

@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/text-cleaner')({
 
 function TextCleanerPage() {
   return (
-    <ToolShell title="Text cleaner">
+    <ToolShell>
       <TextCleanerTool />
     </ToolShell>
   )

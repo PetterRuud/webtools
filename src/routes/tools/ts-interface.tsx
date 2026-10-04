@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/ts-interface')({
 
 function TsInterfacePage() {
   return (
-    <ToolShell title="TS interface">
+    <ToolShell>
       <TsInterfaceTool />
     </ToolShell>
   )

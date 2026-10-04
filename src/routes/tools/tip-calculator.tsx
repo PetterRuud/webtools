@@ -17,7 +17,7 @@ export const Route = createFileRoute('/tools/tip-calculator')({
 
 function TipCalculatorPage() {
   return (
-    <ToolShell title="Tip calculator">
+    <ToolShell>
       <TipCalculatorTool />
     </ToolShell>
   )

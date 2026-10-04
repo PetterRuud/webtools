@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/code-screenshot')({
 
 function CodeScreenshotPage() {
   return (
-    <ToolShell title="Code screenshot">
+    <ToolShell>
       <CodeScreenshotTool />
     </ToolShell>
   )

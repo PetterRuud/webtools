@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/flexbox')({
 
 function FlexboxPage() {
   return (
-    <ToolShell title="Flexbox">
+    <ToolShell>
       <FlexboxTool />
     </ToolShell>
   )

@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/image-format')({
 
 function ImageFormatPage() {
   return (
-    <ToolShell title="Image format">
+    <ToolShell>
       <ImageFormatTool />
     </ToolShell>
   )

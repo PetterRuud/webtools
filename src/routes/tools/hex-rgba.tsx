@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/hex-rgba')({
 
 function HexRgbaPage() {
   return (
-    <ToolShell title="CSS Color">
+    <ToolShell>
       <HexRgbaTool />
     </ToolShell>
   )

@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/nine-slice')({
 
 function NineSlicePage() {
   return (
-    <ToolShell title="9-slicer">
+    <ToolShell>
       <NineSliceTool />
     </ToolShell>
   )

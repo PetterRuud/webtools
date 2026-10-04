@@ -14,7 +14,7 @@ export const Route = createFileRoute('/tools/dns-lookup')({
 
 function DnsLookupPage() {
   return (
-    <ToolShell title="DNS lookup">
+    <ToolShell>
       <DnsLookupTool />
     </ToolShell>
   )

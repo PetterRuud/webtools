@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/sitemap')({
 
 function SitemapPage() {
   return (
-    <ToolShell title="Sitemap generator">
+    <ToolShell>
       <SitemapGeneratorTool />
     </ToolShell>
   )

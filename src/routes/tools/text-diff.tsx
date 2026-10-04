@@ -17,7 +17,7 @@ export const Route = createFileRoute('/tools/text-diff')({
 
 function TextDiffPage() {
   return (
-    <ToolShell title="Text diff">
+    <ToolShell>
       <TextDiffTool />
     </ToolShell>
   )

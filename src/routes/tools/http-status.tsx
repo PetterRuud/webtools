@@ -14,7 +14,7 @@ export const Route = createFileRoute('/tools/http-status')({
 
 function HttpStatusPage() {
   return (
-    <ToolShell title="HTTP status">
+    <ToolShell>
       <HttpStatusTool />
     </ToolShell>
   )

@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/tailwind-cheat-sheet')({
 
 function TailwindCheatSheetPage() {
   return (
-    <ToolShell title="Tailwind cheat sheet">
+    <ToolShell>
       <TailwindCheatSheetTool />
     </ToolShell>
   )

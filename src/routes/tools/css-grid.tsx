@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/css-grid')({
 
 function CssGridPage() {
   return (
-    <ToolShell title="CSS Grid">
+    <ToolShell>
       <CssGridTool />
     </ToolShell>
   )

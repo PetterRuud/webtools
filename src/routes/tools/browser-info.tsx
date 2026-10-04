@@ -14,7 +14,7 @@ export const Route = createFileRoute('/tools/browser-info')({
 
 function BrowserInfoPage() {
   return (
-    <ToolShell title="Browser info">
+    <ToolShell>
       <BrowserInfoTool />
     </ToolShell>
   )

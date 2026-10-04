@@ -1,7 +1,15 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import { MenuIcon } from 'lucide-react'
 import { useState } from 'react'
 import { ModeToggle } from '#/components/mode-toggle'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '#/components/ui/breadcrumb'
 import { Button } from '#/components/ui/button'
 import {
   Item,
@@ -26,19 +34,44 @@ import {
 
 const toolGroups = groupToolsByCategory(TOOLS)
 
+const TOOL_BY_PATH = new Map(TOOLS.map((tool) => [tool.to, tool]))
+
 export default function Header() {
   const [open, setOpen] = useState(false)
+  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const currentTool = TOOL_BY_PATH.get(pathname as ToolLink['to'])
 
   return (
-    <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-      <Link
-        to="/"
-        className="font-heading text-lg tracking-tight text-ink no-underline transition-opacity hover:opacity-80"
-      >
-        WebTools
-      </Link>
+    <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
+      {currentTool ? (
+        <Breadcrumb className="min-w-0">
+          <BreadcrumbList className="gap-1 text-sm sm:gap-1.5">
+            <BreadcrumbItem className="min-w-0">
+              <BreadcrumbLink
+                render={<Link to="/" />}
+                className="font-heading text-lg tracking-tight text-ink no-underline transition-opacity hover:opacity-80 hover:text-ink"
+              >
+                WebTools
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="text-muted-foreground [&>svg]:size-3.5" />
+            <BreadcrumbItem className="min-w-0">
+              <BreadcrumbPage className="truncate font-heading text-sm tracking-tight text-muted-foreground sm:text-base">
+                {currentTool.name}
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      ) : (
+        <Link
+          to="/"
+          className="font-heading text-lg tracking-tight text-ink no-underline transition-opacity hover:opacity-80"
+        >
+          WebTools
+        </Link>
+      )}
 
-      <nav className="flex items-center gap-1.5 text-sm text-muted-foreground sm:gap-2">
+      <nav className="flex shrink-0 items-center gap-1.5 text-sm text-muted-foreground sm:gap-2">
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger
             render={

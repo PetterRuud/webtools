@@ -14,7 +14,7 @@ export const Route = createFileRoute('/tools/ip-lookup')({
 
 function IpLookupPage() {
   return (
-    <ToolShell title="IP lookup">
+    <ToolShell>
       <IpLookupTool />
     </ToolShell>
   )

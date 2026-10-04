@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/image-crop')({
 
 function ImageCropPage() {
   return (
-    <ToolShell title="Image crop">
+    <ToolShell>
       <ImageCropTool />
     </ToolShell>
   )

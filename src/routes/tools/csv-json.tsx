@@ -17,7 +17,7 @@ export const Route = createFileRoute('/tools/csv-json')({
 
 function CsvJsonPage() {
   return (
-    <ToolShell title="CSV ↔ JSON">
+    <ToolShell>
       <CsvJsonTool />
     </ToolShell>
   )

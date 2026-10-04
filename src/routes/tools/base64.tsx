@@ -17,7 +17,7 @@ export const Route = createFileRoute('/tools/base64')({
 
 function Base64Page() {
   return (
-    <ToolShell title="Base64">
+    <ToolShell>
       <Base64Tool />
     </ToolShell>
   )

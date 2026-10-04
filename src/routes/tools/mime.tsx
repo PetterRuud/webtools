@@ -17,7 +17,7 @@ export const Route = createFileRoute('/tools/mime')({
 
 function MimePage() {
   return (
-    <ToolShell title="MIME types">
+    <ToolShell>
       <MimeLookupTool />
     </ToolShell>
   )

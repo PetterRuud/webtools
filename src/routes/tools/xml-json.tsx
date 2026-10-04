@@ -17,7 +17,7 @@ export const Route = createFileRoute('/tools/xml-json')({
 
 function XmlJsonPage() {
   return (
-    <ToolShell title="XML ↔ JSON">
+    <ToolShell>
       <XmlJsonTool />
     </ToolShell>
   )

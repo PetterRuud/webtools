@@ -18,10 +18,7 @@ export const Route = createFileRoute('/tools/random')({
 
 function RandomPage() {
   return (
-    <ToolShell
-      title="Random"
-      description="Numbers, strings, UUIDs, passwords, coin, dice, D&D, list, roulette — local."
-    >
+    <ToolShell>
       <RandomTool />
     </ToolShell>
   )

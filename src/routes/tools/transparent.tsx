@@ -18,10 +18,7 @@ export const Route = createFileRoute('/tools/transparent')({
 
 function TransparentPage() {
   return (
-    <ToolShell
-      title="Transparent"
-      description="Same subject on white + black → PNG with alpha. Node + sharp (not Workers Isolates)."
-    >
+    <ToolShell>
       <TransparentTool />
     </ToolShell>
   )

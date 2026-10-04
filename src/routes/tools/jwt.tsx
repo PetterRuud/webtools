@@ -17,7 +17,7 @@ export const Route = createFileRoute('/tools/jwt')({
 
 function JwtPage() {
   return (
-    <ToolShell title="JWT">
+    <ToolShell>
       <JwtTool />
     </ToolShell>
   )

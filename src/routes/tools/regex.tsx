@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/regex')({
 
 function RegexPage() {
   return (
-    <ToolShell title="Regex editor">
+    <ToolShell>
       <RegexEditorTool />
     </ToolShell>
   )

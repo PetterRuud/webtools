@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/git-commands')({
 
 function GitCommandsPage() {
   return (
-    <ToolShell title="Git commands">
+    <ToolShell>
       <GitCommandsTool />
     </ToolShell>
   )

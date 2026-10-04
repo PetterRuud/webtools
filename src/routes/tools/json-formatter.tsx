@@ -17,7 +17,7 @@ export const Route = createFileRoute('/tools/json-formatter')({
 
 function JsonFormatterPage() {
   return (
-    <ToolShell title="JSON formatter">
+    <ToolShell>
       <JsonFormatterTool />
     </ToolShell>
   )

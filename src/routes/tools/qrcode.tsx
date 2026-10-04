@@ -18,7 +18,7 @@ export const Route = createFileRoute('/tools/qrcode')({
 
 function QrCodePage() {
   return (
-    <ToolShell title="QR code">
+    <ToolShell>
       <QrCodeTool />
     </ToolShell>
   )
