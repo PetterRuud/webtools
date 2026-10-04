@@ -108,6 +108,9 @@ export function IpLookupTool() {
               Copy
             </Button>
           </div>
+          {result.note ? (
+            <p className="m-0 text-sm text-muted-foreground">{result.note}</p>
+          ) : null}
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             <Field label="Type" value={result.type} />
             <Field label="Country" value={result.country ?? result.countryCode} />

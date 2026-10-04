@@ -95,6 +95,7 @@ export const lookupIpFn = createServerFn({ method: 'GET' })
     }
 
     let lookup: IpWhoResponse | null = null
+    let lookupNote: string | undefined
     try {
       const res = await fetch(`https://ipwho.is/${encodeURIComponent(ip)}`, {
         headers: { Accept: 'application/json' },
@@ -107,12 +108,15 @@ export const lookupIpFn = createServerFn({ method: 'GET' })
     }
 
     if (lookup && lookup.success === false) {
-      throw new Error(lookup.message ?? 'Lookup failed')
+      // Private/local IPs (e.g. 127.0.0.1 in vitest/dev) still return the address.
+      lookupNote = lookup.message ?? 'No public geo data'
+      lookup = null
     }
 
     return {
       ip,
       yours: !data.ip,
+      note: lookupNote,
       type: lookup?.type,
       continent: lookup?.continent,
       continentCode: lookup?.continent_code,
