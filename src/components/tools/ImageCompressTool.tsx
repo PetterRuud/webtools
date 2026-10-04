@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from 'react'
 import imageCompression from 'browser-image-compression'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
 
@@ -188,7 +187,7 @@ export function ImageCompressTool() {
         <img
           src={previewUrl}
           alt="Compressed preview"
-          className="max-h-80 w-full rounded-2xl border border-border object-contain bg-[oklch(0.96_0.01_120)]"
+          className="max-h-80 w-full rounded-2xl border border-border bg-muted object-contain"
         />
       ) : null}
     </div>

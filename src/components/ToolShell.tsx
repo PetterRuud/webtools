@@ -17,7 +17,7 @@ export function ToolShell({ title, description, children }: ToolShellProps) {
         >
           ← WebTools
         </Link>
-        <h1 className="font-heading m-0 text-4xl tracking-tight text-[var(--ink)] sm:text-5xl">
+        <h1 className="font-heading m-0 text-4xl tracking-tight text-ink sm:text-5xl">
           {title}
         </h1>
         <p className="m-0 max-w-2xl text-base leading-7 text-muted-foreground">

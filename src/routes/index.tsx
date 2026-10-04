@@ -19,10 +19,10 @@ function HubPage() {
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col px-6 pb-16">
       <section className="relative flex min-h-[72vh] flex-col justify-center gap-6 py-10">
-        <p className="animate-rise font-heading m-0 text-5xl tracking-tight text-[var(--ink)] sm:text-7xl">
+        <p className="animate-rise font-heading m-0 text-5xl tracking-tight text-ink sm:text-7xl">
           WebTools
         </p>
-        <h1 className="animate-rise-delay-1 m-0 max-w-xl text-2xl font-medium leading-snug text-[var(--ink)] sm:text-3xl">
+        <h1 className="animate-rise-delay-1 m-0 max-w-xl text-2xl font-medium leading-snug text-ink sm:text-3xl">
           Small tools you actually reach for.
         </h1>
         <p className="animate-rise-delay-2 m-0 max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
@@ -47,7 +47,7 @@ function HubPage() {
 
       <section className="flex flex-col gap-6 border-t border-border/70 pt-10">
         <div className="flex flex-col gap-2">
-          <h2 className="font-heading m-0 text-2xl tracking-tight text-[var(--ink)]">
+          <h2 className="font-heading m-0 text-2xl tracking-tight text-ink">
             Tools
           </h2>
           <p className="m-0 max-w-xl text-sm leading-6 text-muted-foreground">
@@ -61,11 +61,11 @@ function HubPage() {
             <li key={tool.to}>
               <Link
                 to={tool.to}
-                className="tool-row group flex flex-col gap-1 border-b border-border/60 py-5 no-underline transition-colors hover:bg-[oklch(1_0_0_/_0.35)] sm:flex-row sm:items-baseline sm:justify-between sm:gap-8"
+                className="tool-row group flex flex-col gap-1 border-b border-border/60 py-5 no-underline transition-colors hover:bg-muted/45 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8"
               >
-                <span className="font-heading relative text-lg text-[var(--ink)]">
+                <span className="font-heading relative text-lg text-ink">
                   {tool.name}
-                  <span className="tool-mark absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-[var(--spark)]" />
+                  <span className="tool-mark absolute -bottom-1 left-0 h-0.5 w-full origin-left scale-x-0 bg-spark" />
                 </span>
                 <span className="max-w-md text-sm leading-6 text-muted-foreground">
                   {tool.blurb}
@@ -74,7 +74,7 @@ function HubPage() {
             </li>
           ))}
           <li className="flex flex-col gap-1 border-b border-border/60 py-5 sm:flex-row sm:items-baseline sm:justify-between sm:gap-8">
-            <span className="font-heading text-lg text-[var(--ink)]">
+            <span className="font-heading text-lg text-ink">
               Transparent
             </span>
             <span className="max-w-md text-sm leading-6 text-muted-foreground">
