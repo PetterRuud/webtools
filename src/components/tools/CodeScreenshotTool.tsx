@@ -1,0 +1,450 @@
+import { useEffect, useRef, useState } from 'react'
+import { toPng } from 'html-to-image'
+import { codeToHtml } from 'shiki'
+import { toast } from 'sonner'
+import { Button } from '#/components/ui/button'
+import { Checkbox } from '#/components/ui/checkbox'
+import { Input } from '#/components/ui/input'
+import { Label } from '#/components/ui/label'
+import { Slider } from '#/components/ui/slider'
+import { Textarea } from '#/components/ui/textarea'
+import {
+  BACKGROUND_PRESETS,
+  FONT_FAMILIES,
+  LANGUAGES,
+  SAMPLE_CODE,
+  THEMES,
+  WINDOW_CHROMES,
+  downloadDataUrl,
+  extractShikiBackground,
+  type FontFamilyId,
+  type LanguageId,
+  type ThemeId,
+  type WindowChrome,
+} from '#/lib/codeScreenshot'
+import { cn } from 'cn'
+
+const selectClass =
+  'h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm dark:bg-input/30'
+
+export function CodeScreenshotTool() {
+  const captureRef = useRef<HTMLDivElement>(null)
+  const [code, setCode] = useState(SAMPLE_CODE)
+  const [language, setLanguage] = useState<LanguageId>('typescript')
+  const [theme, setTheme] = useState<ThemeId>('github-dark')
+  const [chrome, setChrome] = useState<WindowChrome>('macos')
+  const [backgroundId, setBackgroundId] = useState(BACKGROUND_PRESETS[0].id)
+  const [customBackground, setCustomBackground] = useState('#0f766e')
+  const [padding, setPadding] = useState(48)
+  const [fontSize, setFontSize] = useState(14)
+  const [fontFamily, setFontFamily] = useState<FontFamilyId>('jetbrains')
+  const [showLineNumbers, setShowLineNumbers] = useState(true)
+  const [showTitle, setShowTitle] = useState(true)
+  const [title, setTitle] = useState('fibonacci.ts')
+  const [highlightedHtml, setHighlightedHtml] = useState('')
+  const [windowBg, setWindowBg] = useState('#24292e')
+  const [highlightError, setHighlightError] = useState<string | null>(null)
+  const [exporting, setExporting] = useState(false)
+
+  const background =
+    backgroundId === 'custom'
+      ? customBackground
+      : (BACKGROUND_PRESETS.find((preset) => preset.id === backgroundId)
+          ?.value ?? BACKGROUND_PRESETS[0].value)
+
+  const fontStack =
+    FONT_FAMILIES.find((item) => item.id === fontFamily)?.stack ??
+    FONT_FAMILIES[0].stack
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function highlight() {
+      try {
+        const html = await codeToHtml(code || ' ', {
+          lang: language,
+          theme,
+        })
+        if (cancelled) return
+        setHighlightedHtml(html)
+        setWindowBg(extractShikiBackground(html) ?? '#1e1e1e')
+        setHighlightError(null)
+      } catch (error) {
+        if (cancelled) return
+        setHighlightError(
+          error instanceof Error ? error.message : 'Highlight failed',
+        )
+      }
+    }
+
+    void highlight()
+    return () => {
+      cancelled = true
+    }
+  }, [code, language, theme])
+
+  async function exportPng() {
+    const node = captureRef.current
+    if (!node) {
+      toast.error('Preview not ready')
+      return
+    }
+    if (!code.trim()) {
+      toast.error('Paste code first')
+      return
+    }
+
+    setExporting(true)
+    try {
+      const dataUrl = await toPng(node, {
+        pixelRatio: 2,
+        cacheBust: true,
+      })
+      const safeName = (title.trim() || 'code')
+        .replace(/[^\w.-]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+      downloadDataUrl(dataUrl, `${safeName || 'code-screenshot'}.png`)
+      toast.success('PNG downloaded')
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Export failed',
+      )
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  return (
+    <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between gap-2">
+            <Label htmlFor="code-shot-source">Code</Label>
+            <Button
+              type="button"
+              size="xs"
+              variant="ghost"
+              onClick={() => setCode(SAMPLE_CODE)}
+            >
+              Sample
+            </Button>
+          </div>
+          <Textarea
+            id="code-shot-source"
+            value={code}
+            onChange={(event) => setCode(event.target.value)}
+            spellCheck={false}
+            className="min-h-48 font-mono text-[0.85rem] leading-5"
+            aria-label="Code source"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-2">
+          <label className="flex flex-col gap-1">
+            <span className="text-xs text-muted-foreground">Language</span>
+            <select
+              value={language}
+              onChange={(event) =>
+                setLanguage(event.target.value as LanguageId)
+              }
+              className={selectClass}
+            >
+              {LANGUAGES.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-xs text-muted-foreground">Theme</span>
+            <select
+              value={theme}
+              onChange={(event) => setTheme(event.target.value as ThemeId)}
+              className={selectClass}
+            >
+              {THEMES.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-xs text-muted-foreground">Window</span>
+            <select
+              value={chrome}
+              onChange={(event) =>
+                setChrome(event.target.value as WindowChrome)
+              }
+              className={selectClass}
+            >
+              {WINDOW_CHROMES.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="flex flex-col gap-1">
+            <span className="text-xs text-muted-foreground">Font</span>
+            <select
+              value={fontFamily}
+              onChange={(event) =>
+                setFontFamily(event.target.value as FontFamilyId)
+              }
+              className={selectClass}
+            >
+              {FONT_FAMILIES.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <label className="flex flex-col gap-1">
+          <span className="text-xs text-muted-foreground">Background</span>
+          <select
+            value={backgroundId}
+            onChange={(event) => setBackgroundId(event.target.value)}
+            className={selectClass}
+          >
+            {BACKGROUND_PRESETS.map((preset) => (
+              <option key={preset.id} value={preset.id}>
+                {preset.label}
+              </option>
+            ))}
+            <option value="custom">Custom color</option>
+          </select>
+        </label>
+
+        {backgroundId === 'custom' ? (
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={
+                /^#[0-9a-fA-F]{6}$/.test(customBackground)
+                  ? customBackground
+                  : '#0f766e'
+              }
+              onChange={(event) => setCustomBackground(event.target.value)}
+              className="h-8 w-10 cursor-pointer rounded-md border border-input bg-transparent p-0.5"
+              aria-label="Custom background color"
+            />
+            <Input
+              value={customBackground}
+              onValueChange={setCustomBackground}
+              spellCheck={false}
+              className="font-mono text-[0.92rem]"
+              aria-label="Custom background value"
+            />
+          </div>
+        ) : null}
+
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="code-shot-padding">Padding</Label>
+            <span className="text-sm tabular-nums text-muted-foreground">
+              {padding}px
+            </span>
+          </div>
+          <Slider
+            id="code-shot-padding"
+            min={16}
+            max={96}
+            step={4}
+            value={[padding]}
+            onValueChange={(value) => {
+              const next = Array.isArray(value) ? value[0] : value
+              if (typeof next === 'number') setPadding(next)
+            }}
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between gap-3">
+            <Label htmlFor="code-shot-font-size">Font size</Label>
+            <span className="text-sm tabular-nums text-muted-foreground">
+              {fontSize}px
+            </span>
+          </div>
+          <Slider
+            id="code-shot-font-size"
+            min={11}
+            max={22}
+            step={1}
+            value={[fontSize]}
+            onValueChange={(value) => {
+              const next = Array.isArray(value) ? value[0] : value
+              if (typeof next === 'number') setFontSize(next)
+            }}
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-x-4 gap-y-2 pt-0.5">
+          <label className="flex cursor-pointer items-center gap-2 text-sm">
+            <Checkbox
+              checked={showLineNumbers}
+              onCheckedChange={(checked) =>
+                setShowLineNumbers(checked === true)
+              }
+              aria-label="Line numbers"
+            />
+            <span>Line numbers</span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-2 text-sm">
+            <Checkbox
+              checked={showTitle}
+              onCheckedChange={(checked) => setShowTitle(checked === true)}
+              aria-label="Window title"
+            />
+            <span>Title bar</span>
+          </label>
+        </div>
+
+        {showTitle ? (
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="code-shot-title">Filename</Label>
+            <Input
+              id="code-shot-title"
+              value={title}
+              onValueChange={setTitle}
+              spellCheck={false}
+              className="font-mono text-[0.92rem]"
+            />
+          </div>
+        ) : null}
+
+        {highlightError ? (
+          <p className="m-0 text-sm text-destructive">{highlightError}</p>
+        ) : null}
+
+        <div className="flex flex-wrap gap-1.5 pt-1">
+          <Button type="button" onClick={() => void exportPng()} disabled={exporting}>
+            {exporting ? 'Exporting…' : 'Download PNG'}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setCode('')
+              setTitle('untitled')
+            }}
+          >
+            Clear
+          </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <div className="overflow-auto rounded-xl border border-border/70 bg-muted/20 p-2 sm:p-3">
+          <div
+            ref={captureRef}
+            className="mx-auto w-full max-w-full"
+            style={{
+              padding: `${padding}px`,
+              background,
+            }}
+          >
+            <div
+              className="overflow-hidden rounded-xl shadow-2xl shadow-black/30"
+              style={{ backgroundColor: windowBg }}
+            >
+              {chrome !== 'none' || showTitle ? (
+                <div
+                  className={cn(
+                    'flex items-center gap-3 px-3.5',
+                    chrome === 'none' ? 'py-2' : 'py-2.5',
+                  )}
+                  style={{ backgroundColor: windowBg }}
+                >
+                  {chrome === 'macos' ? (
+                    <div className="flex shrink-0 items-center gap-1.5" aria-hidden>
+                      <span className="size-3 rounded-full bg-[#ff5f57]" />
+                      <span className="size-3 rounded-full bg-[#febc2e]" />
+                      <span className="size-3 rounded-full bg-[#28c840]" />
+                    </div>
+                  ) : null}
+                  {chrome === 'windows' ? (
+                    <div
+                      className="ml-auto flex shrink-0 items-center gap-3 text-[11px] text-white/55"
+                      aria-hidden
+                    >
+                      <span>—</span>
+                      <span>□</span>
+                      <span>×</span>
+                    </div>
+                  ) : null}
+                  {showTitle ? (
+                    <div
+                      className={cn(
+                        'min-w-0 truncate font-mono text-[11px] tracking-wide text-white/55',
+                        chrome === 'macos' && 'flex-1 text-center',
+                        chrome === 'windows' && 'order-first flex-1',
+                        chrome === 'none' && 'flex-1 text-center',
+                      )}
+                    >
+                      {title || 'untitled'}
+                    </div>
+                  ) : chrome === 'macos' ? (
+                    <div className="flex-1" />
+                  ) : null}
+                </div>
+              ) : null}
+
+              <div
+                className={cn(
+                  'code-shot-preview px-4 pb-4',
+                  showLineNumbers && 'code-shot-lines',
+                  chrome === 'none' && !showTitle && 'pt-4',
+                )}
+                style={{
+                  fontFamily: fontStack,
+                  fontSize: `${fontSize}px`,
+                  lineHeight: 1.55,
+                }}
+                dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+              />
+            </div>
+          </div>
+        </div>
+        <p className="m-0 text-xs text-muted-foreground">
+          Live preview · export is 2× PNG, local only.
+        </p>
+      </div>
+
+      <style>{`
+        .code-shot-preview pre {
+          margin: 0;
+          padding: 0;
+          background: transparent !important;
+          overflow: visible;
+        }
+        .code-shot-preview code {
+          display: block;
+          font-family: inherit;
+          font-size: inherit;
+          line-height: inherit;
+          counter-reset: code-line;
+        }
+        .code-shot-preview .line {
+          display: block;
+          min-height: 1.55em;
+          white-space: pre;
+        }
+        .code-shot-lines .line::before {
+          counter-increment: code-line;
+          content: counter(code-line);
+          display: inline-block;
+          width: 2.25em;
+          margin-right: 1em;
+          text-align: right;
+          color: color-mix(in oklab, currentColor 35%, transparent);
+          user-select: none;
+        }
+      `}</style>
+    </div>
+  )
+}

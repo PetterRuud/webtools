@@ -31,6 +31,7 @@ export type ToolLink = {
     | '/tools/text-diff'
     | '/tools/text-cleaner'
     | '/tools/markdown'
+    | '/tools/code-screenshot'
     | '/tools/ip-lookup'
     | '/tools/dns-lookup'
     | '/tools/browser-info'
@@ -129,6 +130,25 @@ export const TOOLS: ToolLink[] = [
     blurb: 'Bidirectional convert. Local.',
     category: 'text',
     keywords: ['xml', 'json', 'convert', 'parse', 'serialize', 'text'],
+  },
+  {
+    to: '/tools/code-screenshot',
+    name: 'Code screenshot',
+    shortName: 'Code shot',
+    blurb: 'Themed window → PNG.',
+    category: 'text',
+    keywords: [
+      'code',
+      'screenshot',
+      'syntax',
+      'highlight',
+      'theme',
+      'png',
+      'carbon',
+      'snippet',
+      'image',
+      'export',
+    ],
   },
   {
     to: '/tools/image-compress',

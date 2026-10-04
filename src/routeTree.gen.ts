@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsBoxShadowRouteImport } from './routes/tools/box-shadow'
 import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
+import { Route as ToolsCodeScreenshotRouteImport } from './routes/tools/code-screenshot'
 import { Route as ToolsCssGridRouteImport } from './routes/tools/css-grid'
 import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
 import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
@@ -57,6 +58,11 @@ const ToolsBoxShadowRoute = ToolsBoxShadowRouteImport.update({
 const ToolsBrowserInfoRoute = ToolsBrowserInfoRouteImport.update({
   id: '/tools/browser-info',
   path: '/tools/browser-info',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsCodeScreenshotRoute = ToolsCodeScreenshotRouteImport.update({
+  id: '/tools/code-screenshot',
+  path: '/tools/code-screenshot',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsCssGridRoute = ToolsCssGridRouteImport.update({
@@ -190,6 +196,7 @@ export interface FileRoutesByFullPath {
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
@@ -221,6 +228,7 @@ export interface FileRoutesByTo {
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
@@ -253,6 +261,7 @@ export interface FileRoutesById {
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
@@ -286,6 +295,7 @@ export interface FileRouteTypes {
     | '/tools/base64'
     | '/tools/box-shadow'
     | '/tools/browser-info'
+    | '/tools/code-screenshot'
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
@@ -317,6 +327,7 @@ export interface FileRouteTypes {
     | '/tools/base64'
     | '/tools/box-shadow'
     | '/tools/browser-info'
+    | '/tools/code-screenshot'
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
@@ -348,6 +359,7 @@ export interface FileRouteTypes {
     | '/tools/base64'
     | '/tools/box-shadow'
     | '/tools/browser-info'
+    | '/tools/code-screenshot'
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
@@ -380,6 +392,7 @@ export interface RootRouteChildren {
   ToolsBase64Route: typeof ToolsBase64Route
   ToolsBoxShadowRoute: typeof ToolsBoxShadowRoute
   ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
+  ToolsCodeScreenshotRoute: typeof ToolsCodeScreenshotRoute
   ToolsCssGridRoute: typeof ToolsCssGridRoute
   ToolsCsvJsonRoute: typeof ToolsCsvJsonRoute
   ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
@@ -435,6 +448,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/browser-info'
       fullPath: '/tools/browser-info'
       preLoaderRoute: typeof ToolsBrowserInfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/code-screenshot': {
+      id: '/tools/code-screenshot'
+      path: '/tools/code-screenshot'
+      fullPath: '/tools/code-screenshot'
+      preLoaderRoute: typeof ToolsCodeScreenshotRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/css-grid': {
@@ -620,6 +640,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsBase64Route: ToolsBase64Route,
   ToolsBoxShadowRoute: ToolsBoxShadowRoute,
   ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
+  ToolsCodeScreenshotRoute: ToolsCodeScreenshotRoute,
   ToolsCssGridRoute: ToolsCssGridRoute,
   ToolsCsvJsonRoute: ToolsCsvJsonRoute,
   ToolsDnsLookupRoute: ToolsDnsLookupRoute,
