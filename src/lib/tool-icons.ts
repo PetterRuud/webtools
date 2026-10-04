@@ -18,6 +18,7 @@ import {
   TableIcon,
   TextSelectIcon,
   VectorSquareIcon,
+  WindIcon,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 import type { ToolLink } from '#/lib/tools'
@@ -47,4 +48,5 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/dns-lookup': GlobeIcon,
   '/tools/browser-info': MonitorSmartphoneIcon,
   '/tools/http-status': HashIcon,
+  '/tools/tailwind-cheat-sheet': WindIcon,
 }

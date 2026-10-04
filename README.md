@@ -53,6 +53,7 @@ Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker.
 | `/tools/dns-lookup` | DNS over HTTPS via cloudflare-dns.com |
 | `/tools/browser-info` | UA, viewport, languages, storage flags |
 | `/tools/http-status` | Searchable HTTP status reference |
+| `/tools/tailwind-cheat-sheet` | Searchable Tailwind utility cheat sheet |
 
 ## Transparent (local source)
 

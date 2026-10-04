@@ -33,6 +33,7 @@ export type ToolLink = {
     | '/tools/browser-info'
     | '/tools/http-status'
     | '/tools/jwt'
+    | '/tools/tailwind-cheat-sheet'
   name: string
   shortName: string
   blurb: string
@@ -200,6 +201,25 @@ export const TOOLS: ToolLink[] = [
       'template',
       'areas',
       'fr',
+    ],
+  },
+  {
+    to: '/tools/tailwind-cheat-sheet',
+    name: 'Tailwind cheat sheet',
+    shortName: 'Tailwind',
+    blurb: 'Searchable utility reference.',
+    category: 'color',
+    keywords: [
+      'tailwind',
+      'css',
+      'utility',
+      'cheat sheet',
+      'flex',
+      'grid',
+      'spacing',
+      'layout',
+      'typography',
+      'colors',
     ],
   },
   {

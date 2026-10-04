@@ -27,6 +27,7 @@ import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-form
 import { Route as ToolsJwtRouteImport } from './routes/tools/jwt'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
 import { Route as ToolsSvgEditorRouteImport } from './routes/tools/svg-editor'
+import { Route as ToolsTailwindCheatSheetRouteImport } from './routes/tools/tailwind-cheat-sheet'
 import { Route as ToolsTextCleanerRouteImport } from './routes/tools/text-cleaner'
 import { Route as ToolsTextDiffRouteImport } from './routes/tools/text-diff'
 
@@ -120,6 +121,11 @@ const ToolsSvgEditorRoute = ToolsSvgEditorRouteImport.update({
   path: '/tools/svg-editor',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsTailwindCheatSheetRoute = ToolsTailwindCheatSheetRouteImport.update({
+  id: '/tools/tailwind-cheat-sheet',
+  path: '/tools/tailwind-cheat-sheet',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsTextCleanerRoute = ToolsTextCleanerRouteImport.update({
   id: '/tools/text-cleaner',
   path: '/tools/text-cleaner',
@@ -150,6 +156,7 @@ export interface FileRoutesByFullPath {
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
+  '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
@@ -172,6 +179,7 @@ export interface FileRoutesByTo {
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
+  '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
@@ -195,6 +203,7 @@ export interface FileRoutesById {
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
+  '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
@@ -219,6 +228,7 @@ export interface FileRouteTypes {
     | '/tools/jwt'
     | '/tools/regex'
     | '/tools/svg-editor'
+    | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
     | '/tools/text-diff'
   fileRoutesByTo: FileRoutesByTo
@@ -241,6 +251,7 @@ export interface FileRouteTypes {
     | '/tools/jwt'
     | '/tools/regex'
     | '/tools/svg-editor'
+    | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
     | '/tools/text-diff'
   id:
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/tools/jwt'
     | '/tools/regex'
     | '/tools/svg-editor'
+    | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
     | '/tools/text-diff'
   fileRoutesById: FileRoutesById
@@ -286,6 +298,7 @@ export interface RootRouteChildren {
   ToolsJwtRoute: typeof ToolsJwtRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
   ToolsSvgEditorRoute: typeof ToolsSvgEditorRoute
+  ToolsTailwindCheatSheetRoute: typeof ToolsTailwindCheatSheetRoute
   ToolsTextCleanerRoute: typeof ToolsTextCleanerRoute
   ToolsTextDiffRoute: typeof ToolsTextDiffRoute
 }
@@ -418,6 +431,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsSvgEditorRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/tailwind-cheat-sheet': {
+      id: '/tools/tailwind-cheat-sheet'
+      path: '/tools/tailwind-cheat-sheet'
+      fullPath: '/tools/tailwind-cheat-sheet'
+      preLoaderRoute: typeof ToolsTailwindCheatSheetRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/text-cleaner': {
       id: '/tools/text-cleaner'
       path: '/tools/text-cleaner'
@@ -454,6 +474,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsJwtRoute: ToolsJwtRoute,
   ToolsRegexRoute: ToolsRegexRoute,
   ToolsSvgEditorRoute: ToolsSvgEditorRoute,
+  ToolsTailwindCheatSheetRoute: ToolsTailwindCheatSheetRoute,
   ToolsTextCleanerRoute: ToolsTextCleanerRoute,
   ToolsTextDiffRoute: ToolsTextDiffRoute,
 }
