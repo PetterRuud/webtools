@@ -31,6 +31,7 @@ export type ToolLink = {
     | '/tools/qrcode'
     | '/tools/text-diff'
     | '/tools/text-cleaner'
+    | '/tools/random'
     | '/tools/markdown'
     | '/tools/code-screenshot'
     | '/tools/ip-lookup'
@@ -122,6 +123,30 @@ export const TOOLS: ToolLink[] = [
       'html',
       'editor',
       'render',
+    ],
+  },
+  {
+    to: '/tools/random',
+    name: 'Random',
+    shortName: 'Random',
+    blurb: 'Numbers, UUID, password, D&D dice.',
+    category: 'text',
+    keywords: [
+      'random',
+      'number',
+      'string',
+      'uuid',
+      'password',
+      'coin',
+      'dice',
+      'dnd',
+      'dungeons',
+      'dragons',
+      'advantage',
+      'shuffle',
+      'pick',
+      'generator',
+      'decision',
     ],
   },
   {
