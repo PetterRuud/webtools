@@ -129,7 +129,7 @@ export const TOOLS: ToolLink[] = [
     to: '/tools/random',
     name: 'Random',
     shortName: 'Random',
-    blurb: 'Numbers, UUID, password, D&D dice.',
+    blurb: 'Numbers, UUID, coin, D&D, roulette.',
     category: 'text',
     keywords: [
       'random',
@@ -145,6 +145,8 @@ export const TOOLS: ToolLink[] = [
       'advantage',
       'shuffle',
       'pick',
+      'roulette',
+      'wheel',
       'generator',
       'decision',
     ],

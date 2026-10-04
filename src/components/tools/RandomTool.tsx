@@ -1,9 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { XIcon } from 'lucide-react'
 import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Textarea } from '#/components/ui/textarea'
+import {
+  CoinVisual,
+  DnDVisual,
+  RouletteVisual,
+} from '#/components/tools/RandomVisuals'
 import { copyText } from '#/lib/clipboard'
 import {
   charsetFromFlags,
@@ -11,6 +17,7 @@ import {
   flipCoin,
   formatDnDRoll,
   parseList,
+  randomInt,
   randomNumbers,
   randomPassword,
   randomPick,
@@ -20,8 +27,10 @@ import {
   rollDnD,
   shuffle,
   type CharsetFlags,
+  type CoinSide,
   type DnDAdvantage,
   type DnDDieSides,
+  type DnDRollResult,
 } from '#/lib/random'
 import { cn } from '#/lib/utils'
 
@@ -34,8 +43,23 @@ type Mode =
   | 'dice'
   | 'dnd'
   | 'list'
+  | 'roulette'
 
 type ListAction = 'pick' | 'shuffle'
+
+type RouletteEntry = { id: string; text: string }
+
+type VisualState =
+  | { kind: 'coin'; side: CoinSide; key: number }
+  | { kind: 'dnd'; result: DnDRollResult; key: number }
+  | {
+      kind: 'roulette'
+      options: string[]
+      winner: string | null
+      spinning: boolean
+      highlightIndex: number
+    }
+  | null
 
 const MODES: Array<{ id: Mode; label: string }> = [
   { id: 'number', label: 'Number' },
@@ -46,6 +70,7 @@ const MODES: Array<{ id: Mode; label: string }> = [
   { id: 'dice', label: 'Dice' },
   { id: 'dnd', label: 'D&D' },
   { id: 'list', label: 'List' },
+  { id: 'roulette', label: 'Roulette' },
 ]
 
 const DND_ADVANTAGE: Array<{ id: DnDAdvantage; label: string }> = [
@@ -74,6 +99,14 @@ Carol
 Dave
 Eve`
 
+const DEFAULT_ROULETTE: RouletteEntry[] = [
+  { id: 'r1', text: 'Pizza' },
+  { id: 'r2', text: 'Sushi' },
+  { id: 'r3', text: 'Tacos' },
+  { id: 'r4', text: 'Burgers' },
+]
+
+const ROULETTE_KEY = 'webtools.random.roulette'
 const HISTORY_LIMIT = 12
 
 type ToolState = {
@@ -139,12 +172,55 @@ function tryBuild(state: ToolState): { value: string; error: string | null } {
   }
 }
 
+function loadRoulette(): RouletteEntry[] {
+  try {
+    const raw = localStorage.getItem(ROULETTE_KEY)
+    if (!raw) return DEFAULT_ROULETTE
+    const parsed: unknown = JSON.parse(raw)
+    if (!Array.isArray(parsed)) return DEFAULT_ROULETTE
+    const entries = parsed
+      .map((item) => {
+        if (!item || typeof item !== 'object') return null
+        const record = item as { id?: unknown; text?: unknown }
+        const text = typeof record.text === 'string' ? record.text.trim() : ''
+        if (!text) return null
+        const id =
+          typeof record.id === 'string' && record.id
+            ? record.id
+            : `r-${Math.random().toString(36).slice(2, 9)}`
+        return { id, text }
+      })
+      .filter((item): item is RouletteEntry => item != null)
+    return entries.length > 0 ? entries : DEFAULT_ROULETTE
+  } catch {
+    return DEFAULT_ROULETTE
+  }
+}
+
+function saveRoulette(entries: RouletteEntry[]) {
+  try {
+    localStorage.setItem(ROULETTE_KEY, JSON.stringify(entries))
+  } catch {
+    // ignore quota / private mode
+  }
+}
+
+function newEntryId() {
+  return `r-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`
+}
+
 export function RandomTool() {
   const [state, setState] = useState<ToolState>(INITIAL)
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [history, setHistory] = useState<string[]>([])
   const [ready, setReady] = useState(false)
+  const [visual, setVisual] = useState<VisualState>(null)
+  const [visualKey, setVisualKey] = useState(0)
+  const [roulette, setRoulette] = useState<RouletteEntry[]>(DEFAULT_ROULETTE)
+  const [rouletteDraft, setRouletteDraft] = useState('')
+  const [rouletteSpinning, setRouletteSpinning] = useState(false)
+  const spinTimer = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const {
     mode,
@@ -190,24 +266,177 @@ export function RandomTool() {
     )
   }
 
+  function clearSpinTimer() {
+    if (spinTimer.current) {
+      clearInterval(spinTimer.current)
+      spinTimer.current = null
+    }
+  }
+
+  function setRouletteEntries(entries: RouletteEntry[]) {
+    setRoulette(entries)
+    saveRoulette(entries)
+  }
+
   function generate(next: ToolState = state) {
     if (typeof crypto === 'undefined') return
-    const result = tryBuild(next)
-    if (result.error) {
-      setError(result.error)
+    if (next.mode === 'roulette') {
+      spinRoulette()
       return
     }
-    commit(result.value)
+
+    clearSpinTimer()
+    setRouletteSpinning(false)
+
+    if (next.mode === 'coin') {
+      const side = flipCoin()
+      const key = visualKey + 1
+      setVisualKey(key)
+      setVisual({ kind: 'coin', side, key })
+      commit(side)
+      return
+    }
+
+    if (next.mode === 'dnd') {
+      try {
+        const modifier = Number(next.dndModifier)
+        if (!Number.isFinite(modifier)) throw new Error('Modifier must be a number')
+        const result = rollDnD({
+          sides: next.dndSides,
+          count: Number(next.dndCount),
+          modifier,
+          advantage: next.dndAdvantage,
+          dropLowest: Number(next.dndDropLowest) || 0,
+        })
+        const key = visualKey + 1
+        setVisualKey(key)
+        setVisual({ kind: 'dnd', result, key })
+        commit(formatDnDRoll(result))
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Could not generate')
+      }
+      return
+    }
+
+    setVisual(null)
+    const built = tryBuild(next)
+    if (built.error) {
+      setError(built.error)
+      return
+    }
+    commit(built.value)
+  }
+
+  function spinRoulette() {
+    const options = roulette.map((entry) => entry.text)
+    if (options.length === 0) {
+      setError('Add at least one option')
+      setVisual({
+        kind: 'roulette',
+        options: [],
+        winner: null,
+        spinning: false,
+        highlightIndex: 0,
+      })
+      return
+    }
+
+    clearSpinTimer()
+    const winnerIndex = randomInt(0, options.length - 1)
+    const winner = options[winnerIndex]!
+    const totalTicks = 16 + winnerIndex + options.length
+    let ticks = 0
+    setRouletteSpinning(true)
+    setError(null)
+    setVisual({
+      kind: 'roulette',
+      options,
+      winner: null,
+      spinning: true,
+      highlightIndex: 0,
+    })
+
+    spinTimer.current = setInterval(() => {
+      ticks += 1
+      const highlightIndex = ticks % options.length
+      if (ticks >= totalTicks) {
+        clearSpinTimer()
+        setRouletteSpinning(false)
+        setVisual({
+          kind: 'roulette',
+          options,
+          winner,
+          spinning: false,
+          highlightIndex: winnerIndex,
+        })
+        commit(winner)
+        return
+      }
+      setVisual({
+        kind: 'roulette',
+        options,
+        winner: null,
+        spinning: true,
+        highlightIndex,
+      })
+    }, 55)
   }
 
   function selectMode(nextMode: Mode) {
+    clearSpinTimer()
+    setRouletteSpinning(false)
     const next = { ...state, mode: nextMode }
     setState(next)
+    if (nextMode === 'roulette') {
+      setVisual({
+        kind: 'roulette',
+        options: roulette.map((entry) => entry.text),
+        winner: null,
+        spinning: false,
+        highlightIndex: 0,
+      })
+      setOutput('')
+      setError(null)
+      return
+    }
     generate(next)
+  }
+
+  function addRouletteOption() {
+    const text = rouletteDraft.trim()
+    if (!text) return
+    if (roulette.some((entry) => entry.text === text)) {
+      setError('That option is already in the list')
+      return
+    }
+    setError(null)
+    const entries = [...roulette, { id: newEntryId(), text }]
+    setRouletteEntries(entries)
+    setRouletteDraft('')
+    setVisual({
+      kind: 'roulette',
+      options: entries.map((entry) => entry.text),
+      winner: visual?.kind === 'roulette' ? visual.winner : null,
+      spinning: false,
+      highlightIndex: 0,
+    })
+  }
+
+  function removeRouletteOption(id: string) {
+    const entries = roulette.filter((entry) => entry.id !== id)
+    setRouletteEntries(entries)
+    setVisual({
+      kind: 'roulette',
+      options: entries.map((entry) => entry.text),
+      winner: null,
+      spinning: false,
+      highlightIndex: 0,
+    })
   }
 
   useEffect(() => {
     setReady(true)
+    setRoulette(loadRoulette())
     const result = tryBuild(INITIAL)
     if (result.error) {
       setError(result.error)
@@ -216,7 +445,14 @@ export function RandomTool() {
     setOutput(result.value)
     setError(null)
     setHistory([result.value])
+    return () => {
+      clearSpinTimer()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- mount-only init
   }, [])
+
+  const showVisual =
+    mode === 'coin' || mode === 'dnd' || mode === 'roulette'
 
   return (
     <div className="flex flex-col gap-3">
@@ -296,7 +532,7 @@ export function RandomTool() {
           ) : null}
           {mode === 'coin' ? (
             <p className="m-0 text-sm text-muted-foreground">
-              Fair coin flip. Heads or tails — locally generated.
+              Fair coin flip — heads or tails.
             </p>
           ) : null}
           {mode === 'dice' ? (
@@ -389,15 +625,39 @@ export function RandomTool() {
               </div>
             </div>
           ) : null}
+          {mode === 'roulette' ? (
+            <RouletteControls
+              draft={rouletteDraft}
+              entries={roulette}
+              spinning={rouletteSpinning}
+              onDraftChange={setRouletteDraft}
+              onAdd={addRouletteOption}
+              onRemove={removeRouletteOption}
+              onReset={() => {
+                setRouletteEntries(DEFAULT_ROULETTE)
+                setVisual({
+                  kind: 'roulette',
+                  options: DEFAULT_ROULETTE.map((entry) => entry.text),
+                  winner: null,
+                  spinning: false,
+                  highlightIndex: 0,
+                })
+              }}
+            />
+          ) : null}
 
           <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
-            <Button type="button" onClick={() => generate()}>
-              Generate
+            <Button
+              type="button"
+              onClick={() => generate()}
+              disabled={mode === 'roulette' && rouletteSpinning}
+            >
+              {mode === 'roulette' ? 'Spin' : 'Generate'}
             </Button>
             <Button
               type="button"
               variant="outline"
-              disabled={!output}
+              disabled={!output || rouletteSpinning}
               onClick={() => void copyText(output, modeLabel(mode))}
             >
               Copy
@@ -407,7 +667,9 @@ export function RandomTool() {
             <p className="m-0 text-sm text-destructive">{error}</p>
           ) : (
             <p className="m-0 text-xs text-muted-foreground">
-              Cryptographically random in this browser. Nothing is uploaded.
+              {mode === 'roulette'
+                ? 'List saved in this browser (localStorage).'
+                : 'Cryptographically random in this browser. Nothing is uploaded.'}
             </p>
           )}
         </div>
@@ -420,13 +682,50 @@ export function RandomTool() {
                 {modeLabel(mode)}
               </span>
             </div>
+
+            {showVisual ? (
+              <div className="rounded-lg border border-border/70 bg-card/30 px-3 py-2">
+                {visual?.kind === 'coin' ? (
+                  <CoinVisual side={visual.side} flipKey={visual.key} />
+                ) : null}
+                {visual?.kind === 'dnd' ? (
+                  <DnDVisual result={visual.result} rollKey={visual.key} />
+                ) : null}
+                {visual?.kind === 'roulette' ? (
+                  <RouletteVisual
+                    options={visual.options}
+                    winner={visual.winner}
+                    spinning={visual.spinning}
+                    highlightIndex={visual.highlightIndex}
+                  />
+                ) : null}
+                {!visual && mode === 'coin' ? (
+                  <p className="m-0 py-6 text-center text-sm text-muted-foreground">
+                    Flip to see the coin.
+                  </p>
+                ) : null}
+                {!visual && mode === 'dnd' ? (
+                  <p className="m-0 py-6 text-center text-sm text-muted-foreground">
+                    Roll to see the dice.
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
+
             <Textarea
               id="random-output"
               value={ready ? output : ''}
               readOnly
               spellCheck={false}
-              placeholder="Generate to see a result…"
-              className="min-h-48 font-mono text-[0.85rem] leading-5"
+              placeholder={
+                mode === 'roulette'
+                  ? 'Spin to pick a winner…'
+                  : 'Generate to see a result…'
+              }
+              className={cn(
+                'font-mono text-[0.85rem] leading-5',
+                showVisual ? 'min-h-24' : 'min-h-48',
+              )}
             />
           </div>
 
@@ -474,6 +773,92 @@ export function RandomTool() {
             )}
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function RouletteControls(props: {
+  draft: string
+  entries: RouletteEntry[]
+  spinning: boolean
+  onDraftChange: (value: string) => void
+  onAdd: () => void
+  onRemove: (id: string) => void
+  onReset: () => void
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <div className="flex gap-1.5">
+        <Input
+          id="roulette-draft"
+          value={props.draft}
+          onValueChange={props.onDraftChange}
+          placeholder="Add option…"
+          spellCheck={false}
+          autoComplete="off"
+          disabled={props.spinning}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault()
+              props.onAdd()
+            }
+          }}
+        />
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          className="shrink-0"
+          disabled={props.spinning || !props.draft.trim()}
+          onClick={props.onAdd}
+        >
+          Add
+        </Button>
+      </div>
+
+      <div className="rounded-md border border-border/60">
+        {props.entries.length === 0 ? (
+          <p className="m-0 px-2.5 py-3 text-sm text-muted-foreground">
+            No options yet.
+          </p>
+        ) : (
+          <ul className="m-0 max-h-44 list-none overflow-y-auto p-0">
+            {props.entries.map((entry) => (
+              <li
+                key={entry.id}
+                className="flex items-center gap-1 border-b border-border/50 px-2 py-1 last:border-b-0"
+              >
+                <span className="min-w-0 flex-1 truncate font-mono text-xs">
+                  {entry.text}
+                </span>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="size-7 shrink-0 p-0"
+                  disabled={props.spinning}
+                  onClick={() => props.onRemove(entry.id)}
+                  aria-label={`Remove ${entry.text}`}
+                >
+                  <XIcon className="size-3.5" />
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        <Button
+          type="button"
+          size="sm"
+          variant="ghost"
+          disabled={props.spinning}
+          onClick={props.onReset}
+        >
+          Reset sample
+        </Button>
       </div>
     </div>
   )
@@ -913,6 +1298,8 @@ function buildResult(input: {
       if (input.listAction === 'pick') return randomPick(items)
       return shuffle(items).join('\n')
     }
+    case 'roulette':
+      return ''
     default:
       return ''
   }

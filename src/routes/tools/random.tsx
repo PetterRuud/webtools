@@ -9,7 +9,7 @@ export const Route = createFileRoute('/tools/random')({
       {
         name: 'description',
         content:
-          'Generate random numbers, strings, UUIDs, passwords, coin flips, dice, D&D rolls, and list picks locally in your browser.',
+          'Generate random numbers, strings, UUIDs, passwords, coin flips, dice, D&D rolls, list picks, and roulette spins locally in your browser.',
       },
     ],
   }),
@@ -20,7 +20,7 @@ function RandomPage() {
   return (
     <ToolShell
       title="Random"
-      description="Numbers, strings, UUIDs, passwords, coin, dice, D&D, list — local."
+      description="Numbers, strings, UUIDs, passwords, coin, dice, D&D, list, roulette — local."
     >
       <RandomTool />
     </ToolShell>
