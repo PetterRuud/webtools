@@ -2,8 +2,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { CropIcon, DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
+import {
+  ImageFileField,
+  ImagePreviewFrame,
+  imagePreviewClassName,
+} from '#/components/tools/ImageFileField'
 import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { ImageCropper } from '#/components/tools/ImageCropper'
 import {
@@ -156,24 +160,17 @@ export function ImageCropTool() {
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
       <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="crop-image">Image</Label>
-          <Input
-            id="crop-image"
-            type="file"
-            accept="image/*"
-            className="block w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium"
-            onChange={(e) => {
-              const next = e.target.files?.[0] ?? null
-              setFile(next)
-              setOutput(null)
-              setOutputDims(null)
-              setError(null)
-              setCropAspect('free')
-              setCropRect(null)
-            }}
-          />
-        </div>
+        <ImageFileField
+          id="crop-image"
+          onFile={(next) => {
+            setFile(next)
+            setOutput(null)
+            setOutputDims(null)
+            setError(null)
+            setCropAspect('free')
+            setCropRect(null)
+          }}
+        />
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-3">
@@ -290,13 +287,13 @@ export function ImageCropTool() {
                 {outputDims.width}×{outputDims.height}
               </p>
             </div>
-            <div className="bg-muted/40 overflow-hidden rounded-xl border border-border/80 p-3">
+            <ImagePreviewFrame>
               <img
                 src={previewUrl}
                 alt="Cropped preview"
-                className="max-h-72 w-full rounded-md bg-muted object-contain"
+                className={imagePreviewClassName}
               />
-            </div>
+            </ImagePreviewFrame>
           </div>
         ) : (
           <div className="flex min-h-32 items-center justify-center rounded-lg border border-dashed border-border px-3 py-8 text-sm text-muted-foreground lg:min-h-48">

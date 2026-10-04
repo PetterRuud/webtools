@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Loader2Icon, SparklesIcon } from 'lucide-react'
 import { toast } from 'sonner'
+import { ImageFileField, imagePreviewClassName } from '#/components/tools/ImageFileField'
 import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
 import { Input } from '#/components/ui/input'
@@ -106,26 +107,16 @@ export function TransparentTool() {
     >
       <div className="flex flex-col gap-3">
         <div className="grid gap-3 sm:grid-cols-2">
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="transparent-white">On white</Label>
-            <Input
-              id="transparent-white"
-              type="file"
-              accept="image/*"
-              className="h-auto py-1.5 file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium"
-              onChange={(e) => setWhite(e.target.files?.[0] ?? null)}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="transparent-black">On black</Label>
-            <Input
-              id="transparent-black"
-              type="file"
-              accept="image/*"
-              className="h-auto py-1.5 file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium"
-              onChange={(e) => setBlack(e.target.files?.[0] ?? null)}
-            />
-          </div>
+          <ImageFileField
+            id="transparent-white"
+            label="On white"
+            onFile={setWhite}
+          />
+          <ImageFileField
+            id="transparent-black"
+            label="On black"
+            onFile={setBlack}
+          />
         </div>
 
         <fieldset className="m-0 flex flex-col gap-2.5 rounded-lg border border-border/80 bg-card/40 p-3">
@@ -239,7 +230,7 @@ export function TransparentTool() {
             <img
               src={previewUrl}
               alt="Transparent PNG result"
-              className="max-h-[28rem] max-w-full"
+              className={imagePreviewClassName}
             />
           ) : (
             <span className="text-sm text-muted-foreground">

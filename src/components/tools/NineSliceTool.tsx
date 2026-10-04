@@ -2,12 +2,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import samplePanelUrl from '#/assets/samples/nine-slice-panel.png?url'
+import { ImageFileField } from '#/components/tools/ImageFileField'
+import { NineSliceGuides } from '#/components/tools/NineSliceGuides'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
 import { Textarea } from '#/components/ui/textarea'
-import { NineSliceGuides } from '#/components/tools/NineSliceGuides'
 import { copyText } from '#/lib/clipboard'
 import {
   SAMPLE_PANEL_FILE_NAME,
@@ -259,19 +260,14 @@ export function NineSliceTool() {
 
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap items-end gap-2">
-          <div className="flex min-w-[12rem] flex-1 flex-col gap-1.5">
-            <Label htmlFor="nine-slice-file">Image</Label>
-            <Input
-              ref={fileInputRef}
-              id="nine-slice-file"
-              type="file"
-              accept="image/*"
-              className="block w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium"
-              onChange={(e) => {
-                void loadFromFile(e.target.files?.[0] ?? null)
-              }}
-            />
-          </div>
+          <ImageFileField
+            id="nine-slice-file"
+            className="min-w-[12rem] flex-1"
+            inputRef={fileInputRef}
+            onFile={(next) => {
+              void loadFromFile(next)
+            }}
+          />
           <Button
             type="button"
             variant={sourceKind === 'sample' ? 'default' : 'outline'}

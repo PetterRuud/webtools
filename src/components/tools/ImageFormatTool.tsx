@@ -2,8 +2,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { ArrowLeftRightIcon, DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
+import {
+  ImageFileField,
+  ImagePreviewFrame,
+  imagePreviewClassName,
+} from '#/components/tools/ImageFileField'
 import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
 import {
@@ -131,34 +135,29 @@ export function ImageFormatTool() {
   return (
     <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
       <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="format-file">Image</Label>
-          <Input
-            id="format-file"
-            type="file"
-            accept={ACCEPT}
-            className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground hover:file:bg-primary/85"
-            onChange={(event) => onPick(event.target.files?.[0] ?? null)}
-          />
-          {file ? (
-            <p className="m-0 text-xs text-muted-foreground">
-              {file.name} · {formatBytes(file.size)}
-              {file.type ? ` · ${file.type}` : heicSource ? ' · HEIC' : ''}
-              {heicSource ? ' · decoded locally' : ''}
-            </p>
-          ) : null}
-        </div>
+        <ImageFileField
+          id="format-file"
+          accept={ACCEPT}
+          onFile={onPick}
+          meta={
+            file ? (
+              <p className="m-0 text-xs text-muted-foreground">
+                {file.name} · {formatBytes(file.size)}
+                {file.type ? ` · ${file.type}` : heicSource ? ' · HEIC' : ''}
+                {heicSource ? ' · decoded locally' : ''}
+              </p>
+            ) : null
+          }
+        />
 
         {sourceUrl ? (
-          <div className="bg-muted/40 overflow-hidden rounded-lg border border-border/80 p-3">
-            <div className="overflow-hidden rounded-md bg-card/80">
-              <img
-                src={sourceUrl}
-                alt="Source preview"
-                className="mx-auto max-h-52 w-auto object-contain"
-              />
-            </div>
-          </div>
+          <ImagePreviewFrame>
+            <img
+              src={sourceUrl}
+              alt="Source preview"
+              className={imagePreviewClassName}
+            />
+          </ImagePreviewFrame>
         ) : (
           <p className="m-0 rounded-lg border border-dashed border-border px-3 py-8 text-center text-sm text-muted-foreground">
             {previewBusy
@@ -294,15 +293,13 @@ export function ImageFormatTool() {
                 {formatBytes(output.size)}
               </p>
             </div>
-            <div className="bg-muted/40 overflow-hidden rounded-lg border border-border/80 p-3">
-              <div className="overflow-hidden rounded-md bg-card/80">
-                <img
-                  src={outputUrl}
-                  alt="Converted preview"
-                  className="mx-auto max-h-80 w-auto object-contain"
-                />
-              </div>
-            </div>
+            <ImagePreviewFrame>
+              <img
+                src={outputUrl}
+                alt="Converted preview"
+                className={imagePreviewClassName}
+              />
+            </ImagePreviewFrame>
           </>
         ) : (
           <div className="flex min-h-40 items-center justify-center rounded-lg border border-dashed border-border px-3 py-8 text-sm text-muted-foreground lg:min-h-64">

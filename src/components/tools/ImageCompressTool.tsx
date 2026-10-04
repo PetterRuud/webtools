@@ -3,8 +3,12 @@ import { Link } from '@tanstack/react-router'
 import imageCompression from 'browser-image-compression'
 import { DownloadIcon, Loader2Icon, Minimize2Icon } from 'lucide-react'
 import { toast } from 'sonner'
+import {
+  ImageFileField,
+  ImagePreviewFrame,
+  imagePreviewClassName,
+} from '#/components/tools/ImageFileField'
 import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
 import {
@@ -151,23 +155,16 @@ export function ImageCompressTool() {
   return (
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
       <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="image">Image</Label>
-          <Input
-            id="image"
-            type="file"
-            accept="image/*"
-            className="block w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium"
-            onChange={(e) => {
-              const next = e.target.files?.[0] ?? null
-              setFile(next)
-              setOutput(null)
-              setOutputDims(null)
-              setError(null)
-              setScalePercent(100)
-            }}
-          />
-        </div>
+        <ImageFileField
+          id="image"
+          onFile={(next) => {
+            setFile(next)
+            setOutput(null)
+            setOutputDims(null)
+            setError(null)
+            setScalePercent(100)
+          }}
+        />
 
         {sourceUrl && sourceDims ? (
           <div className="flex flex-col gap-1.5">
@@ -180,15 +177,13 @@ export function ImageCompressTool() {
                   : ''}
               </p>
             </div>
-            <div className="bg-muted/40 overflow-hidden rounded-xl border border-border/80 p-3">
-              <div className="overflow-hidden rounded-md bg-card/80">
-                <img
-                  src={sourceUrl}
-                  alt="Source preview"
-                  className="mx-auto max-h-80 w-auto object-contain"
-                />
-              </div>
-            </div>
+            <ImagePreviewFrame>
+              <img
+                src={sourceUrl}
+                alt="Source preview"
+                className={imagePreviewClassName}
+              />
+            </ImagePreviewFrame>
           </div>
         ) : !file ? (
           <p className="m-0 rounded-lg border border-dashed border-border bg-card/50 px-3 py-8 text-center text-sm text-muted-foreground">
@@ -336,13 +331,13 @@ export function ImageCompressTool() {
         {previewUrl ? (
           <div className="flex flex-col gap-1.5">
             <p className="m-0 text-sm font-medium">Result</p>
-            <div className="bg-muted/40 overflow-hidden rounded-xl border border-border/80 p-3">
+            <ImagePreviewFrame>
               <img
                 src={previewUrl}
                 alt="Compressed preview"
-                className="max-h-72 w-full rounded-md bg-muted object-contain"
+                className={imagePreviewClassName}
               />
-            </div>
+            </ImagePreviewFrame>
           </div>
         ) : null}
       </div>

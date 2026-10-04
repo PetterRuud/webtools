@@ -7,6 +7,11 @@ import {
   SparklesIcon,
 } from 'lucide-react'
 import { toast } from 'sonner'
+import {
+  ImageFileField,
+  ImagePreviewFrame,
+  imagePreviewClassName,
+} from '#/components/tools/ImageFileField'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
@@ -107,33 +112,27 @@ export function FaviconGeneratorTool() {
   return (
     <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
       <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="favicon-file">Image</Label>
-          <Input
-            id="favicon-file"
-            type="file"
-            accept="image/*"
-            className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground hover:file:bg-primary/85"
-            onChange={(event) => onPick(event.target.files?.[0] ?? null)}
-          />
-          {file ? (
-            <p className="m-0 text-xs text-muted-foreground">
-              {file.name} · {formatBytes(file.size)}
-              {file.type ? ` · ${file.type}` : ''}
-            </p>
-          ) : null}
-        </div>
+        <ImageFileField
+          id="favicon-file"
+          onFile={onPick}
+          meta={
+            file ? (
+              <p className="m-0 text-xs text-muted-foreground">
+                {file.name} · {formatBytes(file.size)}
+                {file.type ? ` · ${file.type}` : ''}
+              </p>
+            ) : null
+          }
+        />
 
         {sourceUrl ? (
-          <div className="overflow-hidden rounded-lg border border-border/80 bg-muted/40 p-3">
-            <div className="overflow-hidden rounded-md bg-card">
-              <img
-                src={sourceUrl}
-                alt="Source preview"
-                className="mx-auto max-h-44 w-auto object-contain"
-              />
-            </div>
-          </div>
+          <ImagePreviewFrame>
+            <img
+              src={sourceUrl}
+              alt="Source preview"
+              className={imagePreviewClassName}
+            />
+          </ImagePreviewFrame>
         ) : (
           <p className="m-0 rounded-lg border border-dashed border-border px-3 py-8 text-center text-sm text-muted-foreground">
             Choose an image
