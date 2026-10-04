@@ -85,6 +85,56 @@ export const HTTP_STATUS_CLASSES: Array<{ id: HttpStatusClass | 'all'; label: st
   { id: '5xx', label: '5xx' },
 ]
 
+/** Soft tints for cards, chips, and code badges — readable in light and dark. */
+export const HTTP_STATUS_CLASS_STYLES: Record<
+  HttpStatusClass,
+  { chip: string; chipActive: string; card: string; code: string; badge: string }
+> = {
+  '1xx': {
+    chip: 'border-amber-500/35 text-amber-800 hover:bg-amber-500/10 dark:border-amber-400/40 dark:text-amber-200 dark:hover:bg-amber-400/15',
+    chipActive:
+      'border-amber-500/50 bg-amber-500/18 text-amber-950 dark:border-amber-300/50 dark:bg-amber-400/25 dark:text-amber-50',
+    card: 'border-amber-500/30 bg-amber-500/[0.06] dark:border-amber-400/35 dark:bg-amber-400/10',
+    code: 'text-amber-800 dark:text-amber-300',
+    badge:
+      'bg-amber-500/15 text-amber-900 dark:bg-amber-400/20 dark:text-amber-100',
+  },
+  '2xx': {
+    chip: 'border-emerald-500/35 text-emerald-800 hover:bg-emerald-500/10 dark:border-emerald-400/40 dark:text-emerald-200 dark:hover:bg-emerald-400/15',
+    chipActive:
+      'border-emerald-500/50 bg-emerald-500/18 text-emerald-950 dark:border-emerald-300/50 dark:bg-emerald-400/25 dark:text-emerald-50',
+    card: 'border-emerald-500/30 bg-emerald-500/[0.06] dark:border-emerald-400/35 dark:bg-emerald-400/10',
+    code: 'text-emerald-800 dark:text-emerald-300',
+    badge:
+      'bg-emerald-500/15 text-emerald-900 dark:bg-emerald-400/20 dark:text-emerald-100',
+  },
+  '3xx': {
+    chip: 'border-sky-500/35 text-sky-800 hover:bg-sky-500/10 dark:border-sky-400/40 dark:text-sky-200 dark:hover:bg-sky-400/15',
+    chipActive:
+      'border-sky-500/50 bg-sky-500/18 text-sky-950 dark:border-sky-300/50 dark:bg-sky-400/25 dark:text-sky-50',
+    card: 'border-sky-500/30 bg-sky-500/[0.06] dark:border-sky-400/35 dark:bg-sky-400/10',
+    code: 'text-sky-800 dark:text-sky-300',
+    badge: 'bg-sky-500/15 text-sky-900 dark:bg-sky-400/20 dark:text-sky-100',
+  },
+  '4xx': {
+    chip: 'border-orange-500/35 text-orange-800 hover:bg-orange-500/10 dark:border-orange-400/40 dark:text-orange-200 dark:hover:bg-orange-400/15',
+    chipActive:
+      'border-orange-500/50 bg-orange-500/18 text-orange-950 dark:border-orange-300/50 dark:bg-orange-400/25 dark:text-orange-50',
+    card: 'border-orange-500/30 bg-orange-500/[0.06] dark:border-orange-400/35 dark:bg-orange-400/10',
+    code: 'text-orange-800 dark:text-orange-300',
+    badge:
+      'bg-orange-500/15 text-orange-900 dark:bg-orange-400/20 dark:text-orange-100',
+  },
+  '5xx': {
+    chip: 'border-red-500/35 text-red-800 hover:bg-red-500/10 dark:border-red-400/40 dark:text-red-200 dark:hover:bg-red-400/15',
+    chipActive:
+      'border-red-500/50 bg-red-500/18 text-red-950 dark:border-red-300/50 dark:bg-red-400/25 dark:text-red-50',
+    card: 'border-red-500/30 bg-red-500/[0.06] dark:border-red-400/35 dark:bg-red-400/10',
+    code: 'text-red-800 dark:text-red-300',
+    badge: 'bg-red-500/15 text-red-900 dark:bg-red-400/20 dark:text-red-100',
+  },
+}
+
 export function filterHttpStatusCodes(
   codes: HttpStatusCode[],
   options: { query?: string; klass?: HttpStatusClass | 'all' } = {},
