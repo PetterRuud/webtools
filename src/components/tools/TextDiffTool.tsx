@@ -266,6 +266,44 @@ function renderSegments(segments: Segment[] | undefined, fallback: string): Reac
   })
 }
 
+function DiffLegend() {
+  return (
+    <ul className="m-0 flex list-none flex-wrap items-center gap-x-2.5 gap-y-1 p-0 text-[0.7rem] text-muted-foreground">
+      <li className="inline-flex items-center gap-1">
+        <span
+          aria-hidden
+          className="inline-block size-2.5 shrink-0 rounded-[2px] bg-primary/15 dark:bg-primary/25"
+        />
+        Added
+      </li>
+      <li className="inline-flex items-center gap-1">
+        <span
+          aria-hidden
+          className="inline-block size-2.5 shrink-0 rounded-[2px] bg-destructive/12 dark:bg-destructive/20"
+        />
+        Removed
+      </li>
+      <li className="inline-flex items-center gap-1">
+        <span
+          aria-hidden
+          className="inline-flex size-2.5 shrink-0 overflow-hidden rounded-[2px]"
+        >
+          <span className="h-full w-1/2 bg-destructive/12 dark:bg-destructive/20" />
+          <span className="h-full w-1/2 bg-primary/15 dark:bg-primary/25" />
+        </span>
+        Changed
+      </li>
+      <li className="inline-flex items-center gap-1">
+        <span
+          aria-hidden
+          className="inline-block size-2.5 shrink-0 rounded-[2px] border border-border bg-transparent"
+        />
+        Unchanged
+      </li>
+    </ul>
+  )
+}
+
 export function TextDiffTool() {
   const [left, setLeft] = useState('alpha\nbeta\ncolour\ngamma\n')
   const [right, setRight] = useState('alpha\nbeta edited\ncolor\ndelta\n')
@@ -350,10 +388,13 @@ export function TextDiffTool() {
       />
 
       <div className="flex flex-col gap-2">
-        <div className="flex items-baseline justify-between gap-3">
-          <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
-            Diff
-          </h2>
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+              Diff
+            </h2>
+            <DiffLegend />
+          </div>
           <p className="m-0 text-xs text-muted-foreground">
             {!hasInput
               ? '—'
