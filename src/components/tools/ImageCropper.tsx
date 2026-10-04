@@ -14,6 +14,7 @@ type DragState = {
   startX: number
   startY: number
   origin: CropRect
+  pointerId: number
 }
 
 type ImageCropperProps = {
@@ -47,8 +48,16 @@ export function ImageCropper({
   onChange,
 }: ImageCropperProps) {
   const frameRef = useRef<HTMLDivElement>(null)
+  const cropRef = useRef(crop)
+  const aspectRef = useRef(aspectRatio)
+  const onChangeRef = useRef(onChange)
   const [display, setDisplay] = useState({ width: 0, height: 0 })
   const dragRef = useRef<DragState | null>(null)
+  const [activeHandle, setActiveHandle] = useState<HandleId | null>(null)
+
+  cropRef.current = crop
+  aspectRef.current = aspectRatio
+  onChangeRef.current = onChange
 
   useEffect(() => {
     const el = frameRef.current
@@ -62,6 +71,13 @@ export function ImageCropper({
     observer.observe(el)
     return () => observer.disconnect()
   }, [src, imageWidth, imageHeight])
+
+  useEffect(() => {
+    if (!enabled) {
+      dragRef.current = null
+      setActiveHandle(null)
+    }
+  }, [enabled])
 
   const scaleX = display.width > 0 ? display.width / imageWidth : 1
   const scaleY = display.height > 0 ? display.height / imageHeight : 1
@@ -83,14 +99,15 @@ export function ImageCropper({
     const dx = point.x - drag.startX
     const dy = point.y - drag.startY
     const o = drag.origin
+    const ratio = aspectRef.current
 
     if (drag.handle === 'move') {
-      onChange(
+      onChangeRef.current(
         clampCropRect(
           { ...o, x: o.x + dx, y: o.y + dy },
           imageWidth,
           imageHeight,
-          aspectRatio,
+          null,
         ),
       )
       return
@@ -122,19 +139,48 @@ export function ImageCropper({
       height: bottom - top,
     }
 
-    if (aspectRatio && aspectRatio > 0) {
+    if (ratio && ratio > 0) {
       next = resizeWithAspect(
         drag.handle,
         o,
         next,
-        aspectRatio,
+        ratio,
         imageWidth,
         imageHeight,
       )
     }
 
-    onChange(clampCropRect(next, imageWidth, imageHeight, aspectRatio))
+    onChangeRef.current(clampCropRect(next, imageWidth, imageHeight, ratio))
   }
+
+  function endDrag() {
+    dragRef.current = null
+    setActiveHandle(null)
+  }
+
+  useEffect(() => {
+    function onPointerMove(event: PointerEvent) {
+      const drag = dragRef.current
+      if (!drag || event.pointerId !== drag.pointerId) return
+      event.preventDefault()
+      applyDrag(event.clientX, event.clientY)
+    }
+
+    function onPointerUp(event: PointerEvent) {
+      const drag = dragRef.current
+      if (!drag || event.pointerId !== drag.pointerId) return
+      endDrag()
+    }
+
+    window.addEventListener('pointermove', onPointerMove, { passive: false })
+    window.addEventListener('pointerup', onPointerUp)
+    window.addEventListener('pointercancel', onPointerUp)
+    return () => {
+      window.removeEventListener('pointermove', onPointerMove)
+      window.removeEventListener('pointerup', onPointerUp)
+      window.removeEventListener('pointercancel', onPointerUp)
+    }
+  }, [imageWidth, imageHeight])
 
   function onPointerDown(
     handle: HandleId,
@@ -148,23 +194,14 @@ export function ImageCropper({
       handle,
       startX: point.x,
       startY: point.y,
-      origin: crop,
+      origin: cropRef.current,
+      pointerId: event.pointerId,
     }
-    event.currentTarget.setPointerCapture(event.pointerId)
-  }
-
-  function onPointerMove(event: ReactPointerEvent<HTMLElement>) {
-    if (!dragRef.current) return
-    applyDrag(event.clientX, event.clientY)
-  }
-
-  function onPointerUp(event: ReactPointerEvent<HTMLElement>) {
-    if (!dragRef.current) return
-    dragRef.current = null
+    setActiveHandle(handle)
     try {
-      event.currentTarget.releasePointerCapture(event.pointerId)
+      event.currentTarget.setPointerCapture(event.pointerId)
     } catch {
-      // already released
+      // capture optional; window listeners cover move/up
     }
   }
 
@@ -172,6 +209,7 @@ export function ImageCropper({
   const top = crop.y * scaleY
   const width = crop.width * scaleX
   const height = crop.height * scaleY
+  const moving = activeHandle === 'move'
 
   return (
     <div className="flex justify-center rounded-2xl border border-border bg-[oklch(0.96_0.01_120)] p-2 dark:bg-muted/30">
@@ -192,7 +230,11 @@ export function ImageCropper({
         {enabled ? (
           <div
             role="presentation"
-            className="absolute border-2 border-white"
+            aria-label="Move crop region"
+            className={cn(
+              'absolute border-2 border-white',
+              moving ? 'cursor-grabbing' : 'cursor-grab',
+            )}
             style={{
               left,
               top,
@@ -201,9 +243,6 @@ export function ImageCropper({
               boxShadow: '0 0 0 9999px rgb(0 0 0 / 0.45)',
             }}
             onPointerDown={(event) => onPointerDown('move', event)}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerCancel={onPointerUp}
           >
             <div className="pointer-events-none absolute inset-0 grid grid-cols-3 grid-rows-3 opacity-80">
               {Array.from({ length: 9 }, (_, index) => (
@@ -217,14 +256,11 @@ export function ImageCropper({
                 type="button"
                 aria-label={`Resize crop ${handle}`}
                 className={cn(
-                  'absolute z-10 size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-sm border-2 border-white bg-[var(--ink)] shadow-sm',
+                  'absolute z-10 size-3.5 -translate-x-1/2 -translate-y-1/2 touch-none rounded-sm border-2 border-white bg-[var(--ink)] shadow-sm',
                   handleCursor(handle),
                 )}
                 style={handleStyle(handle)}
                 onPointerDown={(event) => onPointerDown(handle, event)}
-                onPointerMove={onPointerMove}
-                onPointerUp={onPointerUp}
-                onPointerCancel={onPointerUp}
               />
             ))}
           </div>
