@@ -426,8 +426,8 @@ export function CodeScreenshotTool() {
           counter-reset: code-line;
         }
         .code-shot-preview .line {
-          display: block;
-          min-height: ${DEFAULT_LINE_HEIGHT}em;
+          display: inline-block;
+          min-height: auto;
           white-space: pre-wrap;
           overflow-wrap: anywhere;
           word-break: break-word;
