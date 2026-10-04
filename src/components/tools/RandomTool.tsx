@@ -7,6 +7,7 @@ import { Label } from '#/components/ui/label'
 import { Textarea } from '#/components/ui/textarea'
 import {
   CoinVisual,
+  DiceVisual,
   DnDVisual,
   RouletteVisual,
 } from '#/components/tools/RandomVisuals'
@@ -51,6 +52,7 @@ type RouletteEntry = { id: string; text: string }
 
 type VisualState =
   | { kind: 'coin'; side: CoinSide; key: number }
+  | { kind: 'dice'; rolls: number[]; sides: number; key: number }
   | { kind: 'dnd'; result: DnDRollResult; key: number }
   | {
       kind: 'roulette'
@@ -297,6 +299,23 @@ export function RandomTool() {
       return
     }
 
+    if (next.mode === 'dice') {
+      try {
+        const rolls = rollDice(Number(next.diceCount), Number(next.diceSides))
+        const sides = Math.max(2, Math.floor(Number(next.diceSides) || 6))
+        const total = rolls.reduce((sum, n) => sum + n, 0)
+        const key = visualKey + 1
+        setVisualKey(key)
+        setVisual({ kind: 'dice', rolls, sides, key })
+        commit(
+          rolls.length === 1 ? String(rolls[0]) : `${rolls.join(' + ')} = ${total}`,
+        )
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Could not generate')
+      }
+      return
+    }
+
     if (next.mode === 'dnd') {
       try {
         const modifier = Number(next.dndModifier)
@@ -451,7 +470,7 @@ export function RandomTool() {
   }, [])
 
   const showVisual =
-    mode === 'coin' || mode === 'dnd' || mode === 'roulette'
+    mode === 'coin' || mode === 'dice' || mode === 'dnd' || mode === 'roulette'
 
   return (
     <div className="flex flex-col gap-3">
@@ -687,6 +706,13 @@ export function RandomTool() {
                 {visual?.kind === 'coin' ? (
                   <CoinVisual side={visual.side} flipKey={visual.key} />
                 ) : null}
+                {visual?.kind === 'dice' ? (
+                  <DiceVisual
+                    rolls={visual.rolls}
+                    sides={visual.sides}
+                    rollKey={visual.key}
+                  />
+                ) : null}
                 {visual?.kind === 'dnd' ? (
                   <DnDVisual result={visual.result} rollKey={visual.key} />
                 ) : null}
@@ -701,6 +727,11 @@ export function RandomTool() {
                 {!visual && mode === 'coin' ? (
                   <p className="m-0 py-6 text-center text-sm text-muted-foreground">
                     Flip to see the coin.
+                  </p>
+                ) : null}
+                {!visual && mode === 'dice' ? (
+                  <p className="m-0 py-6 text-center text-sm text-muted-foreground">
+                    Roll to see the dice.
                   </p>
                 ) : null}
                 {!visual && mode === 'dnd' ? (

@@ -248,6 +248,147 @@ function DieShape(props: { sides: number }) {
   }
 }
 
+export function DiceVisual(props: {
+  rolls: number[]
+  sides: number
+  rollKey: number
+}) {
+  const total = props.rolls.reduce((sum, n) => sum + n, 0)
+  return (
+    <div className="flex flex-col gap-2 py-1">
+      <div className="flex flex-wrap items-center justify-center gap-2">
+        {props.rolls.map((value, index) => (
+          <StandardDie
+            key={`${props.rollKey}-${index}-${value}`}
+            value={value}
+            sides={props.sides}
+            index={index}
+          />
+        ))}
+      </div>
+      <div className="text-center">
+        <p className="m-0 font-mono text-xs text-muted-foreground">
+          {props.rolls.length}d{props.sides}
+        </p>
+        <p className="m-0 text-2xl font-semibold tracking-tight tabular-nums">
+          {props.rolls.length === 1 ? props.rolls[0] : total}
+        </p>
+        {props.rolls.length > 1 ? (
+          <p className="m-0 font-mono text-xs text-muted-foreground">
+            {props.rolls.join(' + ')}
+          </p>
+        ) : null}
+      </div>
+      <style>{`
+        @keyframes wt-std-die-pop {
+          0% { transform: translateY(-10px) rotate(-12deg) scale(0.8); opacity: 0.15; }
+          65% { transform: translateY(3px) rotate(4deg) scale(1.06); opacity: 1; }
+          100% { transform: translateY(0) rotate(0) scale(1); opacity: 1; }
+        }
+      `}</style>
+    </div>
+  )
+}
+
+const PIP_LAYOUTS: Record<number, Array<[number, number]>> = {
+  1: [[32, 32]],
+  2: [
+    [18, 18],
+    [46, 46],
+  ],
+  3: [
+    [18, 18],
+    [32, 32],
+    [46, 46],
+  ],
+  4: [
+    [18, 18],
+    [46, 18],
+    [18, 46],
+    [46, 46],
+  ],
+  5: [
+    [18, 18],
+    [46, 18],
+    [32, 32],
+    [18, 46],
+    [46, 46],
+  ],
+  6: [
+    [18, 18],
+    [18, 32],
+    [18, 46],
+    [46, 18],
+    [46, 32],
+    [46, 46],
+  ],
+}
+
+function StandardDie(props: { value: number; sides: number; index: number }) {
+  const usePips = props.sides === 6 && props.value >= 1 && props.value <= 6
+  const pips = usePips ? PIP_LAYOUTS[props.value]! : null
+  const fill = 'color-mix(in oklab, var(--card) 70%, var(--primary) 18%)'
+  const stroke = 'color-mix(in oklab, var(--foreground) 45%, transparent)'
+  const pipFill = 'color-mix(in oklab, var(--foreground) 82%, transparent)'
+
+  return (
+    <div
+      style={{
+        animation: 'wt-std-die-pop 0.5s ease-out both',
+        animationDelay: `${props.index * 45}ms`,
+      }}
+    >
+      <svg
+        viewBox="0 0 64 64"
+        className="size-14 drop-shadow-sm"
+        role="img"
+        aria-label={`d${props.sides}: ${props.value}`}
+      >
+        <rect
+          x="8"
+          y="8"
+          width="48"
+          height="48"
+          rx="10"
+          fill={fill}
+          stroke={stroke}
+          strokeWidth="2"
+        />
+        <rect
+          x="12"
+          y="12"
+          width="40"
+          height="40"
+          rx="7"
+          fill="none"
+          stroke={stroke}
+          strokeWidth="1"
+          opacity="0.35"
+        />
+        {pips
+          ? pips.map(([cx, cy], i) => (
+              <circle key={i} cx={cx} cy={cy} r="4.5" fill={pipFill} />
+            ))
+          : (
+              <text
+                x="32"
+                y="38"
+                textAnchor="middle"
+                fill="currentColor"
+                style={{
+                  fontSize: props.value >= 100 ? 14 : props.value >= 10 ? 18 : 22,
+                  fontWeight: 700,
+                  fontFamily: 'ui-monospace, monospace',
+                }}
+              >
+                {props.value}
+              </text>
+            )}
+      </svg>
+    </div>
+  )
+}
+
 export function RouletteVisual(props: {
   options: string[]
   winner: string | null
@@ -262,7 +403,11 @@ export function RouletteVisual(props: {
     )
   }
 
-  const windowSize = Math.min(5, props.options.length)
+  // Odd window so the centered selection band lands on a row, not a gap.
+  let windowSize = Math.min(5, props.options.length)
+  if (windowSize % 2 === 0) windowSize -= 1
+  if (windowSize < 1) windowSize = 1
+
   const half = Math.floor(windowSize / 2)
   const rows = Array.from({ length: windowSize }, (_, offset) => {
     const index =
@@ -273,12 +418,8 @@ export function RouletteVisual(props: {
 
   return (
     <div className="flex flex-col items-center gap-3 py-2">
-      <div className="relative w-full max-w-xs overflow-hidden rounded-lg border border-border/70 bg-muted/25">
-        <div
-          className="pointer-events-none absolute inset-x-0 top-1/2 z-10 h-9 -translate-y-1/2 border-y border-primary/45 bg-primary/10"
-          aria-hidden
-        />
-        <ul className="m-0 list-none p-0">
+      <div className="relative isolate w-full max-w-xs overflow-hidden rounded-lg border border-border/70 bg-muted/25">
+        <ul className="relative z-0 m-0 list-none p-0">
           {rows.map((row) => {
             const won =
               !props.spinning &&
@@ -289,7 +430,7 @@ export function RouletteVisual(props: {
               <li
                 key={`${row.index}-${row.text}-${row.center ? 'c' : 's'}`}
                 className={cn(
-                  'flex h-9 items-center justify-center truncate px-3 font-mono text-sm transition-colors',
+                  'relative z-0 flex h-9 items-center justify-center truncate px-3 font-mono text-sm transition-colors',
                   row.center ? 'text-foreground' : 'text-muted-foreground/45',
                   won && 'font-semibold text-primary',
                 )}
@@ -299,6 +440,10 @@ export function RouletteVisual(props: {
             )
           })}
         </ul>
+        <div
+          className="pointer-events-none absolute inset-x-1.5 top-1/2 z-20 h-9 -translate-y-1/2 rounded-md border-2 border-primary/65 bg-primary/12 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--primary)_25%,transparent)]"
+          aria-hidden
+        />
       </div>
       {props.winner && !props.spinning ? (
         <p className="m-0 text-lg font-semibold tracking-tight">{props.winner}</p>
