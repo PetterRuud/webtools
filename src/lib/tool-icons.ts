@@ -1,4 +1,5 @@
 import {
+  AppWindowMacIcon,
   BinaryIcon,
   BracesIcon,
   EraserIcon,
@@ -32,6 +33,7 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/text-cleaner': EraserIcon,
   '/tools/image-compress': ImageIcon,
   '/tools/image-format': ImagesIcon,
+  '/tools/favicon': AppWindowMacIcon,
   '/tools/hex-rgba': PaletteIcon,
   '/tools/flexbox': StretchHorizontalIcon,
   '/tools/box-shadow': LayersIcon,

@@ -19,6 +19,7 @@ export type ToolLink = {
     | '/tools/box-shadow'
     | '/tools/image-compress'
     | '/tools/image-format'
+    | '/tools/favicon'
     | '/tools/json-formatter'
     | '/tools/csv-json'
     | '/tools/regex'
@@ -114,6 +115,14 @@ export const TOOLS: ToolLink[] = [
     blurb: 'PNG ↔ JPEG ↔ WebP.',
     category: 'image',
     keywords: ['image', 'convert', 'png', 'jpeg', 'jpg', 'webp', 'format'],
+  },
+  {
+    to: '/tools/favicon',
+    name: 'Favicon generator',
+    shortName: 'Favicon',
+    blurb: 'PNG / ICO pack + HTML.',
+    category: 'image',
+    keywords: ['favicon', 'icon', 'ico', 'apple-touch', 'png', 'image'],
   },
   {
     to: '/tools/hex-rgba',

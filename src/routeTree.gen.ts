@@ -15,6 +15,7 @@ import { Route as ToolsBoxShadowRouteImport } from './routes/tools/box-shadow'
 import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
 import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
 import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
+import { Route as ToolsFaviconRouteImport } from './routes/tools/favicon'
 import { Route as ToolsFlexboxRouteImport } from './routes/tools/flexbox'
 import { Route as ToolsHexRgbaRouteImport } from './routes/tools/hex-rgba'
 import { Route as ToolsHttpStatusRouteImport } from './routes/tools/http-status'
@@ -55,6 +56,11 @@ const ToolsCsvJsonRoute = ToolsCsvJsonRouteImport.update({
 const ToolsDnsLookupRoute = ToolsDnsLookupRouteImport.update({
   id: '/tools/dns-lookup',
   path: '/tools/dns-lookup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsFaviconRoute = ToolsFaviconRouteImport.update({
+  id: '/tools/favicon',
+  path: '/tools/favicon',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsFlexboxRoute = ToolsFlexboxRouteImport.update({
@@ -120,6 +126,7 @@ export interface FileRoutesByFullPath {
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
+  '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
@@ -139,6 +146,7 @@ export interface FileRoutesByTo {
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
+  '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
@@ -159,6 +167,7 @@ export interface FileRoutesById {
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
+  '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/tools/browser-info'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
+    | '/tools/favicon'
     | '/tools/flexbox'
     | '/tools/hex-rgba'
     | '/tools/http-status'
@@ -199,6 +209,7 @@ export interface FileRouteTypes {
     | '/tools/browser-info'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
+    | '/tools/favicon'
     | '/tools/flexbox'
     | '/tools/hex-rgba'
     | '/tools/http-status'
@@ -218,6 +229,7 @@ export interface FileRouteTypes {
     | '/tools/browser-info'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
+    | '/tools/favicon'
     | '/tools/flexbox'
     | '/tools/hex-rgba'
     | '/tools/http-status'
@@ -238,6 +250,7 @@ export interface RootRouteChildren {
   ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
   ToolsCsvJsonRoute: typeof ToolsCsvJsonRoute
   ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
+  ToolsFaviconRoute: typeof ToolsFaviconRoute
   ToolsFlexboxRoute: typeof ToolsFlexboxRoute
   ToolsHexRgbaRoute: typeof ToolsHexRgbaRoute
   ToolsHttpStatusRoute: typeof ToolsHttpStatusRoute
@@ -293,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/dns-lookup'
       fullPath: '/tools/dns-lookup'
       preLoaderRoute: typeof ToolsDnsLookupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/favicon': {
+      id: '/tools/favicon'
+      path: '/tools/favicon'
+      fullPath: '/tools/favicon'
+      preLoaderRoute: typeof ToolsFaviconRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/flexbox': {
@@ -382,6 +402,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
   ToolsCsvJsonRoute: ToolsCsvJsonRoute,
   ToolsDnsLookupRoute: ToolsDnsLookupRoute,
+  ToolsFaviconRoute: ToolsFaviconRoute,
   ToolsFlexboxRoute: ToolsFlexboxRoute,
   ToolsHexRgbaRoute: ToolsHexRgbaRoute,
   ToolsHttpStatusRoute: ToolsHttpStatusRoute,
