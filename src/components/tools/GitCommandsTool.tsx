@@ -6,24 +6,32 @@ import { Label } from '#/components/ui/label'
 import { copyText } from '#/lib/clipboard'
 import {
   DEFAULT_GIT_PARAMS,
+  GIT_CATEGORIES,
+  GIT_CATEGORY_STYLES,
   GIT_COMMANDS,
   HEAD_PRESETS,
   SINCE_PRESETS,
   buildGitCommand,
   filterGitCommands,
+  groupCommandsByCategory,
+  type CategoryFilter,
+  type GitCategoryId,
   type GitCommandParams,
 } from '#/lib/gitCommands'
 import { cn } from '#/lib/utils'
 
 export function GitCommandsTool() {
   const [query, setQuery] = useState('')
+  const [category, setCategory] = useState<CategoryFilter>('all')
   const [params, setParams] = useState<GitCommandParams>(DEFAULT_GIT_PARAMS)
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
   const visible = useMemo(
-    () => filterGitCommands(GIT_COMMANDS, query),
-    [query],
+    () => filterGitCommands(GIT_COMMANDS, query, category),
+    [query, category],
   )
+
+  const groups = useMemo(() => groupCommandsByCategory(visible), [visible])
 
   const sincePresetActive = SINCE_PRESETS.some(
     (preset) => preset.value === params.since,
@@ -48,7 +56,7 @@ export function GitCommandsTool() {
             id="git-search"
             value={query}
             onValueChange={setQuery}
-            placeholder="churn, bugs, shortlog…"
+            placeholder="reflog, stash, bisect…"
             spellCheck={false}
             autoComplete="off"
           />
@@ -174,73 +182,134 @@ export function GitCommandsTool() {
         </Button>
       </aside>
 
-      <div className="min-w-0">
-        {visible.length === 0 ? (
+      <div className="flex min-w-0 flex-col gap-3">
+        <div
+          className="flex flex-wrap gap-1.5"
+          role="tablist"
+          aria-label="Command category"
+        >
+          {GIT_CATEGORIES.map((item) => {
+            const selected = category === item.id
+            const tones =
+              item.id === 'all'
+                ? null
+                : GIT_CATEGORY_STYLES[item.id as GitCategoryId]
+
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                onClick={() => setCategory(item.id)}
+                className={cn(
+                  'inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors',
+                  item.id === 'all'
+                    ? selected
+                      ? 'border-transparent bg-primary text-primary-foreground'
+                      : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground'
+                    : selected
+                      ? tones!.chipActive
+                      : cn('bg-card/40', tones!.chip),
+                )}
+              >
+                {item.label}
+              </button>
+            )
+          })}
+        </div>
+
+        {groups.length === 0 ? (
           <p className="m-0 rounded-lg border border-dashed border-border/80 px-3 py-8 text-center text-sm text-muted-foreground">
             No matches.
           </p>
         ) : (
-          <ul className="m-0 flex list-none flex-col gap-2 p-0">
-            {visible.map((item) => {
-              const command = buildGitCommand(item.id, params)
-              const copied = copiedId === item.id
+          <div className="flex flex-col gap-4">
+            {groups.map((group) => {
+              const tones = GIT_CATEGORY_STYLES[group.category.id as GitCategoryId]
               return (
-                <li
-                  key={item.id}
-                  className="rounded-lg border border-border/70 border-l-[3px] border-l-emerald-500/55 bg-card/30 px-3 py-2.5 dark:border-l-emerald-400/50"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="min-w-0">
-                      <h2 className="font-heading m-0 text-sm font-semibold tracking-tight text-ink">
-                        {item.title}
-                      </h2>
-                      <p className="m-0 mt-0.5 text-xs leading-4 text-muted-foreground">
-                        {item.blurb}
-                      </p>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="shrink-0 gap-1.5"
-                      onClick={() => copyCommand(item.id, command)}
-                    >
-                      {copied ? (
-                        <CheckIcon className="size-3.5" aria-hidden />
-                      ) : (
-                        <CopyIcon className="size-3.5" aria-hidden />
+                <section key={group.category.id} className="flex flex-col gap-1.5">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <h2
+                      className={cn(
+                        'font-heading m-0 text-[0.8rem] font-semibold tracking-wide uppercase',
+                        tones.heading,
                       )}
-                      Copy
-                    </Button>
+                    >
+                      {group.category.label}
+                    </h2>
+                    <span className="text-[0.65rem] tabular-nums text-muted-foreground">
+                      {group.commands.length}
+                    </span>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => copyCommand(item.id, command)}
-                    className="mt-2 block w-full rounded-md border border-border/60 bg-muted/35 px-2.5 py-2 text-left transition-colors hover:border-border hover:bg-muted/55 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-                    title="Copy command"
-                  >
-                    <code className="font-mono text-[0.78rem] leading-5 break-all text-emerald-800 dark:text-emerald-300">
-                      {command}
-                    </code>
-                  </button>
-                  {item.params.length > 0 ? (
-                    <p className="m-0 mt-1.5 text-[0.65rem] text-muted-foreground/80">
-                      Uses{' '}
-                      {item.params
-                        .map((param) =>
-                          param === 'bugGrep'
-                            ? 'bug grep'
-                            : param === 'fireGrep'
-                              ? 'firefight grep'
-                              : param,
-                        )
-                        .join(' · ')}
-                    </p>
-                  ) : null}
-                </li>
+                  <ul className="m-0 flex list-none flex-col gap-2 p-0">
+                    {group.commands.map((item) => {
+                      const command = buildGitCommand(item.id, params)
+                      const copied = copiedId === item.id
+                      return (
+                        <li
+                          key={item.id}
+                          className={cn(
+                            'rounded-lg border border-border/70 border-l-[3px] bg-card/30 px-3 py-2.5',
+                            tones.rail,
+                          )}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="min-w-0">
+                              <h3 className="font-heading m-0 text-sm font-semibold tracking-tight text-ink">
+                                {item.title}
+                              </h3>
+                              <p className="m-0 mt-0.5 text-xs leading-4 text-muted-foreground">
+                                {item.blurb}
+                              </p>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="sm"
+                              className="shrink-0 gap-1.5"
+                              onClick={() => copyCommand(item.id, command)}
+                            >
+                              {copied ? (
+                                <CheckIcon className="size-3.5" aria-hidden />
+                              ) : (
+                                <CopyIcon className="size-3.5" aria-hidden />
+                              )}
+                              Copy
+                            </Button>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => copyCommand(item.id, command)}
+                            className="mt-2 block w-full rounded-md border border-border/60 bg-muted/35 px-2.5 py-2 text-left transition-colors hover:border-border hover:bg-muted/55 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
+                            title="Copy command"
+                          >
+                            <code className="font-mono text-[0.78rem] leading-5 break-all text-emerald-800 dark:text-emerald-300">
+                              {command}
+                            </code>
+                          </button>
+                          {item.params.length > 0 ? (
+                            <p className="m-0 mt-1.5 text-[0.65rem] text-muted-foreground/80">
+                              Uses{' '}
+                              {item.params
+                                .map((param) =>
+                                  param === 'bugGrep'
+                                    ? 'bug grep'
+                                    : param === 'fireGrep'
+                                      ? 'firefight grep'
+                                      : param,
+                                )
+                                .join(' · ')}
+                            </p>
+                          ) : null}
+                        </li>
+                      )
+                    })}
+                  </ul>
+                </section>
               )
             })}
-          </ul>
+          </div>
         )}
       </div>
     </div>

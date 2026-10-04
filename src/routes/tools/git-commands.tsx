@@ -9,7 +9,7 @@ export const Route = createFileRoute('/tools/git-commands')({
       {
         name: 'description',
         content:
-          'Searchable git forensics cheatsheet — churn, authors, bug clusters, velocity, firefighting. Copyable with since/head/grep builders.',
+          'Searchable git cheatsheet — forensics, undo, reflog, stash, bisect, worktree, fixups, history search. Copyable with since/head/grep builders.',
       },
     ],
   }),
