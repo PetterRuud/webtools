@@ -20,7 +20,7 @@ function ImageCompressPage() {
   return (
     <ToolShell
       title="Image compress"
-      description="Pick a file, set quality, optionally scale or crop, then download. Defaults keep original dimensions. Purely client-side — no R2, no sharp on Isolates."
+      description="Pick a file, optionally crop with drag handles, scale, set quality, then download. Defaults keep the full frame at original resolution. Purely client-side — no R2, no sharp on Isolates."
     >
       <ImageCompressTool />
     </ToolShell>

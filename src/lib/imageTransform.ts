@@ -1,14 +1,18 @@
-export type CropAspectId = 'none' | '1:1' | '4:3' | '3:2' | '16:9' | '9:16'
+export type CropAspectId = 'none' | 'free' | '1:1' | '4:3' | '3:2' | '16:9' | '9:16'
 
-export const CROP_ASPECT_OPTIONS: { id: CropAspectId; label: string; ratio: number | null }[] =
-  [
-    { id: 'none', label: 'None', ratio: null },
-    { id: '1:1', label: '1:1', ratio: 1 },
-    { id: '4:3', label: '4:3', ratio: 4 / 3 },
-    { id: '3:2', label: '3:2', ratio: 3 / 2 },
-    { id: '16:9', label: '16:9', ratio: 16 / 9 },
-    { id: '9:16', label: '9:16', ratio: 9 / 16 },
-  ]
+export const CROP_ASPECT_OPTIONS: {
+  id: CropAspectId
+  label: string
+  ratio: number | null
+}[] = [
+  { id: 'none', label: 'None', ratio: null },
+  { id: 'free', label: 'Free', ratio: null },
+  { id: '1:1', label: '1:1', ratio: 1 },
+  { id: '4:3', label: '4:3', ratio: 4 / 3 },
+  { id: '3:2', label: '3:2', ratio: 3 / 2 },
+  { id: '16:9', label: '16:9', ratio: 16 / 9 },
+  { id: '9:16', label: '9:16', ratio: 9 / 16 },
+]
 
 export type CropRect = {
   x: number
@@ -17,39 +21,124 @@ export type CropRect = {
   height: number
 }
 
-/** focusX/focusY are 0–1 and place the crop window within the image. */
-export function getCropRect(
+const MIN_CROP = 16
+
+export function fullFrameRect(imageWidth: number, imageHeight: number): CropRect {
+  return { x: 0, y: 0, width: imageWidth, height: imageHeight }
+}
+
+export function isFullFrame(
+  rect: CropRect,
+  imageWidth: number,
+  imageHeight: number,
+): boolean {
+  return (
+    rect.x === 0 &&
+    rect.y === 0 &&
+    rect.width === imageWidth &&
+    rect.height === imageHeight
+  )
+}
+
+/** Centered crop covering most of the image, optionally locked to an aspect. */
+export function initialCropRect(
+  imageWidth: number,
+  imageHeight: number,
+  aspectRatio: number | null,
+): CropRect {
+  if (aspectRatio === null) {
+    const insetX = Math.round(imageWidth * 0.08)
+    const insetY = Math.round(imageHeight * 0.08)
+    return clampCropRect(
+      {
+        x: insetX,
+        y: insetY,
+        width: imageWidth - insetX * 2,
+        height: imageHeight - insetY * 2,
+      },
+      imageWidth,
+      imageHeight,
+    )
+  }
+
+  return fitAspectCrop(imageWidth, imageHeight, aspectRatio, 0.84)
+}
+
+/** Largest centered crop of the given aspect, optionally scaled by coverage (0–1). */
+export function fitAspectCrop(
   imageWidth: number,
   imageHeight: number,
   aspectRatio: number,
-  focusX = 0.5,
-  focusY = 0.5,
+  coverage = 1,
 ): CropRect {
   const imageAspect = imageWidth / imageHeight
   let width: number
   let height: number
 
   if (imageAspect > aspectRatio) {
-    height = imageHeight
-    width = Math.max(1, Math.round(imageHeight * aspectRatio))
+    height = Math.max(MIN_CROP, Math.round(imageHeight * coverage))
+    width = Math.max(MIN_CROP, Math.round(height * aspectRatio))
+    if (width > imageWidth) {
+      width = imageWidth
+      height = Math.max(MIN_CROP, Math.round(width / aspectRatio))
+    }
   } else {
-    width = imageWidth
-    height = Math.max(1, Math.round(imageWidth / aspectRatio))
+    width = Math.max(MIN_CROP, Math.round(imageWidth * coverage))
+    height = Math.max(MIN_CROP, Math.round(width / aspectRatio))
+    if (height > imageHeight) {
+      height = imageHeight
+      width = Math.max(MIN_CROP, Math.round(height * aspectRatio))
+    }
   }
 
-  const maxX = Math.max(0, imageWidth - width)
-  const maxY = Math.max(0, imageHeight - height)
-  const x = Math.round(maxX * clamp01(focusX))
-  const y = Math.round(maxY * clamp01(focusY))
+  return {
+    x: Math.round((imageWidth - width) / 2),
+    y: Math.round((imageHeight - height) / 2),
+    width,
+    height,
+  }
+}
 
-  return { x, y, width, height }
+export function clampCropRect(
+  rect: CropRect,
+  imageWidth: number,
+  imageHeight: number,
+  aspectRatio: number | null = null,
+): CropRect {
+  let width = Math.max(MIN_CROP, Math.round(rect.width))
+  let height = Math.max(MIN_CROP, Math.round(rect.height))
+
+  if (aspectRatio && aspectRatio > 0) {
+    // Prefer width; recompute height from aspect, then fit in bounds.
+    height = Math.max(MIN_CROP, Math.round(width / aspectRatio))
+    if (height > imageHeight) {
+      height = imageHeight
+      width = Math.max(MIN_CROP, Math.round(height * aspectRatio))
+    }
+    if (width > imageWidth) {
+      width = imageWidth
+      height = Math.max(MIN_CROP, Math.round(width / aspectRatio))
+    }
+  } else {
+    width = Math.min(width, imageWidth)
+    height = Math.min(height, imageHeight)
+  }
+
+  const x = Math.min(Math.max(0, Math.round(rect.x)), Math.max(0, imageWidth - width))
+  const y = Math.min(Math.max(0, Math.round(rect.y)), Math.max(0, imageHeight - height))
+
+  return {
+    x,
+    y,
+    width: Math.min(width, imageWidth - x),
+    height: Math.min(height, imageHeight - y),
+  }
 }
 
 export type PrepareImageOptions = {
   scalePercent: number
-  cropAspect: CropAspectId
-  focusX: number
-  focusY: number
+  cropEnabled: boolean
+  cropRect: CropRect | null
 }
 
 export type PreparedImage = {
@@ -60,34 +149,34 @@ export type PreparedImage = {
 }
 
 /**
- * Optionally crop (aspect + focus) then scale. When both are identity
- * (no crop, 100% scale), returns the original file untouched.
+ * Crop (optional) then scale (optional). Identity when crop is off/full-frame
+ * and scale is 100%.
  */
 export async function prepareImageForCompress(
   file: File,
   options: PrepareImageOptions,
 ): Promise<PreparedImage> {
-  const scale = Math.max(1, Math.min(100, Math.round(options.scalePercent))) / 100
-  const aspect = CROP_ASPECT_OPTIONS.find((o) => o.id === options.cropAspect)?.ratio ?? null
-  const needsCrop = aspect !== null
+  const scale =
+    Math.max(1, Math.min(100, Math.round(options.scalePercent))) / 100
+  const dims = await readImageDimensions(file)
+  const crop =
+    options.cropEnabled && options.cropRect
+      ? clampCropRect(options.cropRect, dims.width, dims.height)
+      : fullFrameRect(dims.width, dims.height)
+  const cropped = !isFullFrame(crop, dims.width, dims.height)
   const needsScale = scale !== 1
 
-  if (!needsCrop && !needsScale) {
-    const dims = await readImageDimensions(file)
-    return { file, width: dims.width, height: dims.height, transformed: false }
+  if (!cropped && !needsScale) {
+    return {
+      file,
+      width: dims.width,
+      height: dims.height,
+      transformed: false,
+    }
   }
 
   const bitmap = await createImageBitmap(file)
   try {
-    const crop = needsCrop
-      ? getCropRect(bitmap.width, bitmap.height, aspect, options.focusX, options.focusY)
-      : {
-          x: 0,
-          y: 0,
-          width: bitmap.width,
-          height: bitmap.height,
-        }
-
     const outWidth = Math.max(1, Math.round(crop.width * scale))
     const outHeight = Math.max(1, Math.round(crop.height * scale))
     const canvas = document.createElement('canvas')
@@ -108,7 +197,8 @@ export async function prepareImageForCompress(
       outHeight,
     )
 
-    const mime = file.type && file.type.startsWith('image/') ? file.type : 'image/jpeg'
+    const mime =
+      file.type && file.type.startsWith('image/') ? file.type : 'image/jpeg'
     const blob = await canvasToBlob(canvas, mime)
     const next = new File([blob], file.name, {
       type: blob.type || mime,
@@ -132,11 +222,6 @@ export async function readImageDimensions(
   const dims = { width: bitmap.width, height: bitmap.height }
   bitmap.close()
   return dims
-}
-
-function clamp01(value: number): number {
-  if (Number.isNaN(value)) return 0.5
-  return Math.min(1, Math.max(0, value))
 }
 
 function canvasToBlob(canvas: HTMLCanvasElement, mime: string): Promise<Blob> {

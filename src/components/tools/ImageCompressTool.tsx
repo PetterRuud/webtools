@@ -4,12 +4,15 @@ import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
+import { ImageCropper } from '#/components/tools/ImageCropper'
 import {
   CROP_ASPECT_OPTIONS,
-  getCropRect,
+  fullFrameRect,
+  initialCropRect,
   prepareImageForCompress,
   readImageDimensions,
   type CropAspectId,
+  type CropRect,
 } from '#/lib/imageTransform'
 
 function formatBytes(bytes: number): string {
@@ -36,8 +39,7 @@ export function ImageCompressTool() {
   const [quality, setQuality] = useState(0.75)
   const [scalePercent, setScalePercent] = useState(100)
   const [cropAspect, setCropAspect] = useState<CropAspectId>('none')
-  const [focusX, setFocusX] = useState(0.5)
-  const [focusY, setFocusY] = useState(0.5)
+  const [cropRect, setCropRect] = useState<CropRect | null>(null)
   const [output, setOutput] = useState<File | null>(null)
   const [outputDims, setOutputDims] = useState<{
     width: number
@@ -46,6 +48,11 @@ export function ImageCompressTool() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const cropEnabled = cropAspect !== 'none'
+  const aspectRatio =
+    CROP_ASPECT_OPTIONS.find((option) => option.id === cropAspect)?.ratio ??
+    null
 
   useEffect(() => {
     if (!file) {
@@ -58,10 +65,17 @@ export function ImageCompressTool() {
     let cancelled = false
     void readImageDimensions(file)
       .then((dims) => {
-        if (!cancelled) setSourceDims(dims)
+        if (cancelled) return
+        setSourceDims(dims)
+        setCropRect(fullFrameRect(dims.width, dims.height))
       })
-      .catch(() => {
-        if (!cancelled) setSourceDims(null)
+      .catch((err) => {
+        if (cancelled) return
+        setSourceDims(null)
+        setCropRect(null)
+        setError(
+          err instanceof Error ? err.message : 'Could not read that image',
+        )
       })
     return () => {
       cancelled = true
@@ -81,37 +95,45 @@ export function ImageCompressTool() {
 
   const savings = useMemo(() => {
     if (!file || !output || file.size === 0) return null
-    const pct = Math.max(0, Math.round((1 - output.size / file.size) * 100))
-    return pct
+    return Math.max(0, Math.round((1 - output.size / file.size) * 100))
   }, [file, output])
 
-  const cropPreview = useMemo(() => {
-    if (!sourceDims || cropAspect === 'none') return null
-    const ratio =
-      CROP_ASPECT_OPTIONS.find((option) => option.id === cropAspect)?.ratio ??
-      null
-    if (ratio === null) return null
-    return getCropRect(
-      sourceDims.width,
-      sourceDims.height,
-      ratio,
-      focusX,
-      focusY,
-    )
-  }, [sourceDims, cropAspect, focusX, focusY])
+  const activeCrop = useMemo(() => {
+    if (!sourceDims) return null
+    if (!cropEnabled || !cropRect) {
+      return fullFrameRect(sourceDims.width, sourceDims.height)
+    }
+    return cropRect
+  }, [sourceDims, cropEnabled, cropRect])
 
   const plannedDims = useMemo(() => {
-    if (!sourceDims) return null
-    const base = cropPreview ?? {
-      width: sourceDims.width,
-      height: sourceDims.height,
-    }
+    if (!activeCrop) return null
     const scale = scalePercent / 100
     return {
-      width: Math.max(1, Math.round(base.width * scale)),
-      height: Math.max(1, Math.round(base.height * scale)),
+      width: Math.max(1, Math.round(activeCrop.width * scale)),
+      height: Math.max(1, Math.round(activeCrop.height * scale)),
     }
-  }, [sourceDims, cropPreview, scalePercent])
+  }, [activeCrop, scalePercent])
+
+  function selectCropAspect(next: CropAspectId) {
+    setCropAspect(next)
+    if (!sourceDims) return
+    if (next === 'none') {
+      setCropRect(fullFrameRect(sourceDims.width, sourceDims.height))
+      return
+    }
+    const ratio =
+      CROP_ASPECT_OPTIONS.find((option) => option.id === next)?.ratio ?? null
+    setCropRect(initialCropRect(sourceDims.width, sourceDims.height, ratio))
+  }
+
+  function resetGeometry() {
+    setScalePercent(100)
+    setCropAspect('none')
+    if (sourceDims) {
+      setCropRect(fullFrameRect(sourceDims.width, sourceDims.height))
+    }
+  }
 
   async function compress(nextFile = file) {
     if (!nextFile) {
@@ -123,9 +145,8 @@ export function ImageCompressTool() {
     try {
       const prepared = await prepareImageForCompress(nextFile, {
         scalePercent,
-        cropAspect,
-        focusX,
-        focusY,
+        cropEnabled,
+        cropRect: activeCrop,
       })
       const result = await imageCompression(prepared.file, {
         maxSizeMB: 8,
@@ -163,13 +184,6 @@ export function ImageCompressTool() {
     URL.revokeObjectURL(url)
   }
 
-  function resetGeometry() {
-    setScalePercent(100)
-    setCropAspect('none')
-    setFocusX(0.5)
-    setFocusY(0.5)
-  }
-
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
@@ -185,38 +199,79 @@ export function ImageCompressTool() {
             setOutput(null)
             setOutputDims(null)
             setError(null)
-            resetGeometry()
+            setScalePercent(100)
+            setCropAspect('none')
+            setCropRect(null)
           }}
         />
         <p className="m-0 text-sm text-muted-foreground">
           Processing stays in your browser. No upload to Workers. Default keeps
-          the original resolution.
+          the original resolution and full frame.
         </p>
       </div>
+
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <Label>1. Crop</Label>
+          <span className="text-sm text-muted-foreground">
+            {cropAspect === 'none' ? 'Off · full frame' : cropAspect}
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {CROP_ASPECT_OPTIONS.map((option) => (
+            <Button
+              key={option.id}
+              type="button"
+              size="sm"
+              variant={cropAspect === option.id ? 'default' : 'outline'}
+              onClick={() => selectCropAspect(option.id)}
+            >
+              {option.label}
+            </Button>
+          ))}
+        </div>
+        {!cropEnabled ? (
+          <p className="m-0 text-xs text-muted-foreground">
+            Optional. Pick Free or an aspect to enable the visual cropper with
+            drag handles.
+          </p>
+        ) : (
+          <p className="m-0 text-xs text-muted-foreground">
+            Drag inside the frame to move. Pull corner and edge handles to
+            resize.
+          </p>
+        )}
+      </div>
+
+      {sourceUrl && sourceDims && activeCrop ? (
+        <div className="flex flex-col gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <p className="m-0 text-sm font-medium">
+              {cropEnabled ? 'Crop region' : 'Source'}
+            </p>
+            <p className="m-0 text-sm tabular-nums text-muted-foreground">
+              {sourceDims.width}×{sourceDims.height}
+              {plannedDims
+                ? ` → ${plannedDims.width}×${plannedDims.height}`
+                : ''}
+            </p>
+          </div>
+          <ImageCropper
+            src={sourceUrl}
+            imageWidth={sourceDims.width}
+            imageHeight={sourceDims.height}
+            crop={activeCrop}
+            aspectRatio={aspectRatio}
+            enabled={cropEnabled}
+            onChange={setCropRect}
+          />
+        </div>
+      ) : null}
 
       <div className="grid gap-6 sm:grid-cols-2">
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <Label htmlFor="quality">Quality</Label>
-            <span className="text-sm tabular-nums text-muted-foreground">
-              {Math.round(quality * 100)}%
-            </span>
-          </div>
-          <Slider
-            id="quality"
-            min={0.2}
-            max={1}
-            step={0.01}
-            value={[quality]}
-            onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value
-              if (typeof next === 'number') setQuality(next)
-            }}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <Label htmlFor="scale">Scale</Label>
+            <Label htmlFor="scale">2. Scale</Label>
             <span className="text-sm tabular-nums text-muted-foreground">
               {scalePercent}%
             </span>
@@ -233,121 +288,29 @@ export function ImageCompressTool() {
             }}
           />
           <p className="m-0 text-xs text-muted-foreground">
-            100% keeps pixel dimensions. Lower values resize before encode.
+            Optional. 100% keeps cropped pixel size.
           </p>
         </div>
-      </div>
-
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center justify-between gap-3">
-          <Label>Crop</Label>
-          <span className="text-sm text-muted-foreground">
-            {cropAspect === 'none' ? 'Off' : cropAspect}
-          </span>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {CROP_ASPECT_OPTIONS.map((option) => (
-            <Button
-              key={option.id}
-              type="button"
-              size="sm"
-              variant={cropAspect === option.id ? 'default' : 'outline'}
-              onClick={() => {
-                setCropAspect(option.id)
-                if (option.id === 'none') {
-                  setFocusX(0.5)
-                  setFocusY(0.5)
-                }
-              }}
-            >
-              {option.label}
-            </Button>
-          ))}
-        </div>
-        {cropAspect !== 'none' ? (
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="focus-x">Horizontal focus</Label>
-                <span className="text-sm tabular-nums text-muted-foreground">
-                  {Math.round(focusX * 100)}%
-                </span>
-              </div>
-              <Slider
-                id="focus-x"
-                min={0}
-                max={1}
-                step={0.01}
-                value={[focusX]}
-                onValueChange={(value) => {
-                  const next = Array.isArray(value) ? value[0] : value
-                  if (typeof next === 'number') setFocusX(next)
-                }}
-              />
-            </div>
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="focus-y">Vertical focus</Label>
-                <span className="text-sm tabular-nums text-muted-foreground">
-                  {Math.round(focusY * 100)}%
-                </span>
-              </div>
-              <Slider
-                id="focus-y"
-                min={0}
-                max={1}
-                step={0.01}
-                value={[focusY]}
-                onValueChange={(value) => {
-                  const next = Array.isArray(value) ? value[0] : value
-                  if (typeof next === 'number') setFocusY(next)
-                }}
-              />
-            </div>
-          </div>
-        ) : (
-          <p className="m-0 text-xs text-muted-foreground">
-            Optional center crop with aspect presets. Default leaves the full
-            frame.
-          </p>
-        )}
-      </div>
-
-      {sourceUrl && sourceDims ? (
         <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-3">
-            <p className="m-0 text-sm font-medium">Source</p>
-            <p className="m-0 text-sm tabular-nums text-muted-foreground">
-              {sourceDims.width}×{sourceDims.height}
-              {plannedDims
-                ? ` → ${plannedDims.width}×${plannedDims.height}`
-                : ''}
-            </p>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="quality">3. Quality</Label>
+            <span className="text-sm tabular-nums text-muted-foreground">
+              {Math.round(quality * 100)}%
+            </span>
           </div>
-          <div className="flex justify-center rounded-2xl border border-border bg-[oklch(0.96_0.01_120)] p-2">
-            <div className="relative inline-block max-w-full">
-              <img
-                src={sourceUrl}
-                alt="Source preview"
-                className="block max-h-80 w-auto max-w-full"
-              />
-              {cropPreview ? (
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute border-2 border-white"
-                  style={{
-                    left: `${(cropPreview.x / sourceDims.width) * 100}%`,
-                    top: `${(cropPreview.y / sourceDims.height) * 100}%`,
-                    width: `${(cropPreview.width / sourceDims.width) * 100}%`,
-                    height: `${(cropPreview.height / sourceDims.height) * 100}%`,
-                    boxShadow: '0 0 0 9999px rgb(0 0 0 / 0.45)',
-                  }}
-                />
-              ) : null}
-            </div>
-          </div>
+          <Slider
+            id="quality"
+            min={0.2}
+            max={1}
+            step={0.01}
+            value={[quality]}
+            onValueChange={(value) => {
+              const next = Array.isArray(value) ? value[0] : value
+              if (typeof next === 'number') setQuality(next)
+            }}
+          />
         </div>
-      ) : null}
+      </div>
 
       <div className="flex flex-wrap gap-3">
         <Button
@@ -365,7 +328,7 @@ export function ImageCompressTool() {
         >
           Download
         </Button>
-        {file && (scalePercent !== 100 || cropAspect !== 'none') ? (
+        {file && (scalePercent !== 100 || cropEnabled) ? (
           <Button type="button" variant="ghost" onClick={resetGeometry}>
             Reset scale & crop
           </Button>
@@ -420,11 +383,14 @@ export function ImageCompressTool() {
       ) : null}
 
       {previewUrl ? (
-        <img
-          src={previewUrl}
-          alt="Compressed preview"
-          className="max-h-80 w-full rounded-2xl border border-border bg-muted object-contain"
-        />
+        <div className="flex flex-col gap-2">
+          <p className="m-0 text-sm font-medium">Result</p>
+          <img
+            src={previewUrl}
+            alt="Compressed preview"
+            className="max-h-80 w-full rounded-2xl border border-border bg-muted object-contain"
+          />
+        </div>
       ) : null}
     </div>
   )
