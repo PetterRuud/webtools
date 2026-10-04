@@ -123,7 +123,7 @@ export function ToolsBrowse() {
           <Input
             ref={searchRef}
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onValueChange={setQuery}
             placeholder="Search by name or job…"
             className="h-11 bg-card/70 pr-20 pl-10 text-sm shadow-none"
             autoComplete="off"
