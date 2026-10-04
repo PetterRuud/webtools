@@ -12,11 +12,11 @@ import { Checkbox } from '#/components/ui/checkbox'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
-import { readImageDimensions } from '#/lib/imageTransform'
 import {
   RADIUS_PRESETS,
   clampRadius,
   outputFileName,
+  readSourceDimensions,
   renderSquareRound,
   type PadBackground,
 } from '#/lib/imageSquareRound'
@@ -73,7 +73,7 @@ export function ImageSquareRoundTool() {
       return
     }
     let cancelled = false
-    void readImageDimensions(file)
+    void readSourceDimensions(file)
       .then((dims) => {
         if (cancelled) return
         setSourceDims(dims)

@@ -116,6 +116,17 @@ async function loadDrawable(file: File): Promise<{
   }
 }
 
+export async function readSourceDimensions(
+  file: File,
+): Promise<{ width: number; height: number }> {
+  const drawable = await loadDrawable(file)
+  try {
+    return { width: drawable.width, height: drawable.height }
+  } finally {
+    drawable.close?.()
+  }
+}
+
 /**
  * Pad an image to a square (optional) and clip rounded corners. Always PNG.
  */
