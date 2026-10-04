@@ -221,7 +221,7 @@ function ToolGrid({ tools }: { tools: ToolLink[] }) {
             >
               <ItemMedia
                 variant="icon"
-                className="size-7 translate-y-0 self-center rounded-md bg-mist text-primary"
+                className="size-7 translate-y-0 self-center rounded-md bg-mist text-primary dark:text-violet-300"
               >
                 <Icon aria-hidden />
               </ItemMedia>
