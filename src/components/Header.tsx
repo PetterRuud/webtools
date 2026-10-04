@@ -9,6 +9,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from '#/components/ui/dropdown-menu'
+import { TOOL_ICONS } from '#/lib/tool-icons'
 import { groupToolsByCategory, TOOLS } from '#/lib/tools'
 
 const toolGroups = groupToolsByCategory(TOOLS)
@@ -28,19 +29,26 @@ export default function Header() {
             Tools
             <ChevronDownIcon className="size-3.5 opacity-70" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-48">
+          <DropdownMenuContent align="end" className="min-w-56">
             {toolGroups.map((group) => (
               <DropdownMenuGroup key={group.category.id}>
                 <DropdownMenuLabel>{group.category.label}</DropdownMenuLabel>
-                {group.tools.map((tool) => (
-                  <DropdownMenuItem
-                    key={tool.to}
-                    render={<Link to={tool.to} />}
-                    className="cursor-pointer"
-                  >
-                    {tool.name}
-                  </DropdownMenuItem>
-                ))}
+                {group.tools.map((tool) => {
+                  const Icon = TOOL_ICONS[tool.to]
+                  return (
+                    <DropdownMenuItem
+                      key={tool.to}
+                      render={<Link to={tool.to} />}
+                      className="cursor-pointer gap-2"
+                    >
+                      <Icon
+                        className="size-4 shrink-0 text-muted-foreground"
+                        aria-hidden
+                      />
+                      {tool.name}
+                    </DropdownMenuItem>
+                  )
+                })}
               </DropdownMenuGroup>
             ))}
           </DropdownMenuContent>

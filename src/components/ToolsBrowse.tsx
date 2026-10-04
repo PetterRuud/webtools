@@ -1,30 +1,16 @@
 import { Link } from '@tanstack/react-router'
-import {
-  BinaryIcon,
-  BracesIcon,
-  GlobeIcon,
-  HashIcon,
-  ImageIcon,
-  ImagesIcon,
-  KeyRoundIcon,
-  MonitorSmartphoneIcon,
-  NetworkIcon,
-  PaletteIcon,
-  RegexIcon,
-  SearchIcon,
-  TextSelectIcon,
-  XIcon,
-} from 'lucide-react'
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ComponentType,
-  type ReactNode,
-} from 'react'
+import { ImageIcon, SearchIcon, XIcon } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '#/components/ui/item'
+import { TOOL_ICONS } from '#/lib/tool-icons'
 import {
   TOOL_CATEGORIES,
   TOOLS,
@@ -33,23 +19,6 @@ import {
   type ToolCategoryId,
   type ToolLink,
 } from '#/lib/tools'
-
-type ToolIcon = ComponentType<{ className?: string; 'aria-hidden'?: boolean }>
-
-const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
-  '/tools/json-formatter': BracesIcon,
-  '/tools/regex': RegexIcon,
-  '/tools/text-diff': TextSelectIcon,
-  '/tools/image-compress': ImageIcon,
-  '/tools/image-format': ImagesIcon,
-  '/tools/hex-rgba': PaletteIcon,
-  '/tools/base64': BinaryIcon,
-  '/tools/jwt': KeyRoundIcon,
-  '/tools/ip-lookup': NetworkIcon,
-  '/tools/dns-lookup': GlobeIcon,
-  '/tools/browser-info': MonitorSmartphoneIcon,
-  '/tools/http-status': HashIcon,
-}
 
 type CategoryFilter = ToolCategoryId | 'all'
 
@@ -270,26 +239,32 @@ function CategoryGroup({
 
 function ToolGrid({ tools }: { tools: ToolLink[] }) {
   return (
-    <ul className="m-0 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="m-0 grid list-none grid-cols-1 gap-2 p-0 sm:grid-cols-2 lg:grid-cols-3">
       {tools.map((tool) => {
         const Icon = TOOL_ICONS[tool.to]
         return (
-          <li key={tool.to}>
-            <Link
-              to={tool.to}
-              className="tool-tile group flex h-full flex-col gap-1.5 rounded-xl border border-border/70 bg-card/45 px-3.5 py-3 no-underline transition-[background-color,border-color,transform] hover:-translate-y-0.5 hover:border-primary/35 hover:bg-muted/55 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+          <li key={tool.to} className="min-w-0">
+            <Item
+              variant="outline"
+              size="sm"
+              render={<Link to={tool.to} />}
+              className="tool-row h-full flex-nowrap border-border/70 bg-card/45 no-underline hover:border-primary/35 hover:bg-muted/55"
             >
-              <span className="flex items-start justify-between gap-3">
-                <span className="inline-flex size-8 items-center justify-center rounded-lg bg-mist text-primary">
-                  <Icon className="size-4" aria-hidden />
-                </span>
-                <span className="tool-mark mt-1 h-0.5 w-6 origin-left scale-x-0 bg-spark" />
-              </span>
-              <span className="font-heading text-sm text-ink">{tool.name}</span>
-              <span className="text-xs leading-5 text-muted-foreground">
-                {tool.blurb}
-              </span>
-            </Link>
+              <ItemMedia
+                variant="icon"
+                className="size-8 rounded-lg bg-mist text-primary"
+              >
+                <Icon aria-hidden />
+              </ItemMedia>
+              <ItemContent className="min-w-0 gap-0.5">
+                <ItemTitle className="font-heading text-ink">
+                  {tool.name}
+                </ItemTitle>
+                <ItemDescription className="line-clamp-1 text-xs leading-4">
+                  {tool.blurb}
+                </ItemDescription>
+              </ItemContent>
+            </Item>
           </li>
         )
       })}
@@ -299,19 +274,31 @@ function ToolGrid({ tools }: { tools: ToolLink[] }) {
 
 function TransparentNote() {
   return (
-    <div className="rounded-xl border border-dashed border-border/80 bg-card/30 px-3.5 py-3">
-      <div className="flex items-center justify-between gap-3">
-        <p className="font-heading m-0 text-sm text-ink">Transparent</p>
-        <span className="rounded-md bg-muted px-1.5 py-0.5 text-[0.7rem] font-medium text-muted-foreground">
-          Local
-        </span>
-      </div>
-      <p className="mt-1.5 mb-0 text-xs leading-5 text-muted-foreground">
-        <code className="rounded bg-muted px-1 py-0.5 text-[0.75rem]">
-          tools/transparent/
-        </code>{' '}
-        — local only (sharp).
-      </p>
-    </div>
+    <Item
+      variant="outline"
+      size="sm"
+      className="flex-nowrap border-dashed border-border/80 bg-card/30"
+    >
+      <ItemMedia
+        variant="icon"
+        className="size-8 rounded-lg bg-mist text-primary"
+      >
+        <ImageIcon aria-hidden />
+      </ItemMedia>
+      <ItemContent className="min-w-0 gap-0.5">
+        <ItemTitle className="font-heading w-full justify-between gap-2 text-ink">
+          Transparent
+          <span className="rounded-md bg-muted px-1.5 py-0.5 text-[0.7rem] font-medium text-muted-foreground">
+            Local
+          </span>
+        </ItemTitle>
+        <ItemDescription className="line-clamp-1 text-xs leading-4">
+          <code className="rounded bg-muted px-1 py-0.5 text-[0.75rem]">
+            tools/transparent/
+          </code>{' '}
+          — local only (sharp).
+        </ItemDescription>
+      </ItemContent>
+    </Item>
   )
 }

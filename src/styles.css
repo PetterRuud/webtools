@@ -192,8 +192,7 @@
   background: radial-gradient(circle, var(--orb-gold), transparent 70%);
 }
 
-.tool-row:hover .tool-mark,
-.tool-tile:hover .tool-mark {
+.tool-row:hover .tool-mark {
   animation: mark-draw 260ms ease forwards;
   transform-origin: left;
 }
