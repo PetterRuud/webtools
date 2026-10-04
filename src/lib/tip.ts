@@ -14,7 +14,8 @@ export type TipResult = {
 export const TIP_PRESETS = [10, 15, 18, 20, 25] as const
 
 export function roundMoney(value: number): number {
-  return Math.round((value + Number.EPSILON) * 100) / 100
+  // Avoid binary float traps (e.g. 64.5 * 0.15 → 9.674999…)
+  return Math.round(value * 100 + 1e-8) / 100
 }
 
 export function calculateTip({
