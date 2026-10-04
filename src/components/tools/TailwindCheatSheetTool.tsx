@@ -3,10 +3,12 @@ import { Input } from '#/components/ui/input'
 import { copyText } from '#/lib/clipboard'
 import {
   TAILWIND_CATEGORIES,
+  TAILWIND_CATEGORY_STYLES,
   TAILWIND_UTILITIES,
   filterTailwindUtilities,
   groupUtilitiesByCategory,
   type CategoryFilter,
+  type TailwindCategoryId,
 } from '#/lib/tailwindCheatSheet'
 import { cn } from '#/lib/utils'
 
@@ -44,6 +46,11 @@ export function TailwindCheatSheetTool() {
       >
         {TAILWIND_CATEGORIES.map((item) => {
           const selected = category === item.id
+          const tones =
+            item.id === 'all'
+              ? null
+              : TAILWIND_CATEGORY_STYLES[item.id as TailwindCategoryId]
+
           return (
             <button
               key={item.id}
@@ -53,9 +60,13 @@ export function TailwindCheatSheetTool() {
               onClick={() => setCategory(item.id)}
               className={cn(
                 'inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors',
-                selected
-                  ? 'border-transparent bg-primary text-primary-foreground'
-                  : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground',
+                item.id === 'all'
+                  ? selected
+                    ? 'border-transparent bg-primary text-primary-foreground'
+                    : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground'
+                  : selected
+                    ? tones!.chipActive
+                    : cn('bg-card/40', tones!.chip),
               )}
             >
               {item.label}
@@ -70,42 +81,58 @@ export function TailwindCheatSheetTool() {
         </p>
       ) : (
         <div className="flex flex-col gap-4">
-          {groups.map((group) => (
-            <section key={group.category.id} className="flex flex-col gap-1.5">
-              <div className="flex items-baseline justify-between gap-2">
-                <h2 className="font-heading m-0 text-sm font-medium text-ink">
-                  {group.category.label}
-                </h2>
-                <span className="text-[0.65rem] tabular-nums text-muted-foreground">
-                  {group.utilities.length}
-                </span>
-              </div>
-              <ul className="m-0 grid list-none grid-cols-1 gap-1 p-0 sm:grid-cols-2 lg:grid-cols-3">
-                {group.utilities.map((item) => (
-                  <li key={`${item.category}-${item.className}`}>
-                    <button
-                      type="button"
-                      onClick={() => copyText(item.className, item.className)}
-                      className="group flex w-full items-start gap-2 rounded-md border border-border/70 bg-card/30 px-2.5 py-1.5 text-left transition-colors hover:border-border hover:bg-muted/50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-                      title="Copy class"
-                    >
-                      <code className="font-mono text-[0.8rem] leading-5 font-medium text-ink break-all">
-                        {item.className}
-                      </code>
-                      <span className="min-w-0 flex-1 text-right text-[0.7rem] leading-4 text-muted-foreground">
-                        {item.css}
-                        {item.note ? (
-                          <span className="mt-0.5 block text-[0.65rem] text-muted-foreground/80">
-                            {item.note}
-                          </span>
-                        ) : null}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ))}
+          {groups.map((group) => {
+            const tones = TAILWIND_CATEGORY_STYLES[group.category.id as TailwindCategoryId]
+            return (
+              <section key={group.category.id} className="flex flex-col gap-1.5">
+                <div className="flex items-baseline justify-between gap-2">
+                  <h2
+                    className={cn(
+                      'font-heading m-0 text-[0.8rem] font-semibold tracking-wide uppercase',
+                      tones.heading,
+                    )}
+                  >
+                    {group.category.label}
+                  </h2>
+                  <span className="text-[0.65rem] tabular-nums text-muted-foreground">
+                    {group.utilities.length}
+                  </span>
+                </div>
+                <ul className="m-0 grid list-none grid-cols-1 gap-1 p-0 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.utilities.map((item) => (
+                    <li key={`${item.category}-${item.className}`}>
+                      <button
+                        type="button"
+                        onClick={() => copyText(item.className, item.className)}
+                        className={cn(
+                          'group flex w-full items-baseline gap-2 rounded-md border border-border/70 border-l-[3px] bg-card/30 px-2.5 py-1.5 text-left transition-colors hover:border-border hover:bg-muted/50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none',
+                          tones.rail,
+                        )}
+                        title="Copy class"
+                      >
+                        <code
+                          className={cn(
+                            'font-mono text-[0.84rem] leading-5 font-semibold break-all',
+                            tones.className,
+                          )}
+                        >
+                          {item.className}
+                        </code>
+                        <span className="min-w-0 flex-1 text-right font-mono text-[0.68rem] leading-4 font-normal tracking-tight text-muted-foreground">
+                          {item.css}
+                          {item.note ? (
+                            <span className="mt-0.5 block font-sans text-[0.62rem] leading-tight text-muted-foreground/75">
+                              {item.note}
+                            </span>
+                          ) : null}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          })}
         </div>
       )}
     </div>

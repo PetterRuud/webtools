@@ -45,6 +45,125 @@ export const TAILWIND_CATEGORIES: TailwindCategory[] = [
   { id: 'responsive', label: 'Breakpoints' },
 ]
 
+/** Per-category scan colors — chips, headings, and class-name accents. */
+export const TAILWIND_CATEGORY_STYLES: Record<
+  TailwindCategoryId,
+  { chip: string; chipActive: string; heading: string; className: string; rail: string }
+> = {
+  layout: {
+    chip: 'border-slate-500/35 text-slate-700 hover:bg-slate-500/10 dark:border-slate-400/40 dark:text-slate-200 dark:hover:bg-slate-400/15',
+    chipActive:
+      'border-slate-500/50 bg-slate-500/18 text-slate-950 dark:border-slate-300/50 dark:bg-slate-400/25 dark:text-slate-50',
+    heading: 'text-slate-700 dark:text-slate-200',
+    className: 'text-slate-800 dark:text-slate-100',
+    rail: 'border-l-slate-500/55 dark:border-l-slate-400/55',
+  },
+  flex: {
+    chip: 'border-sky-500/35 text-sky-800 hover:bg-sky-500/10 dark:border-sky-400/40 dark:text-sky-200 dark:hover:bg-sky-400/15',
+    chipActive:
+      'border-sky-500/50 bg-sky-500/18 text-sky-950 dark:border-sky-300/50 dark:bg-sky-400/25 dark:text-sky-50',
+    heading: 'text-sky-800 dark:text-sky-200',
+    className: 'text-sky-800 dark:text-sky-300',
+    rail: 'border-l-sky-500/60 dark:border-l-sky-400/55',
+  },
+  grid: {
+    chip: 'border-cyan-500/35 text-cyan-800 hover:bg-cyan-500/10 dark:border-cyan-400/40 dark:text-cyan-200 dark:hover:bg-cyan-400/15',
+    chipActive:
+      'border-cyan-500/50 bg-cyan-500/18 text-cyan-950 dark:border-cyan-300/50 dark:bg-cyan-400/25 dark:text-cyan-50',
+    heading: 'text-cyan-800 dark:text-cyan-200',
+    className: 'text-cyan-800 dark:text-cyan-300',
+    rail: 'border-l-cyan-500/60 dark:border-l-cyan-400/55',
+  },
+  spacing: {
+    chip: 'border-amber-500/35 text-amber-800 hover:bg-amber-500/10 dark:border-amber-400/40 dark:text-amber-200 dark:hover:bg-amber-400/15',
+    chipActive:
+      'border-amber-500/50 bg-amber-500/18 text-amber-950 dark:border-amber-300/50 dark:bg-amber-400/25 dark:text-amber-50',
+    heading: 'text-amber-800 dark:text-amber-200',
+    className: 'text-amber-800 dark:text-amber-300',
+    rail: 'border-l-amber-500/60 dark:border-l-amber-400/55',
+  },
+  sizing: {
+    chip: 'border-orange-500/35 text-orange-800 hover:bg-orange-500/10 dark:border-orange-400/40 dark:text-orange-200 dark:hover:bg-orange-400/15',
+    chipActive:
+      'border-orange-500/50 bg-orange-500/18 text-orange-950 dark:border-orange-300/50 dark:bg-orange-400/25 dark:text-orange-50',
+    heading: 'text-orange-800 dark:text-orange-200',
+    className: 'text-orange-800 dark:text-orange-300',
+    rail: 'border-l-orange-500/60 dark:border-l-orange-400/55',
+  },
+  typography: {
+    chip: 'border-rose-500/35 text-rose-800 hover:bg-rose-500/10 dark:border-rose-400/40 dark:text-rose-200 dark:hover:bg-rose-400/15',
+    chipActive:
+      'border-rose-500/50 bg-rose-500/18 text-rose-950 dark:border-rose-300/50 dark:bg-rose-400/25 dark:text-rose-50',
+    heading: 'text-rose-800 dark:text-rose-200',
+    className: 'text-rose-800 dark:text-rose-300',
+    rail: 'border-l-rose-500/60 dark:border-l-rose-400/55',
+  },
+  colors: {
+    chip: 'border-fuchsia-500/35 text-fuchsia-800 hover:bg-fuchsia-500/10 dark:border-fuchsia-400/40 dark:text-fuchsia-200 dark:hover:bg-fuchsia-400/15',
+    chipActive:
+      'border-fuchsia-500/50 bg-fuchsia-500/18 text-fuchsia-950 dark:border-fuchsia-300/50 dark:bg-fuchsia-400/25 dark:text-fuchsia-50',
+    heading: 'text-fuchsia-800 dark:text-fuchsia-200',
+    className: 'text-fuchsia-800 dark:text-fuchsia-300',
+    rail: 'border-l-fuchsia-500/60 dark:border-l-fuchsia-400/55',
+  },
+  borders: {
+    chip: 'border-stone-500/35 text-stone-700 hover:bg-stone-500/10 dark:border-stone-400/40 dark:text-stone-200 dark:hover:bg-stone-400/15',
+    chipActive:
+      'border-stone-500/50 bg-stone-500/18 text-stone-950 dark:border-stone-300/50 dark:bg-stone-400/25 dark:text-stone-50',
+    heading: 'text-stone-700 dark:text-stone-200',
+    className: 'text-stone-800 dark:text-stone-100',
+    rail: 'border-l-stone-500/55 dark:border-l-stone-400/55',
+  },
+  effects: {
+    chip: 'border-lime-500/35 text-lime-800 hover:bg-lime-500/10 dark:border-lime-400/40 dark:text-lime-200 dark:hover:bg-lime-400/15',
+    chipActive:
+      'border-lime-500/50 bg-lime-500/18 text-lime-950 dark:border-lime-300/50 dark:bg-lime-400/25 dark:text-lime-50',
+    heading: 'text-lime-800 dark:text-lime-200',
+    className: 'text-lime-800 dark:text-lime-300',
+    rail: 'border-l-lime-500/60 dark:border-l-lime-400/55',
+  },
+  transform: {
+    chip: 'border-blue-500/35 text-blue-800 hover:bg-blue-500/10 dark:border-blue-400/40 dark:text-blue-200 dark:hover:bg-blue-400/15',
+    chipActive:
+      'border-blue-500/50 bg-blue-500/18 text-blue-950 dark:border-blue-300/50 dark:bg-blue-400/25 dark:text-blue-50',
+    heading: 'text-blue-800 dark:text-blue-200',
+    className: 'text-blue-800 dark:text-blue-300',
+    rail: 'border-l-blue-500/60 dark:border-l-blue-400/55',
+  },
+  transition: {
+    chip: 'border-yellow-500/35 text-yellow-800 hover:bg-yellow-500/10 dark:border-yellow-400/40 dark:text-yellow-200 dark:hover:bg-yellow-400/15',
+    chipActive:
+      'border-yellow-500/50 bg-yellow-500/18 text-yellow-950 dark:border-yellow-300/50 dark:bg-yellow-400/25 dark:text-yellow-50',
+    heading: 'text-yellow-800 dark:text-yellow-200',
+    className: 'text-yellow-800 dark:text-yellow-300',
+    rail: 'border-l-yellow-500/60 dark:border-l-yellow-400/55',
+  },
+  filters: {
+    chip: 'border-teal-500/35 text-teal-800 hover:bg-teal-500/10 dark:border-teal-400/40 dark:text-teal-200 dark:hover:bg-teal-400/15',
+    chipActive:
+      'border-teal-500/50 bg-teal-500/18 text-teal-950 dark:border-teal-300/50 dark:bg-teal-400/25 dark:text-teal-50',
+    heading: 'text-teal-800 dark:text-teal-200',
+    className: 'text-teal-800 dark:text-teal-300',
+    rail: 'border-l-teal-500/60 dark:border-l-teal-400/55',
+  },
+  interactivity: {
+    chip: 'border-emerald-500/35 text-emerald-800 hover:bg-emerald-500/10 dark:border-emerald-400/40 dark:text-emerald-200 dark:hover:bg-emerald-400/15',
+    chipActive:
+      'border-emerald-500/50 bg-emerald-500/18 text-emerald-950 dark:border-emerald-300/50 dark:bg-emerald-400/25 dark:text-emerald-50',
+    heading: 'text-emerald-800 dark:text-emerald-200',
+    className: 'text-emerald-800 dark:text-emerald-300',
+    rail: 'border-l-emerald-500/60 dark:border-l-emerald-400/55',
+  },
+  responsive: {
+    chip: 'border-indigo-500/35 text-indigo-800 hover:bg-indigo-500/10 dark:border-indigo-400/40 dark:text-indigo-200 dark:hover:bg-indigo-400/15',
+    chipActive:
+      'border-indigo-500/50 bg-indigo-500/18 text-indigo-950 dark:border-indigo-300/50 dark:bg-indigo-400/25 dark:text-indigo-50',
+    heading: 'text-indigo-800 dark:text-indigo-200',
+    className: 'text-indigo-800 dark:text-indigo-300',
+    rail: 'border-l-indigo-500/60 dark:border-l-indigo-400/55',
+  },
+}
+
 /** Practical everyday utilities — not a full Tailwind docs mirror. */
 export const TAILWIND_UTILITIES: TailwindUtility[] = [
   // Layout / display / position
