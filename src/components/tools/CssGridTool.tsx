@@ -11,6 +11,7 @@ import {
   MIN_TRACKS,
   TRACK_PRESETS,
   areaName,
+  buildTemplateAreas,
   defaultTracks,
   generateGridCss,
   resizeTracks,
@@ -19,11 +20,11 @@ import {
 import { cn } from '#/lib/utils'
 
 const PREVIEW_TONES = [
-  'bg-primary/20 border-primary/40 text-foreground',
+  'bg-primary/35 border-primary/55 text-foreground',
   'bg-secondary border-border text-secondary-foreground',
-  'bg-accent/30 border-accent/50 text-foreground',
-  'bg-mist/60 border-border text-foreground',
-  'bg-spark/25 border-spark/45 text-foreground',
+  'bg-accent/45 border-accent/60 text-foreground',
+  'bg-mist border-border text-foreground',
+  'bg-spark/40 border-spark/55 text-foreground',
 ]
 
 function TrackList({
@@ -233,13 +234,23 @@ export function CssGridTool() {
 
       <section className="flex flex-col gap-3">
         <div
-          className="min-h-64 rounded-xl border border-border/80 bg-muted/20 p-3 sm:min-h-80 sm:p-4"
+          className="min-h-64 rounded-xl border border-border/80 bg-card/50 p-3 sm:min-h-80 sm:p-4"
           style={{
             display: 'grid',
             gridTemplateColumns: columns.join(' '),
             gridTemplateRows: rows.join(' '),
             columnGap: `${columnGap}px`,
             rowGap: `${rowGap}px`,
+            ...(includeAreas
+              ? {
+                  gridTemplateAreas: buildTemplateAreas(
+                    rows.length,
+                    columns.length,
+                  )
+                    .map((row) => `"${row}"`)
+                    .join(' '),
+                }
+              : {}),
           }}
           aria-label="Grid preview"
         >
@@ -252,14 +263,10 @@ export function CssGridTool() {
                 <div
                   key={`${rowIndex}-${colIndex}`}
                   className={cn(
-                    'flex min-h-12 items-center justify-center rounded-md border px-2 text-xs font-medium tabular-nums',
+                    'flex min-h-14 items-center justify-center rounded-md border px-2 text-xs font-semibold tabular-nums shadow-sm',
                     tone,
                   )}
-                  style={
-                    includeAreas
-                      ? { gridArea: name }
-                      : undefined
-                  }
+                  style={includeAreas ? { gridArea: name } : undefined}
                 >
                   {includeAreas ? name : `${rowIndex + 1}×${colIndex + 1}`}
                 </div>
