@@ -12,7 +12,7 @@ import {
 } from '#/lib/tip'
 
 const DEFAULT_BILL = '64.50'
-const DEFAULT_TIP = 15
+const DEFAULT_TIP = 0
 const DEFAULT_PEOPLE = 2
 
 export function TipCalculatorTool() {

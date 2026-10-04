@@ -11,7 +11,7 @@ export type TipResult = {
   totalPerPerson: number
 }
 
-export const TIP_PRESETS = [10, 15, 18, 20, 25] as const
+export const TIP_PRESETS = [0, 10, 15, 18, 20, 25] as const
 
 export function roundMoney(value: number): number {
   // Avoid binary float traps (e.g. 64.5 * 0.15 → 9.674999…)
