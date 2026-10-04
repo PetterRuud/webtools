@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, type ReactNode } from 'react'
 import * as Diff from 'diff'
 import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
@@ -7,26 +7,150 @@ import { Textarea } from '#/components/ui/textarea'
 import { cn } from 'cn'
 
 type ViewMode = 'split' | 'unified'
+type LineKind = 'same' | 'added' | 'removed' | 'empty'
+type SegmentKind = 'same' | 'added' | 'removed'
+
+type Segment = {
+  text: string
+  type: SegmentKind
+}
+
+type DiffCell = {
+  text: string
+  type: LineKind
+  segments?: Segment[]
+}
 
 type DiffRow = {
-  left?: { text: string; type: 'same' | 'removed' | 'empty' }
-  right?: { text: string; type: 'same' | 'added' | 'empty' }
-  unified?: { text: string; type: 'same' | 'added' | 'removed' }
+  left?: DiffCell
+  right?: DiffCell
+  unified?: DiffCell
+}
+
+function splitLines(value: string): string[] {
+  if (value === '') return []
+  return value.replace(/\n$/, '').split('\n')
+}
+
+/** Prefer word-level hunks; refine dense single-token edits with char LCS. */
+function inlineSegments(before: string, after: string): {
+  left: Segment[]
+  right: Segment[]
+} {
+  const parts = Diff.diffWordsWithSpace(before, after)
+  const left: Segment[] = []
+  const right: Segment[] = []
+
+  let i = 0
+  while (i < parts.length) {
+    const part = parts[i]
+    const next = parts[i + 1]
+
+    if (part.removed && next?.added) {
+      const removed = part.value
+      const added = next.value
+      const useChars =
+        !/\s/.test(removed) &&
+        !/\s/.test(added) &&
+        removed.length > 0 &&
+        added.length > 0 &&
+        Math.max(removed.length, added.length) <= 48
+
+      if (useChars) {
+        for (const sub of Diff.diffChars(removed, added)) {
+          if (sub.added) {
+            right.push({ text: sub.value, type: 'added' })
+          } else if (sub.removed) {
+            left.push({ text: sub.value, type: 'removed' })
+          } else {
+            left.push({ text: sub.value, type: 'same' })
+            right.push({ text: sub.value, type: 'same' })
+          }
+        }
+      } else {
+        left.push({ text: removed, type: 'removed' })
+        right.push({ text: added, type: 'added' })
+      }
+      i += 2
+      continue
+    }
+
+    if (part.added) {
+      right.push({ text: part.value, type: 'added' })
+    } else if (part.removed) {
+      left.push({ text: part.value, type: 'removed' })
+    } else {
+      left.push({ text: part.value, type: 'same' })
+      right.push({ text: part.value, type: 'same' })
+    }
+    i += 1
+  }
+
+  return { left, right }
 }
 
 function buildRows(left: string, right: string, view: ViewMode): DiffRow[] {
   const parts = Diff.diffLines(left, right)
+
   if (view === 'unified') {
-    return parts.flatMap((part) => {
-      const lines = part.value.replace(/\n$/, '').split('\n')
-      if (part.value === '' || (part.value === '\n' && lines.length === 1 && lines[0] === '')) {
-        return []
+    const rows: DiffRow[] = []
+    let i = 0
+    while (i < parts.length) {
+      const part = parts[i]
+      const next = parts[i + 1]
+
+      if (part.removed && next?.added) {
+        const leftLines = splitLines(part.value)
+        const rightLines = splitLines(next.value)
+        const max = Math.max(leftLines.length, rightLines.length)
+        for (let n = 0; n < max; n += 1) {
+          const hasLeft = n < leftLines.length
+          const hasRight = n < rightLines.length
+          if (hasLeft && hasRight) {
+            const { left: leftSegs, right: rightSegs } = inlineSegments(
+              leftLines[n],
+              rightLines[n],
+            )
+            rows.push({
+              unified: {
+                text: leftLines[n],
+                type: 'removed',
+                segments: leftSegs,
+              },
+            })
+            rows.push({
+              unified: {
+                text: rightLines[n],
+                type: 'added',
+                segments: rightSegs,
+              },
+            })
+          } else if (hasLeft) {
+            rows.push({
+              unified: { text: leftLines[n], type: 'removed' },
+            })
+          } else {
+            rows.push({
+              unified: { text: rightLines[n], type: 'added' },
+            })
+          }
+        }
+        i += 2
+        continue
       }
-      const type = part.added ? 'added' : part.removed ? 'removed' : 'same'
-      return lines.map((text) => ({
-        unified: { text, type: type as 'same' | 'added' | 'removed' },
-      }))
-    })
+
+      const lines = splitLines(part.value)
+      if (part.value === '' || (part.value === '\n' && lines.length === 1 && lines[0] === '')) {
+        i += 1
+        continue
+      }
+      const type: SegmentKind = part.added ? 'added' : part.removed ? 'removed' : 'same'
+      for (const text of lines) {
+        rows.push({ unified: { text, type } })
+      }
+      i += 1
+    }
+    return rows
   }
 
   const rows: DiffRow[] = []
@@ -35,28 +159,38 @@ function buildRows(left: string, right: string, view: ViewMode): DiffRow[] {
     const part = parts[i]
     const next = parts[i + 1]
     if (part.removed && next?.added) {
-      const leftLines = part.value.replace(/\n$/, '').split('\n')
-      const rightLines = next.value.replace(/\n$/, '').split('\n')
+      const leftLines = splitLines(part.value)
+      const rightLines = splitLines(next.value)
       const max = Math.max(leftLines.length, rightLines.length)
       for (let n = 0; n < max; n += 1) {
-        rows.push({
-          left:
-            n < leftLines.length
-              ? { text: leftLines[n], type: 'removed' }
-              : { text: '', type: 'empty' },
-          right:
-            n < rightLines.length
-              ? { text: rightLines[n], type: 'added' }
-              : { text: '', type: 'empty' },
-        })
+        const hasLeft = n < leftLines.length
+        const hasRight = n < rightLines.length
+        if (hasLeft && hasRight) {
+          const { left: leftSegs, right: rightSegs } = inlineSegments(
+            leftLines[n],
+            rightLines[n],
+          )
+          rows.push({
+            left: { text: leftLines[n], type: 'removed', segments: leftSegs },
+            right: { text: rightLines[n], type: 'added', segments: rightSegs },
+          })
+        } else if (hasLeft) {
+          rows.push({
+            left: { text: leftLines[n], type: 'removed' },
+            right: { text: '', type: 'empty' },
+          })
+        } else {
+          rows.push({
+            left: { text: '', type: 'empty' },
+            right: { text: rightLines[n], type: 'added' },
+          })
+        }
       }
       i += 2
       continue
     }
-    const lines = part.value.replace(/\n$/, '').split('\n')
-    if (part.value.endsWith('\n') && lines.at(-1) === '') {
-      // keep trailing empty from split behavior; already handled by replace
-    }
+
+    const lines = splitLines(part.value)
     for (const text of lines) {
       if (part.added) {
         rows.push({
@@ -80,17 +214,48 @@ function buildRows(left: string, right: string, view: ViewMode): DiffRow[] {
   return rows
 }
 
-function cellClass(type: 'same' | 'added' | 'removed' | 'empty') {
-  if (type === 'added') {
-    return 'bg-primary/15 text-foreground dark:bg-primary/25'
-  }
-  if (type === 'removed') {
-    return 'bg-destructive/12 text-foreground dark:bg-destructive/20'
-  }
+function lineClass(type: LineKind, hasSegments: boolean) {
   if (type === 'empty') {
     return 'bg-muted/40 text-transparent'
   }
+  if (type === 'added') {
+    return hasSegments
+      ? 'bg-primary/8 dark:bg-primary/12'
+      : 'bg-primary/15 dark:bg-primary/25'
+  }
+  if (type === 'removed') {
+    return hasSegments
+      ? 'bg-destructive/8 dark:bg-destructive/12'
+      : 'bg-destructive/12 dark:bg-destructive/20'
+  }
   return 'bg-transparent'
+}
+
+function segmentClass(type: SegmentKind) {
+  if (type === 'added') {
+    return 'rounded-[2px] bg-primary/35 text-foreground dark:bg-primary/45'
+  }
+  if (type === 'removed') {
+    return 'rounded-[2px] bg-destructive/30 text-foreground dark:bg-destructive/40'
+  }
+  return undefined
+}
+
+function renderSegments(segments: Segment[] | undefined, fallback: string): ReactNode {
+  if (!segments || segments.length === 0) {
+    return fallback || ' '
+  }
+  return segments.map((segment, index) => {
+    const mark = segmentClass(segment.type)
+    if (!mark) {
+      return <span key={index}>{segment.text}</span>
+    }
+    return (
+      <mark key={index} className={cn(mark, 'text-inherit')}>
+        {segment.text}
+      </mark>
+    )
+  })
 }
 
 export function TextDiffTool() {
@@ -197,25 +362,29 @@ export function TextDiffTool() {
           <div className="overflow-x-auto rounded-xl border border-border">
             <table className="w-full border-collapse font-mono text-[0.8rem] leading-6">
               <tbody>
-                {rows.map((row, index) => (
-                  <tr key={index}>
-                    <td
-                      className={cn(
-                        'whitespace-pre-wrap px-3 py-0.5 align-top',
-                        cellClass(row.unified!.type),
-                      )}
-                    >
-                      <span className="mr-2 inline-block w-3 text-muted-foreground">
-                        {row.unified!.type === 'added'
-                          ? '+'
-                          : row.unified!.type === 'removed'
-                            ? '−'
-                            : ' '}
-                      </span>
-                      {row.unified!.text || ' '}
-                    </td>
-                  </tr>
-                ))}
+                {rows.map((row, index) => {
+                  const cell = row.unified!
+                  const hasSegments = Boolean(cell.segments?.length)
+                  return (
+                    <tr key={index}>
+                      <td
+                        className={cn(
+                          'whitespace-pre-wrap px-3 py-0.5 align-top',
+                          lineClass(cell.type, hasSegments),
+                        )}
+                      >
+                        <span className="mr-2 inline-block w-3 text-muted-foreground">
+                          {cell.type === 'added'
+                            ? '+'
+                            : cell.type === 'removed'
+                              ? '−'
+                              : ' '}
+                        </span>
+                        {renderSegments(cell.segments, cell.text)}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
@@ -229,26 +398,30 @@ export function TextDiffTool() {
                 </tr>
               </thead>
               <tbody>
-                {rows.map((row, index) => (
-                  <tr key={index} className="border-t border-border/50">
-                    <td
-                      className={cn(
-                        'w-1/2 whitespace-pre-wrap px-3 py-0.5 align-top',
-                        cellClass(row.left!.type),
-                      )}
-                    >
-                      {row.left!.text || ' '}
-                    </td>
-                    <td
-                      className={cn(
-                        'w-1/2 whitespace-pre-wrap px-3 py-0.5 align-top',
-                        cellClass(row.right!.type),
-                      )}
-                    >
-                      {row.right!.text || ' '}
-                    </td>
-                  </tr>
-                ))}
+                {rows.map((row, index) => {
+                  const leftCell = row.left!
+                  const rightCell = row.right!
+                  return (
+                    <tr key={index} className="border-t border-border/50">
+                      <td
+                        className={cn(
+                          'w-1/2 whitespace-pre-wrap px-3 py-0.5 align-top',
+                          lineClass(leftCell.type, Boolean(leftCell.segments?.length)),
+                        )}
+                      >
+                        {renderSegments(leftCell.segments, leftCell.text)}
+                      </td>
+                      <td
+                        className={cn(
+                          'w-1/2 whitespace-pre-wrap px-3 py-0.5 align-top',
+                          lineClass(rightCell.type, Boolean(rightCell.segments?.length)),
+                        )}
+                      >
+                        {renderSegments(rightCell.segments, rightCell.text)}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
