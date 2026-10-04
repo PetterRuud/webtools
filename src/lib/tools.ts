@@ -18,6 +18,7 @@ export type ToolLink = {
     | '/tools/image-compress'
     | '/tools/image-format'
     | '/tools/json-formatter'
+    | '/tools/csv-json'
     | '/tools/regex'
     | '/tools/base64'
     | '/tools/text-diff'
@@ -52,6 +53,14 @@ export const TOOLS: ToolLink[] = [
     blurb: 'Pretty-print, minify, validate.',
     category: 'text',
     keywords: ['json', 'pretty', 'minify', 'validate', 'format'],
+  },
+  {
+    to: '/tools/csv-json',
+    name: 'CSV ↔ JSON',
+    shortName: 'CSV/JSON',
+    blurb: 'Convert either way.',
+    category: 'text',
+    keywords: ['csv', 'json', 'convert', 'delimiter', 'spreadsheet', 'table'],
   },
   {
     to: '/tools/regex',
