@@ -25,18 +25,6 @@ export function clampRadius(
   return Math.max(0, Math.min(max, Math.round(radius)))
 }
 
-function fillBackground(
-  ctx: CanvasRenderingContext2D,
-  width: number,
-  height: number,
-  background: PadBackground,
-) {
-  ctx.clearRect(0, 0, width, height)
-  if (background === 'transparent') return
-  ctx.fillStyle = background
-  ctx.fillRect(0, 0, width, height)
-}
-
 /** Rounded rect path using quadratic curves (matches common canvas corner clips). */
 function roundedRectPath(
   ctx: CanvasRenderingContext2D,
@@ -155,12 +143,19 @@ export async function renderSquareRound(
     const ctx = canvas.getContext('2d')
     if (!ctx) throw new Error('Canvas unavailable in this browser')
 
-    fillBackground(ctx, width, height, options.background)
-
+    // Clear fully, then clip BEFORE painting so radius cuts the whole
+    // composite (padding + background + image). Painting the background
+    // first left sharp opaque corners and made radius look like a no-op
+    // when pad+transparent left only empty padding in the corner zones.
+    ctx.clearRect(0, 0, width, height)
     ctx.save()
     if (radius > 0) {
       roundedRectPath(ctx, width, height, radius)
       ctx.clip()
+    }
+    if (options.background !== 'transparent') {
+      ctx.fillStyle = options.background
+      ctx.fillRect(0, 0, width, height)
     }
     ctx.drawImage(drawable.source, offsetX, offsetY)
     ctx.restore()

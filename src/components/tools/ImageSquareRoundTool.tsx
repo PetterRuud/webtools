@@ -356,6 +356,7 @@ export function ImageSquareRoundTool() {
               }
             >
               <img
+                key={`${previewUrl}-${effectiveRadius}-${padToSquare}-${background}`}
                 src={previewUrl}
                 alt="Square and round preview"
                 className={imagePreviewClassName}
