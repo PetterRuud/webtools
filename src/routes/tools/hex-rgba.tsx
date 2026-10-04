@@ -9,7 +9,7 @@ export const Route = createFileRoute('/tools/hex-rgba')({
       {
         name: 'description',
         content:
-          'Convert hex, rgba, hsl/hsla, hwb, and oklch colors live — copy any format.',
+          'Convert hex, rgba, hsl/hsla, hwb, and oklch colors — copy any format.',
       },
     ],
   }),
@@ -18,10 +18,7 @@ export const Route = createFileRoute('/tools/hex-rgba')({
 
 function HexRgbaPage() {
   return (
-    <ToolShell
-      title="CSS Color"
-      description="Paste hex, rgba, hsl/hsla, hwb, or oklch. Every field stays in sync — copy the format you need."
-    >
+    <ToolShell title="CSS Color">
       <HexRgbaTool />
     </ToolShell>
   )

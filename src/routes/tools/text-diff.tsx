@@ -8,8 +8,7 @@ export const Route = createFileRoute('/tools/text-diff')({
       { title: 'Text diff · WebTools' },
       {
         name: 'description',
-        content:
-          'Compare two texts side by side or in a unified view — additions and removals highlighted.',
+        content: 'Compare two texts side by side or in a unified view.',
       },
     ],
   }),
@@ -18,11 +17,7 @@ export const Route = createFileRoute('/tools/text-diff')({
 
 function TextDiffPage() {
   return (
-    <ToolShell
-      wide
-      title="Text diff"
-      description="Paste original and changed text. See additions and removals in a split or unified view."
-    >
+    <ToolShell title="Text diff">
       <TextDiffTool />
     </ToolShell>
   )

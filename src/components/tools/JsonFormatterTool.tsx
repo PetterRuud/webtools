@@ -37,7 +37,7 @@ export function JsonFormatterTool() {
   function run(mode: 'pretty' | 'minify') {
     if (!input.trim()) {
       setOutput('')
-      setError('Paste some JSON first.')
+      setError('Paste JSON first.')
       return
     }
     try {
@@ -53,7 +53,7 @@ export function JsonFormatterTool() {
 
   function validateOnly() {
     if (!input.trim()) {
-      setError('Paste some JSON first.')
+      setError('Paste JSON first.')
       setOutput('')
       return
     }
@@ -68,9 +68,9 @@ export function JsonFormatterTool() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
-        <div className="flex flex-wrap gap-2">
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-1.5">
           <Button type="button" onClick={() => run('pretty')}>
             Pretty
           </Button>
@@ -92,7 +92,7 @@ export function JsonFormatterTool() {
             Sample
           </Button>
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
           <span>Indent</span>
           {([2, 4] as const).map((value) => (
             <Button
@@ -108,8 +108,8 @@ export function JsonFormatterTool() {
         </div>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <div className="flex flex-col gap-2">
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="flex flex-col gap-1.5">
           <Label htmlFor="json-input">Input</Label>
           <Textarea
             id="json-input"
@@ -119,12 +119,12 @@ export function JsonFormatterTool() {
               setError(null)
             }}
             spellCheck={false}
-            placeholder="Paste JSON here…"
+            placeholder="Paste JSON…"
             className="min-h-64 font-mono text-[0.85rem] leading-6"
             aria-invalid={Boolean(error)}
           />
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
             <Label htmlFor="json-output">Output</Label>
             <Button
@@ -143,9 +143,7 @@ export function JsonFormatterTool() {
             readOnly
             spellCheck={false}
             placeholder={
-              status === 'empty'
-                ? 'Formatted result will appear here…'
-                : 'Run Pretty or Minify to fill this pane.'
+              status === 'empty' ? 'Result…' : 'Run Pretty or Minify…'
             }
             className="min-h-64 font-mono text-[0.85rem] leading-6"
           />
@@ -157,14 +155,10 @@ export function JsonFormatterTool() {
           {error}
         </p>
       ) : status === 'ready' ? (
-        <p className="m-0 text-sm text-muted-foreground">
-          {output.length.toLocaleString()} characters · stays on this device
+        <p className="m-0 text-xs text-muted-foreground">
+          {output.length.toLocaleString()} characters
         </p>
-      ) : (
-        <p className="m-0 text-sm text-muted-foreground">
-          Pretty, minify, or validate — nothing is uploaded.
-        </p>
-      )}
+      ) : null}
     </div>
   )
 }

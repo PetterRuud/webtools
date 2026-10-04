@@ -96,20 +96,14 @@ export function ToolsBrowse() {
   return (
     <section
       id="tools"
-      className="flex scroll-mt-8 flex-col gap-6 border-t border-border/70 pt-10"
+      className="flex scroll-mt-8 flex-col gap-4 border-t border-border/70 pt-6"
     >
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="flex flex-col gap-2">
-          <h2 className="font-heading m-0 text-2xl tracking-tight text-ink">
-            Tools
-          </h2>
-          <p className="m-0 max-w-xl text-sm leading-6 text-muted-foreground">
-            Browse by category or search. Ready in the browser today —
-            Transparent stays local until Containers can host sharp.
-          </p>
-        </div>
+      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <h2 className="font-heading m-0 text-xl tracking-tight text-ink">
+          Tools
+        </h2>
         <p className="m-0 shrink-0 text-sm text-muted-foreground tabular-nums">
-          {visibleCount} / {totalCount} tools
+          {visibleCount} / {totalCount}
         </p>
       </div>
 
@@ -273,16 +267,16 @@ function ToolGrid({ tools }: { tools: ToolLink[] }) {
           <li key={tool.to}>
             <Link
               to={tool.to}
-              className="tool-tile group flex h-full flex-col gap-2 rounded-xl border border-border/70 bg-card/45 px-4 py-4 no-underline transition-[background-color,border-color,transform] hover:-translate-y-0.5 hover:border-primary/35 hover:bg-muted/55 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              className="tool-tile group flex h-full flex-col gap-1.5 rounded-xl border border-border/70 bg-card/45 px-3.5 py-3 no-underline transition-[background-color,border-color,transform] hover:-translate-y-0.5 hover:border-primary/35 hover:bg-muted/55 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
             >
               <span className="flex items-start justify-between gap-3">
-                <span className="inline-flex size-9 items-center justify-center rounded-lg bg-mist text-primary">
+                <span className="inline-flex size-8 items-center justify-center rounded-lg bg-mist text-primary">
                   <Icon className="size-4" aria-hidden />
                 </span>
                 <span className="tool-mark mt-1 h-0.5 w-6 origin-left scale-x-0 bg-spark" />
               </span>
-              <span className="font-heading text-base text-ink">{tool.name}</span>
-              <span className="text-sm leading-6 text-muted-foreground">
+              <span className="font-heading text-sm text-ink">{tool.name}</span>
+              <span className="text-xs leading-5 text-muted-foreground">
                 {tool.blurb}
               </span>
             </Link>
@@ -295,20 +289,18 @@ function ToolGrid({ tools }: { tools: ToolLink[] }) {
 
 function TransparentNote() {
   return (
-    <div className="rounded-xl border border-dashed border-border/80 bg-card/30 px-4 py-4">
+    <div className="rounded-xl border border-dashed border-border/80 bg-card/30 px-3.5 py-3">
       <div className="flex items-center justify-between gap-3">
-        <p className="font-heading m-0 text-base text-ink">Transparent</p>
+        <p className="font-heading m-0 text-sm text-ink">Transparent</p>
         <span className="rounded-md bg-muted px-1.5 py-0.5 text-[0.7rem] font-medium text-muted-foreground">
           Local
         </span>
       </div>
-      <p className="mt-2 mb-0 text-sm leading-6 text-muted-foreground">
-        Source lives at{' '}
-        <code className="rounded bg-muted px-1.5 py-0.5 text-[0.8rem]">
+      <p className="mt-1.5 mb-0 text-xs leading-5 text-muted-foreground">
+        <code className="rounded bg-muted px-1 py-0.5 text-[0.75rem]">
           tools/transparent/
         </code>{' '}
-        (Express + sharp). Run it locally — not on Workers Isolates yet; edge
-        needs Containers later.
+        — local only (sharp).
       </p>
     </div>
   )

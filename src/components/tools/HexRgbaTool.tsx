@@ -72,57 +72,55 @@ export function HexRgbaTool() {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      <div
-        className="h-32 w-full rounded-2xl border border-border shadow-inner transition-[background] duration-300 ease-out"
-        style={{ background: preview }}
-        aria-label="Color preview"
-      />
+    <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+      <div className="flex flex-col gap-3">
+        <div
+          className="h-24 w-full rounded-xl border border-border shadow-inner transition-[background] duration-300 ease-out sm:h-28"
+          style={{ background: preview }}
+          aria-label="Color preview"
+        />
 
-      <div className="flex flex-col gap-5">
-        {FORMATS.map((format) => {
-          const meta = COLOR_FORMAT_META[format]
-          const error = errors[format]
-          return (
-            <div key={format} className="flex flex-col gap-2">
-              <Label htmlFor={`color-${format}`}>{meta.label}</Label>
-              <div className="flex gap-2">
-                <Input
-                  id={`color-${format}`}
-                  value={drafts[format]}
-                  onValueChange={(value) => onFormatChange(format, value)}
-                  aria-invalid={Boolean(error)}
-                  spellCheck={false}
-                  className="font-mono text-[0.92rem]"
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    if (errors[format] || !parseColor(format, drafts[format])) {
-                      toast.error(`Fix the ${meta.label} value first`)
-                      return
-                    }
-                    void copyText(formatColor(format, channels), meta.label)
-                  }}
-                >
-                  Copy
-                </Button>
+        <div className="flex flex-col gap-3">
+          {FORMATS.map((format) => {
+            const meta = COLOR_FORMAT_META[format]
+            const error = errors[format]
+            return (
+              <div key={format} className="flex flex-col gap-1">
+                <Label htmlFor={`color-${format}`}>{meta.label}</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id={`color-${format}`}
+                    value={drafts[format]}
+                    onValueChange={(value) => onFormatChange(format, value)}
+                    aria-invalid={Boolean(error)}
+                    spellCheck={false}
+                    className="font-mono text-[0.92rem]"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      if (errors[format] || !parseColor(format, drafts[format])) {
+                        toast.error(`Fix ${meta.label} first`)
+                        return
+                      }
+                      void copyText(formatColor(format, channels), meta.label)
+                    }}
+                  >
+                    Copy
+                  </Button>
+                </div>
+                {error ? (
+                  <p className="m-0 text-xs text-destructive">{error}</p>
+                ) : null}
               </div>
-              {error ? (
-                <p className="m-0 text-sm text-destructive">{error}</p>
-              ) : (
-                <p className="m-0 text-sm text-muted-foreground">{meta.hint}</p>
-              )}
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
 
-      <div className="grid gap-5 border-t border-border/70 pt-6">
-        <p className="m-0 text-sm text-muted-foreground">
-          Nudge channels — every format updates together.
-        </p>
+      <div className="flex flex-col gap-4 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
+        <p className="m-0 text-sm font-medium text-ink">Channels</p>
         {(
           [
             ['r', 'Red', 255],
@@ -131,7 +129,7 @@ export function HexRgbaTool() {
             ['a', 'Alpha', 1],
           ] as const
         ).map(([key, label, max]) => (
-          <div key={key} className="flex flex-col gap-2">
+          <div key={key} className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between gap-3">
               <Label htmlFor={`channel-${key}`}>{label}</Label>
               <span className="text-sm tabular-nums text-muted-foreground">

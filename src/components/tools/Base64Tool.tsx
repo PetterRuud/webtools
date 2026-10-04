@@ -33,8 +33,8 @@ export function Base64Tool() {
   }, [input, mode])
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap gap-2">
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap gap-1.5">
         <Button
           type="button"
           variant={mode === 'encode' ? 'default' : 'outline'}
@@ -60,8 +60,8 @@ export function Base64Tool() {
         </Button>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <div className="flex flex-col gap-2">
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="flex flex-col gap-1.5">
           <Label htmlFor="base64-input">
             {mode === 'encode' ? 'Text' : 'Base64'}
           </Label>
@@ -71,15 +71,13 @@ export function Base64Tool() {
             onChange={(event) => setInput(event.target.value)}
             spellCheck={false}
             placeholder={
-              mode === 'encode'
-                ? 'Type or paste text (UTF-8)…'
-                : 'Paste a Base64 string…'
+              mode === 'encode' ? 'Text (UTF-8)…' : 'Base64 string…'
             }
             className="min-h-56 font-mono text-[0.85rem] leading-6"
             aria-invalid={Boolean(result.error)}
           />
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
             <Label htmlFor="base64-output">
               {mode === 'encode' ? 'Base64' : 'Text'}
@@ -99,13 +97,7 @@ export function Base64Tool() {
             value={result.value}
             readOnly
             spellCheck={false}
-            placeholder={
-              !input
-                ? 'Result updates as you type…'
-                : result.error
-                  ? 'Fix the input to see output.'
-                  : ''
-            }
+            placeholder={!input ? 'Result…' : result.error ? 'Fix input…' : ''}
             className="min-h-56 font-mono text-[0.85rem] leading-6"
           />
         </div>
@@ -115,11 +107,7 @@ export function Base64Tool() {
         <p className="m-0 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
           {result.error}
         </p>
-      ) : (
-        <p className="m-0 text-sm text-muted-foreground">
-          UTF-8 safe via TextEncoder / TextDecoder. Runs entirely in your browser.
-        </p>
-      )}
+      ) : null}
     </div>
   )
 }

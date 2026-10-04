@@ -8,8 +8,7 @@ export const Route = createFileRoute('/tools/base64')({
       { title: 'Base64 · WebTools' },
       {
         name: 'description',
-        content:
-          'Encode or decode UTF-8 text as Base64 entirely in your browser.',
+        content: 'Encode or decode UTF-8 text as Base64 in the browser.',
       },
     ],
   }),
@@ -18,11 +17,7 @@ export const Route = createFileRoute('/tools/base64')({
 
 function Base64Page() {
   return (
-    <ToolShell
-      wide
-      title="Base64"
-      description="Encode text to Base64 or decode it back — UTF-8 safe for accents and emoji."
-    >
+    <ToolShell title="Base64">
       <Base64Tool />
     </ToolShell>
   )

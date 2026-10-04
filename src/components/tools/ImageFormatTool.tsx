@@ -90,153 +90,154 @@ export function ImageFormatTool() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="format-file">Image</Label>
-        <input
-          id="format-file"
-          type="file"
-          accept="image/*"
-          className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground hover:file:bg-primary/85"
-          onChange={(event) => onPick(event.target.files?.[0] ?? null)}
-        />
-        {!file ? (
-          <p className="m-0 text-sm text-muted-foreground">
-            Choose a PNG, JPEG, WebP, GIF, or other browser-decodable image.
-          </p>
-        ) : (
-          <p className="m-0 text-sm text-muted-foreground">
-            {file.name} · {formatBytes(file.size)}
-            {file.type ? ` · ${file.type}` : ''}
-          </p>
-        )}
-      </div>
-
-      {sourceUrl ? (
-        <div className="overflow-hidden rounded-xl border border-border bg-card/50">
-          <img
-            src={sourceUrl}
-            alt="Source preview"
-            className="mx-auto max-h-56 w-auto object-contain"
-          />
-        </div>
-      ) : null}
-
+    <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
       <div className="flex flex-col gap-3">
-        <Label>Output format</Label>
-        <div className="flex flex-wrap gap-2">
-          {OUTPUT_FORMATS.map((item) => (
-            <Button
-              key={item.id}
-              type="button"
-              size="sm"
-              variant={format === item.id ? 'default' : 'outline'}
-              onClick={() => {
-                setFormat(item.id)
-                setOutput(null)
-                setError(null)
-              }}
-            >
-              {item.label}
-            </Button>
-          ))}
-        </div>
-      </div>
-
-      {lossy ? (
-        <div className="flex flex-col gap-3">
-          <div className="flex items-baseline justify-between gap-3">
-            <Label htmlFor="format-quality">Quality</Label>
-            <span className="font-mono text-sm text-muted-foreground">
-              {Math.round(quality * 100)}%
-            </span>
-          </div>
-          <Slider
-            id="format-quality"
-            min={0.1}
-            max={1}
-            step={0.05}
-            value={[quality]}
-            onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value
-              if (typeof next === 'number') {
-                setQuality(next)
-                setOutput(null)
-              }
-            }}
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="format-file">Image</Label>
+          <input
+            id="format-file"
+            type="file"
+            accept="image/*"
+            className="block w-full text-sm text-muted-foreground file:mr-3 file:rounded-lg file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-primary-foreground hover:file:bg-primary/85"
+            onChange={(event) => onPick(event.target.files?.[0] ?? null)}
           />
-          <p className="m-0 text-sm text-muted-foreground">
-            Applies to JPEG and WebP only. PNG stays lossless.
-          </p>
-        </div>
-      ) : null}
-
-      <div className="flex flex-wrap gap-2">
-        <Button type="button" onClick={() => void convert()} disabled={busy || !file}>
-          {busy ? 'Converting…' : `Convert to ${selected.label}`}
-        </Button>
-        <Button
-          type="button"
-          variant="outline"
-          onClick={download}
-          disabled={!output}
-        >
-          Download
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={() => {
-            onPick(null)
-            setFormat('webp')
-            setQuality(0.9)
-          }}
-        >
-          Clear
-        </Button>
-      </div>
-
-      {error ? (
-        <p className="m-0 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {error}
-        </p>
-      ) : null}
-
-      {output && outputUrl ? (
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-            <h2 className="font-heading m-0 text-lg text-ink">Result</h2>
-            <p className="m-0 text-sm text-muted-foreground">
-              {downloadName}
-              {dims ? ` · ${dims.width}×${dims.height}` : ''} ·{' '}
-              {formatBytes(output.size)}
+          {file ? (
+            <p className="m-0 text-xs text-muted-foreground">
+              {file.name} · {formatBytes(file.size)}
+              {file.type ? ` · ${file.type}` : ''}
             </p>
-          </div>
-          <div className="overflow-hidden rounded-xl border border-border bg-card/50">
+          ) : null}
+        </div>
+
+        {sourceUrl ? (
+          <div className="overflow-hidden rounded-lg border border-border bg-card/50">
             <img
-              src={outputUrl}
-              alt="Converted preview"
-              className="mx-auto max-h-56 w-auto object-contain"
+              src={sourceUrl}
+              alt="Source preview"
+              className="mx-auto max-h-52 w-auto object-contain"
             />
           </div>
-        </div>
-      ) : file && !error ? (
-        <p className="m-0 text-sm text-muted-foreground">
-          Pick a format{lossy ? ' and quality' : ''}, then convert. Dimensions
-          stay the same — this is not a compressor.
-        </p>
-      ) : null}
+        ) : (
+          <p className="m-0 rounded-lg border border-dashed border-border px-3 py-8 text-center text-sm text-muted-foreground">
+            Choose an image
+          </p>
+        )}
 
-      <p className="m-0 text-sm text-muted-foreground">
-        Need a smaller file? Use{' '}
-        <Link
-          to="/tools/image-compress"
-          className="text-foreground underline-offset-4 hover:underline"
-        >
-          Image compress
-        </Link>{' '}
-        for crop, scale, and quality. Conversion runs entirely in your browser.
-      </p>
+        <div className="flex flex-col gap-2">
+          <Label>Output</Label>
+          <div className="flex flex-wrap gap-1.5">
+            {OUTPUT_FORMATS.map((item) => (
+              <Button
+                key={item.id}
+                type="button"
+                size="sm"
+                variant={format === item.id ? 'default' : 'outline'}
+                onClick={() => {
+                  setFormat(item.id)
+                  setOutput(null)
+                  setError(null)
+                }}
+              >
+                {item.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {lossy ? (
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-baseline justify-between gap-3">
+              <Label htmlFor="format-quality">Quality</Label>
+              <span className="font-mono text-sm text-muted-foreground">
+                {Math.round(quality * 100)}%
+              </span>
+            </div>
+            <Slider
+              id="format-quality"
+              min={0.1}
+              max={1}
+              step={0.05}
+              value={[quality]}
+              onValueChange={(value) => {
+                const next = Array.isArray(value) ? value[0] : value
+                if (typeof next === 'number') {
+                  setQuality(next)
+                  setOutput(null)
+                }
+              }}
+            />
+          </div>
+        ) : null}
+
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" onClick={() => void convert()} disabled={busy || !file}>
+            {busy ? 'Converting…' : `Convert to ${selected.label}`}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={download}
+            disabled={!output}
+          >
+            Download
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              onPick(null)
+              setFormat('webp')
+              setQuality(0.9)
+            }}
+          >
+            Clear
+          </Button>
+        </div>
+
+        {error ? (
+          <p className="m-0 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            {error}
+          </p>
+        ) : null}
+
+        <p className="m-0 text-xs text-muted-foreground">
+          Need crop/scale?{' '}
+          <Link
+            to="/tools/image-compress"
+            className="text-foreground underline-offset-4 hover:underline"
+          >
+            Image compress
+          </Link>
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        {output && outputUrl ? (
+          <>
+            <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
+              <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+                Result
+              </h2>
+              <p className="m-0 text-xs text-muted-foreground">
+                {downloadName}
+                {dims ? ` · ${dims.width}×${dims.height}` : ''} ·{' '}
+                {formatBytes(output.size)}
+              </p>
+            </div>
+            <div className="overflow-hidden rounded-lg border border-border bg-card/50">
+              <img
+                src={outputUrl}
+                alt="Converted preview"
+                className="mx-auto max-h-80 w-auto object-contain"
+              />
+            </div>
+          </>
+        ) : (
+          <div className="flex min-h-40 items-center justify-center rounded-lg border border-dashed border-border px-3 py-8 text-sm text-muted-foreground lg:min-h-64">
+            Result appears here
+          </div>
+        )}
+      </div>
     </div>
   )
 }

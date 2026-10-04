@@ -8,8 +8,7 @@ export const Route = createFileRoute('/tools/json-formatter')({
       { title: 'JSON formatter · WebTools' },
       {
         name: 'description',
-        content:
-          'Pretty-print, minify, and validate JSON in the browser — then copy the result.',
+        content: 'Pretty-print, minify, and validate JSON in the browser.',
       },
     ],
   }),
@@ -18,11 +17,7 @@ export const Route = createFileRoute('/tools/json-formatter')({
 
 function JsonFormatterPage() {
   return (
-    <ToolShell
-      wide
-      title="JSON formatter"
-      description="Pretty-print, minify, or validate JSON. Indent stays under your control; nothing leaves this device."
-    >
+    <ToolShell title="JSON formatter">
       <JsonFormatterTool />
     </ToolShell>
   )

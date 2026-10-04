@@ -8,8 +8,7 @@ export const Route = createFileRoute('/tools/image-format')({
       { title: 'Image format · WebTools' },
       {
         name: 'description',
-        content:
-          'Convert images between PNG, JPEG, and WebP in the browser — pick a format, set quality if lossy, download.',
+        content: 'Convert images between PNG, JPEG, and WebP in the browser.',
       },
     ],
   }),
@@ -18,10 +17,7 @@ export const Route = createFileRoute('/tools/image-format')({
 
 function ImageFormatPage() {
   return (
-    <ToolShell
-      title="Image format"
-      description="Convert between PNG, JPEG, and WebP without leaving the browser. Same pixels, new container — use Image compress when you need crop, scale, or a smaller file."
-    >
+    <ToolShell title="Image format">
       <ImageFormatTool />
     </ToolShell>
   )

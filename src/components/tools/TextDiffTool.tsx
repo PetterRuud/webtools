@@ -111,8 +111,8 @@ export function TextDiffTool() {
   )
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap gap-2">
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap gap-1.5">
         <Button
           type="button"
           variant={view === 'split' ? 'default' : 'outline'}
@@ -149,37 +149,39 @@ export function TextDiffTool() {
         </Button>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <div className="flex flex-col gap-2">
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="flex flex-col gap-1.5">
           <Label htmlFor="diff-left">Original</Label>
           <Textarea
             id="diff-left"
             value={left}
             onChange={(event) => setLeft(event.target.value)}
             spellCheck={false}
-            placeholder="Paste the original text…"
-            className="min-h-40 font-mono text-[0.85rem] leading-6"
+            placeholder="Original…"
+            className="min-h-36 font-mono text-[0.85rem] leading-6"
           />
         </div>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1.5">
           <Label htmlFor="diff-right">Changed</Label>
           <Textarea
             id="diff-right"
             value={right}
             onChange={(event) => setRight(event.target.value)}
             spellCheck={false}
-            placeholder="Paste the changed text…"
-            className="min-h-40 font-mono text-[0.85rem] leading-6"
+            placeholder="Changed…"
+            className="min-h-36 font-mono text-[0.85rem] leading-6"
           />
         </div>
       </div>
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between gap-3">
-          <h2 className="font-heading m-0 text-lg text-ink">Diff</h2>
-          <p className="m-0 text-sm text-muted-foreground">
+          <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+            Diff
+          </h2>
+          <p className="m-0 text-xs text-muted-foreground">
             {!hasInput
-              ? 'Paste text in both panes'
+              ? '—'
               : changeCount === 0
                 ? 'No differences'
                 : `${changeCount} changed line${changeCount === 1 ? '' : 's'}`}
@@ -187,8 +189,8 @@ export function TextDiffTool() {
         </div>
 
         {!hasInput ? (
-          <p className="m-0 rounded-xl border border-dashed border-border px-4 py-10 text-center text-sm text-muted-foreground">
-            Add original and changed text to see a clear line diff.
+          <p className="m-0 rounded-lg border border-dashed border-border px-3 py-6 text-center text-sm text-muted-foreground">
+            Paste both sides to diff
           </p>
         ) : view === 'unified' ? (
           <div className="overflow-x-auto rounded-xl border border-border">

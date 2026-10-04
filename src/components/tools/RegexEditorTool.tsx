@@ -86,9 +86,7 @@ function renderHighlighted(
   activeIndex: number | null,
 ): ReactNode {
   if (!text) {
-    return (
-      <span className="text-muted-foreground">Type a test string to see matches.</span>
-    )
+    return <span className="text-muted-foreground">Add a test string…</span>
   }
   if (matches.length === 0) {
     return <span>{text}</span>
@@ -184,208 +182,208 @@ export function RegexEditorTool() {
     setActiveMatch(null)
   }
 
+  const matchSummary = regexError
+    ? 'Fix pattern'
+    : !pattern
+      ? '—'
+      : !testString
+        ? '—'
+        : `${matches.length} match${matches.length === 1 ? '' : 'es'}${
+            matches.length > 0
+              ? ` · ${coverage.covered}/${coverage.total} (${coverage.percent}%)`
+              : ''
+          }`
+
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <div className="flex flex-wrap items-end justify-between gap-2">
-          <Label htmlFor="regex-pattern">Pattern</Label>
-          <p className="m-0 font-mono text-xs text-muted-foreground">
-            /{pattern || '…'}/{flagString}
-          </p>
-        </div>
-        <Input
-          id="regex-pattern"
-          value={pattern}
-          onValueChange={(value) => {
-            setActivePresetId(null)
-            setPattern(value)
-          }}
-          spellCheck={false}
-          placeholder="Enter a regular expression"
-          className="font-mono text-[0.92rem]"
-          aria-invalid={Boolean(regexError)}
-        />
-        <div className="flex flex-wrap gap-2 pt-1">
-          {FLAG_OPTIONS.map((flag) => (
-            <Button
-              key={flag.id}
-              type="button"
-              size="sm"
-              variant={flags[flag.id] ? 'default' : 'outline'}
-              onClick={() => toggleFlag(flag.id)}
-              title={flag.hint}
-              aria-pressed={flags[flag.id]}
-            >
-              {flag.label}
-              <span className="ml-1 text-[0.7rem] opacity-70">{flag.hint}</span>
-            </Button>
-          ))}
-        </div>
-        {regexError ? (
-          <p className="m-0 text-sm text-destructive">{regexError}</p>
-        ) : null}
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap gap-1.5">
+        {COMMON_REGEX_PATTERNS.map((preset) => (
+          <Button
+            key={preset.id}
+            type="button"
+            size="sm"
+            variant={activePresetId === preset.id ? 'default' : 'outline'}
+            title={preset.description}
+            onClick={() => applyPreset(preset)}
+            aria-pressed={activePresetId === preset.id}
+          >
+            {preset.label}
+          </Button>
+        ))}
       </div>
 
-      <section className="flex flex-col gap-2" aria-label="Common patterns">
-        <div className="flex items-baseline justify-between gap-3">
-          <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
-            Common patterns
-          </h2>
-          <p className="m-0 text-xs text-muted-foreground">Click to fill pattern & sample</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {COMMON_REGEX_PATTERNS.map((preset) => (
-            <Button
-              key={preset.id}
-              type="button"
-              size="sm"
-              variant={activePresetId === preset.id ? 'default' : 'outline'}
-              title={preset.description}
-              onClick={() => applyPreset(preset)}
-              aria-pressed={activePresetId === preset.id}
-            >
-              {preset.label}
-            </Button>
-          ))}
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-3" aria-label="Pattern breakdown">
-        <div className="flex items-baseline justify-between gap-3">
-          <h2 className="font-heading m-0 text-lg text-ink">Breakdown</h2>
-          <p className="m-0 text-sm text-muted-foreground">
-            {!pattern
-              ? 'Enter a pattern'
-              : `${tokens.length} token${tokens.length === 1 ? '' : 's'}`}
-          </p>
-        </div>
-        {!pattern ? (
-          <p className="m-0 rounded-xl border border-dashed border-border px-3 py-4 text-sm text-muted-foreground">
-            Tokens appear here as you edit the pattern.
-          </p>
-        ) : (
-          <ol className="m-0 grid list-none gap-2 p-0 sm:grid-cols-2">
-            {tokens.map((token, index) => (
-              <li
-                key={`${token.text}-${index}`}
-                className="flex min-w-0 items-start gap-3 rounded-lg border border-border/70 bg-card/50 px-3 py-2"
-              >
-                <code
-                  className={cn(
-                    'shrink-0 rounded-md border px-1.5 py-0.5 font-mono text-[0.8rem]',
-                    KIND_STYLES[token.kind] ?? KIND_STYLES.literal,
-                  )}
+      <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
+        <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1.5">
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <Label htmlFor="regex-pattern">Pattern</Label>
+              <p className="m-0 font-mono text-xs text-muted-foreground">
+                /{pattern || '…'}/{flagString}
+              </p>
+            </div>
+            <Input
+              id="regex-pattern"
+              value={pattern}
+              onValueChange={(value) => {
+                setActivePresetId(null)
+                setPattern(value)
+              }}
+              spellCheck={false}
+              placeholder="Regular expression"
+              className="font-mono text-[0.92rem]"
+              aria-invalid={Boolean(regexError)}
+            />
+            <div className="flex flex-wrap gap-1.5">
+              {FLAG_OPTIONS.map((flag) => (
+                <Button
+                  key={flag.id}
+                  type="button"
+                  size="sm"
+                  variant={flags[flag.id] ? 'default' : 'outline'}
+                  onClick={() => toggleFlag(flag.id)}
+                  title={flag.hint}
+                  aria-pressed={flags[flag.id]}
                 >
-                  {token.text}
-                </code>
-                <span className="min-w-0">
-                  <span className="block text-sm font-medium text-ink">{token.label}</span>
-                  <span className="block text-xs leading-5 text-muted-foreground">
-                    {token.meaning}
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ol>
-        )}
-      </section>
-
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="regex-test">Test string</Label>
-        <Textarea
-          id="regex-test"
-          value={testString}
-          onChange={(event) => {
-            setActivePresetId(null)
-            setActiveMatch(null)
-            setTestString(event.target.value)
-          }}
-          spellCheck={false}
-          placeholder="Text to match against…"
-          className="min-h-36 font-mono text-[0.9rem] leading-6"
-        />
-      </div>
-
-      <section className="flex flex-col gap-3" aria-label="Matches">
-        <div className="flex flex-wrap items-baseline justify-between gap-3">
-          <h2 className="font-heading m-0 text-lg text-ink">Matches</h2>
-          <p className="m-0 text-sm text-muted-foreground">
-            {regexError
-              ? 'Fix the pattern to run'
-              : !pattern
-                ? 'Enter a pattern'
-                : !testString
-                  ? 'Add a test string'
-                  : `${matches.length} match${matches.length === 1 ? '' : 'es'}${
-                      matches.length > 0
-                        ? ` · ${coverage.covered}/${coverage.total} chars (${coverage.percent}%)`
-                        : ''
-                    }`}
-          </p>
-        </div>
-
-        <div>
-          <p className="mb-1.5 text-xs font-medium tracking-wide text-muted-foreground uppercase">
-            Highlight
-          </p>
-          <div className="min-h-28 whitespace-pre-wrap rounded-xl border border-border bg-card/60 px-3 py-3 font-mono text-[0.9rem] leading-7 text-foreground">
+                  {flag.label}
+                </Button>
+              ))}
+            </div>
             {regexError ? (
-              <span className="text-destructive">Pattern error — highlights paused.</span>
-            ) : (
-              renderHighlighted(testString, matches, activeMatch)
-            )}
+              <p className="m-0 text-sm text-destructive">{regexError}</p>
+            ) : null}
+          </div>
+
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="regex-test">Test string</Label>
+            <Textarea
+              id="regex-test"
+              value={testString}
+              onChange={(event) => {
+                setActivePresetId(null)
+                setActiveMatch(null)
+                setTestString(event.target.value)
+              }}
+              spellCheck={false}
+              placeholder="Text to match…"
+              className="min-h-40 font-mono text-[0.9rem] leading-6 lg:min-h-56"
+            />
           </div>
         </div>
 
-        {matches.length > 0 ? (
-          <ul className="m-0 flex list-none flex-col gap-2 p-0">
-            {matches.slice(0, 40).map((match, index) => {
-              const groups = formatGroups(match.groups)
-              const selected = activeMatch === index
-              return (
-                <li key={`${match.index}-${index}`}>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setActiveMatch((prev) => (prev === index ? null : index))
-                    }
-                    className={cn(
-                      'flex w-full items-start gap-3 rounded-lg border px-3 py-2 text-left text-sm transition-colors',
-                      selected
-                        ? 'border-spark/70 bg-spark/15'
-                        : 'border-border/70 bg-transparent hover:bg-muted/40',
-                    )}
+        <div className="flex flex-col gap-3">
+          <section className="flex flex-col gap-1.5" aria-label="Pattern breakdown">
+            <div className="flex items-baseline justify-between gap-3">
+              <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+                Breakdown
+              </h2>
+              <p className="m-0 text-xs text-muted-foreground">
+                {!pattern
+                  ? '—'
+                  : `${tokens.length} token${tokens.length === 1 ? '' : 's'}`}
+              </p>
+            </div>
+            {!pattern ? (
+              <p className="m-0 rounded-lg border border-dashed border-border px-3 py-3 text-sm text-muted-foreground">
+                Tokens appear as you type.
+              </p>
+            ) : (
+              <ol className="m-0 grid max-h-48 list-none gap-1.5 overflow-y-auto p-0 sm:grid-cols-2 lg:max-h-56">
+                {tokens.map((token, index) => (
+                  <li
+                    key={`${token.text}-${index}`}
+                    className="flex min-w-0 items-start gap-2 rounded-md border border-border/70 bg-card/50 px-2 py-1.5"
                   >
-                    <span className="mt-0.5 inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-md bg-muted px-1.5 font-mono text-[0.7rem] text-muted-foreground">
-                      {index + 1}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="font-mono text-ink">
-                        {match.text || '(empty)'}
-                        <span className="ml-2 text-muted-foreground">@{match.index}</span>
+                    <code
+                      className={cn(
+                        'shrink-0 rounded border px-1 py-0.5 font-mono text-[0.75rem]',
+                        KIND_STYLES[token.kind] ?? KIND_STYLES.literal,
+                      )}
+                    >
+                      {token.text}
+                    </code>
+                    <span className="min-w-0">
+                      <span className="block text-xs font-medium text-ink">
+                        {token.label}
                       </span>
-                      {groups ? (
-                        <span className="mt-1 block font-mono text-xs text-muted-foreground">
-                          [{groups}]
-                        </span>
-                      ) : null}
+                      <span className="block text-[0.7rem] leading-4 text-muted-foreground">
+                        {token.meaning}
+                      </span>
                     </span>
-                  </button>
-                </li>
-              )
-            })}
-            {matches.length > 40 ? (
-              <li className="text-sm text-muted-foreground">
-                Showing first 40 of {matches.length} matches.
-              </li>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </section>
+
+          <section className="flex flex-col gap-1.5" aria-label="Matches">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+                Matches
+              </h2>
+              <p className="m-0 text-xs text-muted-foreground">{matchSummary}</p>
+            </div>
+
+            <div className="min-h-24 whitespace-pre-wrap rounded-lg border border-border bg-card/60 px-3 py-2 font-mono text-[0.85rem] leading-6 text-foreground">
+              {regexError ? (
+                <span className="text-destructive">Pattern error</span>
+              ) : (
+                renderHighlighted(testString, matches, activeMatch)
+              )}
+            </div>
+
+            {matches.length > 0 ? (
+              <ul className="m-0 flex max-h-52 list-none flex-col gap-1 overflow-y-auto p-0">
+                {matches.slice(0, 40).map((match, index) => {
+                  const groups = formatGroups(match.groups)
+                  const selected = activeMatch === index
+                  return (
+                    <li key={`${match.index}-${index}`}>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setActiveMatch((prev) => (prev === index ? null : index))
+                        }
+                        className={cn(
+                          'flex w-full items-start gap-2 rounded-md border px-2 py-1.5 text-left text-sm transition-colors',
+                          selected
+                            ? 'border-spark/70 bg-spark/15'
+                            : 'border-border/70 bg-transparent hover:bg-muted/40',
+                        )}
+                      >
+                        <span className="mt-0.5 inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded bg-muted px-1 font-mono text-[0.65rem] text-muted-foreground">
+                          {index + 1}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="font-mono text-sm text-ink">
+                            {match.text || '(empty)'}
+                            <span className="ml-2 text-muted-foreground">
+                              @{match.index}
+                            </span>
+                          </span>
+                          {groups ? (
+                            <span className="mt-0.5 block font-mono text-[0.7rem] text-muted-foreground">
+                              [{groups}]
+                            </span>
+                          ) : null}
+                        </span>
+                      </button>
+                    </li>
+                  )
+                })}
+                {matches.length > 40 ? (
+                  <li className="text-xs text-muted-foreground">
+                    First 40 of {matches.length}
+                  </li>
+                ) : null}
+              </ul>
+            ) : !regexError && pattern && testString ? (
+              <p className="m-0 rounded-lg border border-dashed border-border px-3 py-2 text-sm text-muted-foreground">
+                No matches
+              </p>
             ) : null}
-          </ul>
-        ) : !regexError && pattern && testString ? (
-          <p className="m-0 rounded-xl border border-dashed border-border px-3 py-3 text-sm text-muted-foreground">
-            No matches in the test string.
-          </p>
-        ) : null}
-      </section>
+          </section>
+        </div>
+      </div>
     </div>
   )
 }

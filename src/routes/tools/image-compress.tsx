@@ -9,7 +9,7 @@ export const Route = createFileRoute('/tools/image-compress')({
       {
         name: 'description',
         content:
-          'Compress images in the browser at original resolution, with optional scale and crop. Files never leave your device.',
+          'Crop, scale, and compress images in the browser. Files never leave your device.',
       },
     ],
   }),
@@ -18,10 +18,7 @@ export const Route = createFileRoute('/tools/image-compress')({
 
 function ImageCompressPage() {
   return (
-    <ToolShell
-      title="Image compress"
-      description="Pick a file, optionally crop with drag handles, scale, set quality, then download. Defaults keep the full frame at original resolution. Purely client-side — no R2, no sharp on Isolates."
-    >
+    <ToolShell title="Image compress">
       <ImageCompressTool />
     </ToolShell>
   )
