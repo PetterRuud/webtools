@@ -19,18 +19,18 @@ export function ToolShell({
   return (
     <main
       className={cn(
-        'mx-auto flex w-full flex-col gap-4 px-4 pb-10 pt-1 sm:px-6 md:gap-5',
+        'mx-auto flex w-full flex-col gap-3 px-4 pb-8 pt-1 sm:px-6 md:gap-4',
         wide ? 'max-w-6xl' : 'max-w-3xl',
       )}
     >
-      <div className="animate-rise flex flex-col gap-1.5">
+      <div className="animate-rise flex flex-col gap-1">
         <Link
           to="/"
-          className="w-fit text-sm text-muted-foreground no-underline transition-colors hover:text-foreground"
+          className="w-fit text-xs text-muted-foreground no-underline transition-colors hover:text-foreground"
         >
           ← WebTools
         </Link>
-        <h1 className="font-heading m-0 text-2xl tracking-tight text-ink sm:text-3xl">
+        <h1 className="font-heading m-0 text-xl tracking-tight text-ink sm:text-2xl">
           {title}
         </h1>
         {description ? (

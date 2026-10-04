@@ -15,7 +15,7 @@ const toolGroups = groupToolsByCategory(TOOLS)
 
 export default function Header() {
   return (
-    <header className="mx-auto flex w-full max-w-5xl items-center justify-between px-6 py-5">
+    <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
       <Link
         to="/"
         className="font-heading text-lg tracking-tight text-ink no-underline transition-opacity hover:opacity-80"
