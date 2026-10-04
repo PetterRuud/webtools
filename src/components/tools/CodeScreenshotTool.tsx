@@ -389,9 +389,8 @@ export function CodeScreenshotTool() {
 
               <div
                 className={cn(
-                  'code-shot-preview px-3 pb-3',
+                  'code-shot-preview p-3',
                   showLineNumbers && 'code-shot-lines',
-                  chrome === 'none' && !showTitle && 'pt-3',
                 )}
                 style={{
                   fontFamily: fontStack,
