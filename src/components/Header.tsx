@@ -16,7 +16,7 @@ export default function Header() {
           className="no-underline transition-colors hover:text-foreground"
           activeProps={{ className: 'text-foreground no-underline' }}
         >
-          Hex ↔ RGBA
+          CSS Color
         </Link>
         <Link
           to="/tools/image-compress"

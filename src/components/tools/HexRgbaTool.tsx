@@ -5,13 +5,28 @@ import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
 import {
+  COLOR_FORMAT_META,
+  formatColor,
   formatRgba,
-  hexToRgba,
-  normalizeHex,
-  parseRgba,
+  parseColor,
   rgbaToHex,
+  type ColorFormat,
   type Rgba,
 } from '#/lib/color'
+
+const FORMATS: ColorFormat[] = ['hex', 'rgba', 'hsl', 'hwb', 'oklch']
+
+const DEFAULT_COLOR: Rgba = { r: 47, g: 111, b: 102, a: 1 }
+
+function draftsFromColor(color: Rgba): Record<ColorFormat, string> {
+  return {
+    hex: rgbaToHex(color),
+    rgba: formatColor('rgba', color),
+    hsl: formatColor('hsl', color),
+    hwb: formatColor('hwb', color),
+    oklch: formatColor('oklch', color),
+  }
+}
 
 async function copyText(value: string, label: string) {
   try {
@@ -23,132 +38,91 @@ async function copyText(value: string, label: string) {
 }
 
 export function HexRgbaTool() {
-  const [hex, setHex] = useState('#2f6f66')
-  const [rgbaText, setRgbaText] = useState('rgba(47, 111, 102, 1)')
-  const [channels, setChannels] = useState<Rgba>({
-    r: 47,
-    g: 111,
-    b: 102,
-    a: 1,
-  })
-  const [hexError, setHexError] = useState<string | null>(null)
-  const [rgbaError, setRgbaError] = useState<string | null>(null)
+  const [channels, setChannels] = useState<Rgba>(DEFAULT_COLOR)
+  const [drafts, setDrafts] = useState(() => draftsFromColor(DEFAULT_COLOR))
+  const [errors, setErrors] = useState<Partial<Record<ColorFormat, string>>>({})
 
-  const preview = useMemo(
-    () => formatRgba(channels),
-    [channels],
-  )
+  const preview = useMemo(() => formatRgba(channels), [channels])
 
-  function applyRgba(next: Rgba) {
+  function applyColor(next: Rgba, source?: ColorFormat) {
+    const formatted = draftsFromColor(next)
     setChannels(next)
-    setHex(rgbaToHex(next))
-    setRgbaText(formatRgba(next))
-    setHexError(null)
-    setRgbaError(null)
+    setDrafts((prev) => ({
+      ...formatted,
+      ...(source ? { [source]: prev[source] } : {}),
+    }))
+    setErrors({})
   }
 
-  function onHexChange(value: string) {
-    setHex(value)
-    const parsed = hexToRgba(value)
+  function onFormatChange(format: ColorFormat, value: string) {
+    setDrafts((prev) => ({ ...prev, [format]: value }))
+    const parsed = parseColor(format, value)
     if (!parsed) {
-      setHexError('Use #RGB, #RRGGBB, or #RRGGBBAA')
+      setErrors((prev) => ({
+        ...prev,
+        [format]: COLOR_FORMAT_META[format].error,
+      }))
       return
     }
-    setChannels(parsed)
-    setRgbaText(formatRgba(parsed))
-    setHexError(null)
-    setRgbaError(null)
-  }
-
-  function onRgbaTextChange(value: string) {
-    setRgbaText(value)
-    const parsed = parseRgba(value)
-    if (!parsed) {
-      setRgbaError('Use rgba(r, g, b, a) or rgb(r, g, b)')
-      return
-    }
-    setChannels(parsed)
-    setHex(rgbaToHex(parsed))
-    setHexError(null)
-    setRgbaError(null)
+    applyColor(parsed, format)
   }
 
   function updateChannel(key: keyof Rgba, value: number) {
-    applyRgba({ ...channels, [key]: value })
+    applyColor({ ...channels, [key]: value })
   }
 
   return (
     <div className="flex flex-col gap-8">
       <div
-        className="h-28 w-full rounded-2xl border border-border shadow-inner"
+        className="h-32 w-full rounded-2xl border border-border shadow-inner transition-[background] duration-300 ease-out"
         style={{ background: preview }}
         aria-label="Color preview"
       />
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="hex">Hex</Label>
-          <div className="flex gap-2">
-            <Input
-              id="hex"
-              value={hex}
-              onValueChange={onHexChange}
-              aria-invalid={Boolean(hexError)}
-              spellCheck={false}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                const normalized = normalizeHex(hex)
-                if (!normalized) {
-                  toast.error('Fix the hex value first')
-                  return
-                }
-                void copyText(normalized, 'hex')
-              }}
-            >
-              Copy
-            </Button>
-          </div>
-          {hexError ? (
-            <p className="m-0 text-sm text-destructive">{hexError}</p>
-          ) : (
-            <p className="m-0 text-sm text-muted-foreground">
-              Accepts 3, 6, or 8 digit hex.
-            </p>
-          )}
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="rgba">RGBA</Label>
-          <div className="flex gap-2">
-            <Input
-              id="rgba"
-              value={rgbaText}
-              onValueChange={onRgbaTextChange}
-              aria-invalid={Boolean(rgbaError)}
-              spellCheck={false}
-            />
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => void copyText(formatRgba(channels), 'rgba')}
-            >
-              Copy
-            </Button>
-          </div>
-          {rgbaError ? (
-            <p className="m-0 text-sm text-destructive">{rgbaError}</p>
-          ) : (
-            <p className="m-0 text-sm text-muted-foreground">
-              Live CSS string for paste into stylesheets.
-            </p>
-          )}
-        </div>
+      <div className="flex flex-col gap-5">
+        {FORMATS.map((format) => {
+          const meta = COLOR_FORMAT_META[format]
+          const error = errors[format]
+          return (
+            <div key={format} className="flex flex-col gap-2">
+              <Label htmlFor={`color-${format}`}>{meta.label}</Label>
+              <div className="flex gap-2">
+                <Input
+                  id={`color-${format}`}
+                  value={drafts[format]}
+                  onValueChange={(value) => onFormatChange(format, value)}
+                  aria-invalid={Boolean(error)}
+                  spellCheck={false}
+                  className="font-mono text-[0.92rem]"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    if (errors[format] || !parseColor(format, drafts[format])) {
+                      toast.error(`Fix the ${meta.label} value first`)
+                      return
+                    }
+                    void copyText(formatColor(format, channels), meta.label)
+                  }}
+                >
+                  Copy
+                </Button>
+              </div>
+              {error ? (
+                <p className="m-0 text-sm text-destructive">{error}</p>
+              ) : (
+                <p className="m-0 text-sm text-muted-foreground">{meta.hint}</p>
+              )}
+            </div>
+          )
+        })}
       </div>
 
-      <div className="grid gap-5">
+      <div className="grid gap-5 border-t border-border/70 pt-6">
+        <p className="m-0 text-sm text-muted-foreground">
+          Nudge channels — every format updates together.
+        </p>
         {(
           [
             ['r', 'Red', 255],

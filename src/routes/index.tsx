@@ -5,8 +5,9 @@ export const Route = createFileRoute('/')({ component: HubPage })
 const readyTools = [
   {
     to: '/tools/hex-rgba' as const,
-    name: 'Hex ↔ RGBA',
-    blurb: 'Paste a hex, get CSS rgba — and the other way around. Copy either.',
+    name: 'CSS Color',
+    blurb:
+      'Hex, rgba, hsl/hsla, hwb, oklch — paste any one, copy the rest.',
   },
   {
     to: '/tools/image-compress' as const,
@@ -34,7 +35,7 @@ function HubPage() {
             to="/tools/hex-rgba"
             className="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground no-underline transition hover:bg-primary/85"
           >
-            Open Hex ↔ RGBA
+            Open CSS Color
           </Link>
           <Link
             to="/tools/image-compress"
