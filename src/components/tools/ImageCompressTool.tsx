@@ -332,36 +332,17 @@ export function ImageCompressTool() {
                 className="block max-h-80 w-auto max-w-full"
               />
               {cropPreview ? (
-                <>
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-black/45"
-                    style={{
-                      clipPath: `polygon(
-                        0% 0%,
-                        100% 0%,
-                        100% 100%,
-                        0% 100%,
-                        0% 0%,
-                        ${(cropPreview.x / sourceDims.width) * 100}% ${(cropPreview.y / sourceDims.height) * 100}%,
-                        ${(cropPreview.x / sourceDims.width) * 100}% ${((cropPreview.y + cropPreview.height) / sourceDims.height) * 100}%,
-                        ${((cropPreview.x + cropPreview.width) / sourceDims.width) * 100}% ${((cropPreview.y + cropPreview.height) / sourceDims.height) * 100}%,
-                        ${((cropPreview.x + cropPreview.width) / sourceDims.width) * 100}% ${(cropPreview.y / sourceDims.height) * 100}%,
-                        ${(cropPreview.x / sourceDims.width) * 100}% ${(cropPreview.y / sourceDims.height) * 100}%
-                      )`,
-                    }}
-                  />
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute border-2 border-white shadow-[0_0_0_1px_rgba(0,0,0,0.35)]"
-                    style={{
-                      left: `${(cropPreview.x / sourceDims.width) * 100}%`,
-                      top: `${(cropPreview.y / sourceDims.height) * 100}%`,
-                      width: `${(cropPreview.width / sourceDims.width) * 100}%`,
-                      height: `${(cropPreview.height / sourceDims.height) * 100}%`,
-                    }}
-                  />
-                </>
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute border-2 border-white"
+                  style={{
+                    left: `${(cropPreview.x / sourceDims.width) * 100}%`,
+                    top: `${(cropPreview.y / sourceDims.height) * 100}%`,
+                    width: `${(cropPreview.width / sourceDims.width) * 100}%`,
+                    height: `${(cropPreview.height / sourceDims.height) * 100}%`,
+                    boxShadow: '0 0 0 9999px rgb(0 0 0 / 0.45)',
+                  }}
+                />
               ) : null}
             </div>
           </div>
