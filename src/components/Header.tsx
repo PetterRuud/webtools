@@ -1,20 +1,34 @@
 import { Link } from '@tanstack/react-router'
-import { ChevronDownIcon } from 'lucide-react'
+import { MenuIcon } from 'lucide-react'
+import { useState } from 'react'
 import { ModeToggle } from '#/components/mode-toggle'
+import { Button } from '#/components/ui/button'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from '#/components/ui/dropdown-menu'
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemMedia,
+  ItemTitle,
+} from '#/components/ui/item'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '#/components/ui/sheet'
 import { TOOL_ICONS } from '#/lib/tool-icons'
-import { groupToolsByCategory, TOOLS } from '#/lib/tools'
+import {
+  groupToolsByCategory,
+  TOOLS,
+  type ToolLink,
+} from '#/lib/tools'
 
 const toolGroups = groupToolsByCategory(TOOLS)
 
 export default function Header() {
+  const [open, setOpen] = useState(false)
+
   return (
     <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
       <Link
@@ -23,38 +37,100 @@ export default function Header() {
       >
         WebTools
       </Link>
-      <nav className="flex items-center gap-3 text-sm text-muted-foreground sm:gap-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 no-underline transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+
+      <nav className="flex items-center gap-1.5 text-sm text-muted-foreground sm:gap-2">
+        <Sheet open={open} onOpenChange={setOpen}>
+          <SheetTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="sm"
+                className="gap-1.5 text-muted-foreground hover:text-foreground"
+              />
+            }
+          >
+            <MenuIcon className="size-3.5 opacity-80" aria-hidden />
             Tools
-            <ChevronDownIcon className="size-3.5 opacity-70" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="min-w-56">
-            {toolGroups.map((group) => (
-              <DropdownMenuGroup key={group.category.id}>
-                <DropdownMenuLabel>{group.category.label}</DropdownMenuLabel>
-                {group.tools.map((tool) => {
-                  const Icon = TOOL_ICONS[tool.to]
-                  return (
-                    <DropdownMenuItem
-                      key={tool.to}
-                      render={<Link to={tool.to} />}
-                      className="cursor-pointer gap-2"
-                    >
-                      <Icon
-                        className="size-4 shrink-0 text-muted-foreground"
-                        aria-hidden
-                      />
-                      {tool.name}
-                    </DropdownMenuItem>
-                  )
-                })}
-              </DropdownMenuGroup>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            className="w-[min(22rem,100vw)] gap-0 p-0 sm:max-w-sm"
+          >
+            <SheetHeader className="border-b border-border/70 px-4 py-3">
+              <SheetTitle className="text-sm">Tools</SheetTitle>
+            </SheetHeader>
+            <div className="flex flex-col gap-4 overflow-y-auto px-3 py-3">
+              {toolGroups.map((group) => (
+                <section
+                  key={group.category.id}
+                  className="min-w-0"
+                  aria-labelledby={`sheet-cat-${group.category.id}`}
+                >
+                  <h3
+                    id={`sheet-cat-${group.category.id}`}
+                    className="font-heading mb-1.5 px-1 text-[0.7rem] font-semibold tracking-wide text-muted-foreground uppercase"
+                  >
+                    {group.category.label}
+                  </h3>
+                  <ul className="m-0 flex list-none flex-col gap-1 p-0">
+                    {uniqueTools(group.tools).map((tool) => (
+                      <li key={`${group.category.id}-${tool.to}`}>
+                        <ToolSheetLink
+                          tool={tool}
+                          onNavigate={() => setOpen(false)}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </SheetContent>
+        </Sheet>
+
         <ModeToggle />
       </nav>
     </header>
+  )
+}
+
+function uniqueTools(tools: ToolLink[]) {
+  const seen = new Set<ToolLink['to']>()
+  return tools.filter((tool) => {
+    if (seen.has(tool.to)) return false
+    seen.add(tool.to)
+    return true
+  })
+}
+
+function ToolSheetLink({
+  tool,
+  onNavigate,
+}: {
+  tool: ToolLink
+  onNavigate: () => void
+}) {
+  const Icon = TOOL_ICONS[tool.to]
+
+  return (
+    <Item
+      variant="outline"
+      size="xs"
+      render={<Link to={tool.to} onClick={onNavigate} />}
+      className="tool-row h-full flex-nowrap items-center border-border/70 bg-card/45 py-2 no-underline hover:border-primary/35 hover:bg-muted/55"
+    >
+      <ItemMedia
+        variant="icon"
+        className="size-7 translate-y-0 self-center rounded-md bg-mist text-primary"
+      >
+        <Icon aria-hidden />
+      </ItemMedia>
+      <ItemContent className="min-w-0 gap-0">
+        <ItemTitle className="font-heading text-ink">{tool.name}</ItemTitle>
+        <ItemDescription className="line-clamp-1 text-xs leading-4">
+          {tool.blurb}
+        </ItemDescription>
+      </ItemContent>
+    </Item>
   )
 }
