@@ -1,9 +1,5 @@
 import { createMockScreenshotPng } from './mockPng.ts'
-import {
-  WEBSITE_SCREENSHOT_WORKERS_SETUP,
-  type CaptureRequest,
-  type CaptureResult,
-} from './types.ts'
+import type { CaptureRequest, CaptureResult } from './types.ts'
 
 /** Minimal surface we need from env.BROWSER (BrowserRun). */
 export type BrowserScreenshotBinding = {
@@ -62,9 +58,5 @@ export async function captureWebsiteScreenshotWorkers(
   }
 
   const png = await createMockScreenshotPng(req.width, req.height)
-  return {
-    png,
-    mode: 'mock',
-    note: WEBSITE_SCREENSHOT_WORKERS_SETUP,
-  }
+  return { png, mode: 'mock' }
 }

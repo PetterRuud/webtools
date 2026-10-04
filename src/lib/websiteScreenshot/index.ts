@@ -10,8 +10,6 @@ export {
   type BrowserScreenshotBinding,
 } from './workersCapture.ts'
 export {
-  WEBSITE_SCREENSHOT_NOTE,
-  WEBSITE_SCREENSHOT_WORKERS_SETUP,
   VIEWPORT_PRESETS,
   type CaptureMode,
   type CaptureRequest,

@@ -6,9 +6,6 @@ export function pngCaptureResponse(result: CaptureResult): Response {
     'Cache-Control': 'no-store',
     'X-Capture-Mode': result.mode,
   })
-  if (result.note) {
-    headers.set('X-Capture-Note', encodeURIComponent(result.note))
-  }
   return new Response(new Blob([Uint8Array.from(result.png)], { type: 'image/png' }), {
     status: 200,
     headers,

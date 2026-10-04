@@ -6,7 +6,6 @@ import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import {
   VIEWPORT_PRESETS,
-  WEBSITE_SCREENSHOT_NOTE,
   type CaptureMode,
   type ViewportPreset,
 } from '#/lib/websiteScreenshot'
@@ -23,7 +22,6 @@ export function WebsiteScreenshotTool() {
   const [error, setError] = useState<string | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [mode, setMode] = useState<CaptureMode | null>(null)
-  const [note, setNote] = useState<string | null>(null)
 
   useEffect(() => {
     return () => {
@@ -43,7 +41,6 @@ export function WebsiteScreenshotTool() {
     event.preventDefault()
     setBusy(true)
     setError(null)
-    setNote(null)
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl)
       setPreviewUrl(null)
@@ -73,14 +70,10 @@ export function WebsiteScreenshotTool() {
         throw new Error(msg)
       }
       const captureMode = res.headers.get('X-Capture-Mode') as CaptureMode | null
-      const captureNote = res.headers.get('X-Capture-Note')
       const blob = await res.blob()
       setPreviewUrl(URL.createObjectURL(blob))
       setMode(captureMode)
-      setNote(captureNote ? decodeURIComponent(captureNote) : null)
-      toast.success(
-        captureMode === 'mock' ? 'Mock PNG ready' : 'Screenshot ready',
-      )
+      toast.success('Screenshot ready')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Capture failed')
     } finally {
@@ -167,10 +160,6 @@ export function WebsiteScreenshotTool() {
           {busy ? 'Capturing…' : 'Capture screenshot'}
         </Button>
 
-        <p className="m-0 text-xs leading-4 text-muted-foreground">
-          {WEBSITE_SCREENSHOT_NOTE}
-        </p>
-
         {error ? (
           <p className="m-0 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
             {error}
@@ -202,9 +191,6 @@ export function WebsiteScreenshotTool() {
             </span>
           )}
         </div>
-        {note ? (
-          <p className="m-0 text-xs leading-4 text-muted-foreground">{note}</p>
-        ) : null}
         {previewUrl ? (
           <a
             href={previewUrl}

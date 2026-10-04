@@ -139,13 +139,7 @@ export async function captureWebsiteScreenshotNode(
   if (chrome) {
     try {
       const png = await captureWithChrome(chrome, req)
-      return {
-        png,
-        mode: 'node-chrome',
-        note: req.fullPage
-          ? 'Full-page approximated with a taller Chrome window (install Playwright for true full-page).'
-          : undefined,
-      }
+      return { png, mode: 'node-chrome' }
     } catch {
       // fall through
     }
@@ -159,9 +153,5 @@ export async function captureWebsiteScreenshotNode(
   }
 
   const png = await createMockScreenshotPng(req.width, req.height)
-  return {
-    png,
-    mode: 'mock',
-    note: 'No local Chrome/Playwright available — returned a mock PNG. Install Chrome, or `pnpm add -D playwright && pnpm exec playwright install chromium`, or rely on Workers Browser Rendering when deployed.',
-  }
+  return { png, mode: 'mock' }
 }

@@ -49,9 +49,6 @@ async function handleCapture(
     res.setHeader('Content-Type', 'image/png')
     res.setHeader('Cache-Control', 'no-store')
     res.setHeader('X-Capture-Mode', result.mode)
-    if (result.note) {
-      res.setHeader('X-Capture-Note', encodeURIComponent(result.note))
-    }
     res.end(Buffer.from(result.png))
   } catch (e) {
     const message = e instanceof Error ? e.message : 'Screenshot capture failed'

@@ -5,7 +5,6 @@ import {
   parseCaptureRequest,
   pngCaptureResponse,
   readJsonBody,
-  WEBSITE_SCREENSHOT_NOTE,
 } from '#/lib/websiteScreenshot'
 
 /**
@@ -29,10 +28,7 @@ export const Route = createFileRoute('/api/website-screenshot/capture')({
         } catch (e) {
           const message =
             e instanceof Error ? e.message : 'Screenshot capture failed'
-          return Response.json(
-            { error: message, note: WEBSITE_SCREENSHOT_NOTE },
-            { status: 400 },
-          )
+          return Response.json({ error: message }, { status: 400 })
         }
       },
     },
