@@ -42,6 +42,7 @@ export type ToolLink = {
     | '/tools/jwt'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/xml-json'
+    | '/tools/tip-calculator'
   name: string
   shortName: string
   blurb: string
@@ -149,6 +150,23 @@ export const TOOLS: ToolLink[] = [
       'wheel',
       'generator',
       'decision',
+    ],
+  },
+  {
+    to: '/tools/tip-calculator',
+    name: 'Tip calculator',
+    shortName: 'Tip',
+    blurb: 'Bill, tip %, split per person.',
+    category: 'text',
+    keywords: [
+      'tip',
+      'calculator',
+      'bill',
+      'split',
+      'gratuity',
+      'percent',
+      'restaurant',
+      'money',
     ],
   },
   {

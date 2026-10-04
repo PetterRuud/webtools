@@ -38,6 +38,7 @@ import { Route as ToolsSvgEditorRouteImport } from './routes/tools/svg-editor'
 import { Route as ToolsTailwindCheatSheetRouteImport } from './routes/tools/tailwind-cheat-sheet'
 import { Route as ToolsTextCleanerRouteImport } from './routes/tools/text-cleaner'
 import { Route as ToolsTextDiffRouteImport } from './routes/tools/text-diff'
+import { Route as ToolsTipCalculatorRouteImport } from './routes/tools/tip-calculator'
 import { Route as ToolsTransparentRouteImport } from './routes/tools/transparent'
 import { Route as ToolsXmlJsonRouteImport } from './routes/tools/xml-json'
 import { Route as ApiTransparentExtractRouteImport } from './routes/api/transparent.extract'
@@ -187,6 +188,11 @@ const ToolsTextDiffRoute = ToolsTextDiffRouteImport.update({
   path: '/tools/text-diff',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsTipCalculatorRoute = ToolsTipCalculatorRouteImport.update({
+  id: '/tools/tip-calculator',
+  path: '/tools/tip-calculator',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsTransparentRoute = ToolsTransparentRouteImport.update({
   id: '/tools/transparent',
   path: '/tools/transparent',
@@ -233,6 +239,7 @@ export interface FileRoutesByFullPath {
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
+  '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
@@ -267,6 +274,7 @@ export interface FileRoutesByTo {
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
+  '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
@@ -302,6 +310,7 @@ export interface FileRoutesById {
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
+  '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
@@ -338,6 +347,7 @@ export interface FileRouteTypes {
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
     | '/tools/text-diff'
+    | '/tools/tip-calculator'
     | '/tools/transparent'
     | '/tools/xml-json'
     | '/api/transparent/extract'
@@ -372,6 +382,7 @@ export interface FileRouteTypes {
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
     | '/tools/text-diff'
+    | '/tools/tip-calculator'
     | '/tools/transparent'
     | '/tools/xml-json'
     | '/api/transparent/extract'
@@ -406,6 +417,7 @@ export interface FileRouteTypes {
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
     | '/tools/text-diff'
+    | '/tools/tip-calculator'
     | '/tools/transparent'
     | '/tools/xml-json'
     | '/api/transparent/extract'
@@ -441,6 +453,7 @@ export interface RootRouteChildren {
   ToolsTailwindCheatSheetRoute: typeof ToolsTailwindCheatSheetRoute
   ToolsTextCleanerRoute: typeof ToolsTextCleanerRoute
   ToolsTextDiffRoute: typeof ToolsTextDiffRoute
+  ToolsTipCalculatorRoute: typeof ToolsTipCalculatorRoute
   ToolsTransparentRoute: typeof ToolsTransparentRoute
   ToolsXmlJsonRoute: typeof ToolsXmlJsonRoute
   ApiTransparentExtractRoute: typeof ApiTransparentExtractRoute
@@ -651,6 +664,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsTextDiffRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/tip-calculator': {
+      id: '/tools/tip-calculator'
+      path: '/tools/tip-calculator'
+      fullPath: '/tools/tip-calculator'
+      preLoaderRoute: typeof ToolsTipCalculatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/transparent': {
       id: '/tools/transparent'
       path: '/tools/transparent'
@@ -705,6 +725,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsTailwindCheatSheetRoute: ToolsTailwindCheatSheetRoute,
   ToolsTextCleanerRoute: ToolsTextCleanerRoute,
   ToolsTextDiffRoute: ToolsTextDiffRoute,
+  ToolsTipCalculatorRoute: ToolsTipCalculatorRoute,
   ToolsTransparentRoute: ToolsTransparentRoute,
   ToolsXmlJsonRoute: ToolsXmlJsonRoute,
   ApiTransparentExtractRoute: ApiTransparentExtractRoute,
@@ -712,12 +733,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
