@@ -37,7 +37,7 @@ export function TipCalculatorTool() {
 
   return (
     <div className="grid gap-3 lg:grid-cols-2 lg:items-start lg:gap-4">
-      <div className="skeuo-plastic flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
+      <div className="skeuo-panel flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="tip-bill">Bill amount</Label>
           <Input
@@ -102,7 +102,6 @@ export function TipCalculatorTool() {
               variant="outline"
               size="icon-sm"
               aria-label="Fewer people"
-              className="skeuo-plastic"
               disabled={peopleInt === null || peopleInt <= 1}
               onClick={() => {
                 if (peopleInt !== null && peopleInt > 1) {
@@ -125,7 +124,6 @@ export function TipCalculatorTool() {
               variant="outline"
               size="icon-sm"
               aria-label="More people"
-              className="skeuo-plastic"
               onClick={() => {
                 const next = peopleInt === null ? 1 : peopleInt + 1
                 setPeopleDraft(String(next))

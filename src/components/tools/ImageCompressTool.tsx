@@ -265,7 +265,6 @@ export function ImageCompressTool() {
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
-            className="skeuo-plastic"
             disabled={!file || busy}
             onClick={() => void compress()}
           >

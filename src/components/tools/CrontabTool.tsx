@@ -191,7 +191,7 @@ export function CrontabTool() {
               type="button"
               variant="outline"
               size="icon"
-              className="skeuo-plastic shrink-0"
+              className="shrink-0"
               aria-label="Copy expression"
               onClick={() => void copyText(expression, 'cron expression')}
             >

@@ -101,7 +101,7 @@ export function CodeScreenshotTool() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-      <div className="skeuo-plastic flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
+      <div className="skeuo-panel flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
             <Label htmlFor="code-shot-source">Code</Label>
@@ -359,7 +359,7 @@ export function CodeScreenshotTool() {
                     chrome === 'none' ? 'py-2' : 'py-2.5',
                   )}
                   style={{
-                    backgroundImage: `linear-gradient(180deg, color-mix(in srgb, ${windowBg} 88%, white 12%), ${windowBg})`,
+                    backgroundColor: `color-mix(in srgb, ${windowBg} 92%, white 8%)`,
                   }}
                 >
                   {chrome === 'macos' ? (

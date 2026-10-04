@@ -108,7 +108,7 @@ export function BrowserInfoTool() {
           type="button"
           size="sm"
           variant="outline"
-          className="skeuo-plastic h-7"
+          className="h-7"
           disabled={rows.length === 0}
           onClick={() => void copyText(asText, 'browser info')}
         >

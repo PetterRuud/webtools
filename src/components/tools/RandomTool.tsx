@@ -674,7 +674,6 @@ export function RandomTool() {
           <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
             <Button
               type="button"
-              className="skeuo-plastic"
               onClick={() => generate()}
               disabled={mode === 'roulette' && rouletteSpinning}
             >

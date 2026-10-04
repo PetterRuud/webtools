@@ -80,7 +80,7 @@ export function BoxShadowTool() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-      <div className="skeuo-plastic flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
+      <div className="skeuo-panel flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
         {SLIDERS.map(({ key, label, min, max, step, format }) => (
           <div key={key} className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between gap-3">
@@ -166,10 +166,6 @@ export function BoxShadowTool() {
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 bg-[repeating-conic-gradient(color-mix(in_oklch,var(--muted)_80%,transparent)_0%_25%,transparent_0%_50%)] bg-size-[16px_16px] opacity-70"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-x-[12%] top-[8%] h-24 rounded-full bg-[radial-gradient(ellipse_at_center,color-mix(in_oklch,var(--spark)_28%,transparent),transparent_70%)]"
           />
           <div
             className="skeuo-emboss relative z-[1] flex size-36 items-center justify-center rounded-2xl border border-border/70 bg-card text-sm font-medium text-muted-foreground transition-[box-shadow] duration-200 ease-out sm:size-44"

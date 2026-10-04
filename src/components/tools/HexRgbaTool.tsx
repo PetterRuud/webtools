@@ -126,7 +126,7 @@ export function HexRgbaTool() {
         </div>
       </div>
 
-      <div className="skeuo-plastic flex flex-col gap-4 rounded-xl border border-border/80 p-3 sm:p-4">
+      <div className="skeuo-panel flex flex-col gap-4 rounded-xl border border-border/80 p-3 sm:p-4">
         <p className="m-0 text-sm font-medium text-ink">Channels</p>
         {(
           [

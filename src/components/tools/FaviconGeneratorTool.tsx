@@ -231,7 +231,6 @@ export function FaviconGeneratorTool() {
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
-            className="skeuo-plastic"
             onClick={() => void generate()}
             disabled={busy || !file}
           >

@@ -217,7 +217,6 @@ export function ImageFormatTool() {
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
-            className="skeuo-plastic"
             onClick={() => void convert()}
             disabled={busy || !file}
           >
