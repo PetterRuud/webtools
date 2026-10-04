@@ -18,6 +18,7 @@ export type ToolLink = {
     | '/tools/css-grid'
     | '/tools/image-compress'
     | '/tools/image-crop'
+    | '/tools/image-resize'
     | '/tools/image-format'
     | '/tools/favicon'
     | '/tools/svg-editor'
@@ -171,8 +172,27 @@ export const TOOLS: ToolLink[] = [
       'aspect',
       'trim',
       'cut',
-      'resize',
       'frame',
+    ],
+  },
+  {
+    to: '/tools/image-resize',
+    name: 'Image resize',
+    shortName: 'Resize',
+    blurb: 'Width, height, lock aspect.',
+    category: 'image',
+    keywords: [
+      'image',
+      'resize',
+      'scale',
+      'width',
+      'height',
+      'dimensions',
+      'pixels',
+      'aspect',
+      'png',
+      'jpeg',
+      'webp',
     ],
   },
   {

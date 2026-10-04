@@ -224,12 +224,69 @@ export async function readImageDimensions(
   return dims
 }
 
+const MIN_RESIZE = 1
+const MAX_RESIZE = 16384
+
+export function clampResizeDimension(value: number): number {
+  if (!Number.isFinite(value)) return MIN_RESIZE
+  return Math.max(MIN_RESIZE, Math.min(MAX_RESIZE, Math.round(value)))
+}
+
+/** Resize to exact pixel dimensions (stretch). Identity when unchanged. */
+export async function resizeImage(
+  file: File,
+  width: number,
+  height: number,
+): Promise<PreparedImage> {
+  const outWidth = clampResizeDimension(width)
+  const outHeight = clampResizeDimension(height)
+  const dims = await readImageDimensions(file)
+
+  if (dims.width === outWidth && dims.height === outHeight) {
+    return {
+      file,
+      width: dims.width,
+      height: dims.height,
+      transformed: false,
+    }
+  }
+
+  const bitmap = await createImageBitmap(file)
+  try {
+    const canvas = document.createElement('canvas')
+    canvas.width = outWidth
+    canvas.height = outHeight
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('Canvas unavailable in this browser')
+
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
+    ctx.drawImage(bitmap, 0, 0, outWidth, outHeight)
+
+    const mime =
+      file.type && file.type.startsWith('image/') ? file.type : 'image/png'
+    const blob = await canvasToBlob(canvas, mime)
+    const next = new File([blob], file.name, {
+      type: blob.type || mime,
+      lastModified: Date.now(),
+    })
+    return {
+      file: next,
+      width: outWidth,
+      height: outHeight,
+      transformed: true,
+    }
+  } finally {
+    bitmap.close()
+  }
+}
+
 function canvasToBlob(canvas: HTMLCanvasElement, mime: string): Promise<Blob> {
   return new Promise((resolve, reject) => {
     canvas.toBlob(
       (blob) => {
         if (!blob) {
-          reject(new Error('Could not encode cropped image'))
+          reject(new Error('Could not encode image'))
           return
         }
         resolve(blob)

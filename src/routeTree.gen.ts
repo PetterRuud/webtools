@@ -24,6 +24,7 @@ import { Route as ToolsHttpStatusRouteImport } from './routes/tools/http-status'
 import { Route as ToolsImageCompressRouteImport } from './routes/tools/image-compress'
 import { Route as ToolsImageCropRouteImport } from './routes/tools/image-crop'
 import { Route as ToolsImageFormatRouteImport } from './routes/tools/image-format'
+import { Route as ToolsImageResizeRouteImport } from './routes/tools/image-resize'
 import { Route as ToolsIpLookupRouteImport } from './routes/tools/ip-lookup'
 import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-formatter'
 import { Route as ToolsJwtRouteImport } from './routes/tools/jwt'
@@ -113,6 +114,11 @@ const ToolsImageCropRoute = ToolsImageCropRouteImport.update({
 const ToolsImageFormatRoute = ToolsImageFormatRouteImport.update({
   id: '/tools/image-format',
   path: '/tools/image-format',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsImageResizeRoute = ToolsImageResizeRouteImport.update({
+  id: '/tools/image-resize',
+  path: '/tools/image-resize',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsIpLookupRoute = ToolsIpLookupRouteImport.update({
@@ -207,6 +213,7 @@ export interface FileRoutesByFullPath {
   '/tools/image-compress': typeof ToolsImageCompressRoute
   '/tools/image-crop': typeof ToolsImageCropRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
+  '/tools/image-resize': typeof ToolsImageResizeRoute
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
@@ -239,6 +246,7 @@ export interface FileRoutesByTo {
   '/tools/image-compress': typeof ToolsImageCompressRoute
   '/tools/image-crop': typeof ToolsImageCropRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
+  '/tools/image-resize': typeof ToolsImageResizeRoute
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
@@ -272,6 +280,7 @@ export interface FileRoutesById {
   '/tools/image-compress': typeof ToolsImageCompressRoute
   '/tools/image-crop': typeof ToolsImageCropRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
+  '/tools/image-resize': typeof ToolsImageResizeRoute
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
@@ -306,6 +315,7 @@ export interface FileRouteTypes {
     | '/tools/image-compress'
     | '/tools/image-crop'
     | '/tools/image-format'
+    | '/tools/image-resize'
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
     | '/tools/jwt'
@@ -338,6 +348,7 @@ export interface FileRouteTypes {
     | '/tools/image-compress'
     | '/tools/image-crop'
     | '/tools/image-format'
+    | '/tools/image-resize'
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
     | '/tools/jwt'
@@ -370,6 +381,7 @@ export interface FileRouteTypes {
     | '/tools/image-compress'
     | '/tools/image-crop'
     | '/tools/image-format'
+    | '/tools/image-resize'
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
     | '/tools/jwt'
@@ -403,6 +415,7 @@ export interface RootRouteChildren {
   ToolsImageCompressRoute: typeof ToolsImageCompressRoute
   ToolsImageCropRoute: typeof ToolsImageCropRoute
   ToolsImageFormatRoute: typeof ToolsImageFormatRoute
+  ToolsImageResizeRoute: typeof ToolsImageResizeRoute
   ToolsIpLookupRoute: typeof ToolsIpLookupRoute
   ToolsJsonFormatterRoute: typeof ToolsJsonFormatterRoute
   ToolsJwtRoute: typeof ToolsJwtRoute
@@ -525,6 +538,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/image-format'
       fullPath: '/tools/image-format'
       preLoaderRoute: typeof ToolsImageFormatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/image-resize': {
+      id: '/tools/image-resize'
+      path: '/tools/image-resize'
+      fullPath: '/tools/image-resize'
+      preLoaderRoute: typeof ToolsImageResizeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/ip-lookup': {
@@ -651,6 +671,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsImageCompressRoute: ToolsImageCompressRoute,
   ToolsImageCropRoute: ToolsImageCropRoute,
   ToolsImageFormatRoute: ToolsImageFormatRoute,
+  ToolsImageResizeRoute: ToolsImageResizeRoute,
   ToolsIpLookupRoute: ToolsIpLookupRoute,
   ToolsJsonFormatterRoute: ToolsJsonFormatterRoute,
   ToolsJwtRoute: ToolsJwtRoute,
@@ -670,12 +691,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

@@ -295,15 +295,21 @@ export function ImageCropTool() {
         )}
 
         <p className="m-0 text-xs text-muted-foreground">
-          Compress after?{' '}
+          Related:{' '}
+          <Link
+            to="/tools/image-resize"
+            className="text-foreground underline-offset-4 hover:underline"
+          >
+            Resize
+          </Link>
+          {' · '}
           <Link
             to="/tools/image-compress"
             className="text-foreground underline-offset-4 hover:underline"
           >
-            Image compress
+            Compress
           </Link>
           {' · '}
-          UI patches:{' '}
           <Link
             to="/tools/nine-slice"
             className="text-foreground underline-offset-4 hover:underline"
