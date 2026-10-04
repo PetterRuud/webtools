@@ -6,8 +6,10 @@ Personal browser-tool hub on **TanStack Start** + **Cloudflare Workers**.
 
 - TanStack Start (React, file routes)
 - Vite + Cloudflare Vite plugin
-- Tailwind CSS + shadcn/ui primitives
+- Tailwind CSS + shadcn/ui primitives (mint theme, light / dark / system)
 - Deploy target: `workers.dev` (Cloudflare Access with email later)
+
+Theme preference is stored in `localStorage` (`webtools-ui-theme`) and applied as a `class` on `<html>`. The header toggle switches Light / Dark / System (`prefers-color-scheme`).
 
 ## Develop
 

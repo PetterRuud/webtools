@@ -27,6 +27,9 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-ink: var(--ink);
+  --color-mist: var(--mist);
+  --color-spark: var(--spark);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -57,6 +60,45 @@
   --ink: oklch(0.2 0.03 160);
   --mist: oklch(0.92 0.035 165);
   --spark: oklch(0.8 0.14 75);
+  --atmosphere-mint: oklch(0.88 0.06 165 / 0.55);
+  --atmosphere-gold: oklch(0.9 0.09 75 / 0.32);
+  --atmosphere-base-a: oklch(0.985 0.01 95);
+  --atmosphere-base-b: oklch(0.945 0.025 150);
+  --atmosphere-base-c: oklch(0.96 0.015 120);
+  --orb-mint: oklch(0.82 0.08 165 / 0.45);
+  --orb-gold: oklch(0.86 0.1 75 / 0.35);
+}
+
+.dark {
+  color-scheme: dark;
+  --background: oklch(0.17 0.02 160);
+  --foreground: oklch(0.94 0.015 100);
+  --card: oklch(0.22 0.025 160 / 0.88);
+  --card-foreground: oklch(0.94 0.015 100);
+  --popover: oklch(0.22 0.025 160);
+  --popover-foreground: oklch(0.94 0.015 100);
+  --primary: oklch(0.74 0.09 165);
+  --primary-foreground: oklch(0.16 0.025 160);
+  --secondary: oklch(0.28 0.03 155);
+  --secondary-foreground: oklch(0.92 0.015 100);
+  --muted: oklch(0.26 0.022 155);
+  --muted-foreground: oklch(0.72 0.025 145);
+  --accent: oklch(0.76 0.12 75);
+  --accent-foreground: oklch(0.2 0.04 70);
+  --destructive: oklch(0.65 0.18 25);
+  --border: oklch(0.34 0.025 155);
+  --input: oklch(0.3 0.02 150);
+  --ring: oklch(0.66 0.08 165);
+  --ink: oklch(0.96 0.012 100);
+  --mist: oklch(0.28 0.04 165);
+  --spark: oklch(0.82 0.13 75);
+  --atmosphere-mint: oklch(0.42 0.07 165 / 0.45);
+  --atmosphere-gold: oklch(0.48 0.09 75 / 0.28);
+  --atmosphere-base-a: oklch(0.16 0.02 160);
+  --atmosphere-base-b: oklch(0.2 0.03 155);
+  --atmosphere-base-c: oklch(0.18 0.02 145);
+  --orb-mint: oklch(0.48 0.09 165 / 0.4);
+  --orb-gold: oklch(0.52 0.11 75 / 0.3);
 }
 
 @layer base {
@@ -80,9 +122,14 @@
     @apply bg-background text-foreground antialiased;
     margin: 0;
     background-image:
-      radial-gradient(1100px 640px at 8% -12%, oklch(0.88 0.06 165 / 0.55), transparent 60%),
-      radial-gradient(900px 560px at 96% 0%, oklch(0.9 0.09 75 / 0.32), transparent 55%),
-      linear-gradient(165deg, oklch(0.985 0.01 95), oklch(0.945 0.025 150) 52%, oklch(0.96 0.015 120));
+      radial-gradient(1100px 640px at 8% -12%, var(--atmosphere-mint), transparent 60%),
+      radial-gradient(900px 560px at 96% 0%, var(--atmosphere-gold), transparent 55%),
+      linear-gradient(
+        165deg,
+        var(--atmosphere-base-a),
+        var(--atmosphere-base-b) 52%,
+        var(--atmosphere-base-c)
+      );
     background-attachment: fixed;
   }
 
@@ -135,6 +182,14 @@
 
 .atmosphere-orb {
   animation: drift 16s ease-in-out infinite;
+}
+
+.atmosphere-orb-mint {
+  background: radial-gradient(circle, var(--orb-mint), transparent 70%);
+}
+
+.atmosphere-orb-gold {
+  background: radial-gradient(circle, var(--orb-gold), transparent 70%);
 }
 
 .tool-row:hover .tool-mark {
