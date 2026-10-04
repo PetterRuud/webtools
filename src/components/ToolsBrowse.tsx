@@ -69,23 +69,10 @@ export function ToolsBrowse() {
     [visibleTools],
   )
   const showTransparent = matchesTransparent(query, category)
-  const visibleCount = visibleTools.length + (showTransparent ? 1 : 0)
-  const totalCount = TOOLS.length + 1
+  const hasResults = visibleTools.length > 0 || showTransparent
 
   return (
-    <section
-      id="tools"
-      className="flex scroll-mt-8 flex-col gap-4 border-t border-border/70 pt-6"
-    >
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <h2 className="font-heading m-0 text-xl tracking-tight text-ink">
-          Tools
-        </h2>
-        <p className="m-0 shrink-0 text-sm text-muted-foreground tabular-nums">
-          {visibleCount} / {totalCount}
-        </p>
-      </div>
-
+    <section className="flex flex-col gap-4">
       <div className="flex flex-col gap-3">
         <label className="relative block">
           <span className="sr-only">Search tools</span>
@@ -141,7 +128,7 @@ export function ToolsBrowse() {
         </div>
       </div>
 
-      {visibleCount === 0 ? (
+      {!hasResults ? (
         <div className="rounded-xl border border-dashed border-border/80 px-5 py-10 text-center">
           <p className="m-0 text-sm text-muted-foreground">
             No tools match “{query.trim()}”.
@@ -220,17 +207,11 @@ function CategoryGroup({
   tools: ToolLink[]
   footer?: ReactNode
 }) {
-  const count = tools.length + (footer ? 1 : 0)
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-baseline justify-between gap-3">
-        <h3 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
-          {label}
-        </h3>
-        <span className="text-xs text-muted-foreground tabular-nums">
-          {count}
-        </span>
-      </div>
+      <h3 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+        {label}
+      </h3>
       <ToolGrid tools={tools} />
       {footer}
     </div>
