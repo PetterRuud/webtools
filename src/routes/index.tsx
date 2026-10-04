@@ -1,20 +1,7 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
+import { TOOLS } from '#/lib/tools'
 
 export const Route = createFileRoute('/')({ component: HubPage })
-
-const readyTools = [
-  {
-    to: '/tools/hex-rgba' as const,
-    name: 'CSS Color',
-    blurb:
-      'Hex, rgba, hsl/hsla, hwb, oklch — paste any one, copy the rest.',
-  },
-  {
-    to: '/tools/image-compress' as const,
-    name: 'Image compress',
-    blurb: 'Shrink a photo in the browser. Nothing leaves this device.',
-  },
-]
 
 function HubPage() {
   return (
@@ -27,21 +14,21 @@ function HubPage() {
           Small tools you actually reach for.
         </h1>
         <p className="animate-rise-delay-2 m-0 max-w-lg text-base leading-7 text-muted-foreground sm:text-lg">
-          A personal hub on Cloudflare Workers. Open a converter, compress an
-          image, get out — no accounts yet, Access later.
+          A personal hub on Cloudflare Workers. Format JSON, test a regex,
+          compress an image — get out. No accounts yet; Access later.
         </p>
         <div className="animate-rise-delay-2 flex flex-wrap gap-3 pt-2">
           <Link
-            to="/tools/hex-rgba"
+            to="/tools/json-formatter"
             className="inline-flex h-10 items-center rounded-lg bg-primary px-4 text-sm font-medium text-primary-foreground no-underline transition hover:bg-primary/85"
           >
-            Open CSS Color
+            Open JSON formatter
           </Link>
           <Link
-            to="/tools/image-compress"
+            to="/tools/regex"
             className="inline-flex h-10 items-center rounded-lg border border-border bg-card/70 px-4 text-sm font-medium text-foreground no-underline transition hover:bg-muted"
           >
-            Compress an image
+            Try regex
           </Link>
         </div>
       </section>
@@ -58,7 +45,7 @@ function HubPage() {
         </div>
 
         <ul className="m-0 flex list-none flex-col gap-0 p-0">
-          {readyTools.map((tool) => (
+          {TOOLS.map((tool) => (
             <li key={tool.to}>
               <Link
                 to={tool.to}

@@ -10,12 +10,22 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsHexRgbaRouteImport } from './routes/tools/hex-rgba'
 import { Route as ToolsImageCompressRouteImport } from './routes/tools/image-compress'
+import { Route as ToolsImageFormatRouteImport } from './routes/tools/image-format'
+import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-formatter'
+import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
+import { Route as ToolsTextDiffRouteImport } from './routes/tools/text-diff'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsBase64Route = ToolsBase64RouteImport.update({
+  id: '/tools/base64',
+  path: '/tools/base64',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsHexRgbaRoute = ToolsHexRgbaRouteImport.update({
@@ -28,35 +38,100 @@ const ToolsImageCompressRoute = ToolsImageCompressRouteImport.update({
   path: '/tools/image-compress',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsImageFormatRoute = ToolsImageFormatRouteImport.update({
+  id: '/tools/image-format',
+  path: '/tools/image-format',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsJsonFormatterRoute = ToolsJsonFormatterRouteImport.update({
+  id: '/tools/json-formatter',
+  path: '/tools/json-formatter',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsRegexRoute = ToolsRegexRouteImport.update({
+  id: '/tools/regex',
+  path: '/tools/regex',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsTextDiffRoute = ToolsTextDiffRouteImport.update({
+  id: '/tools/text-diff',
+  path: '/tools/text-diff',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/tools/base64': typeof ToolsBase64Route
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
+  '/tools/image-format': typeof ToolsImageFormatRoute
+  '/tools/json-formatter': typeof ToolsJsonFormatterRoute
+  '/tools/regex': typeof ToolsRegexRoute
+  '/tools/text-diff': typeof ToolsTextDiffRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/tools/base64': typeof ToolsBase64Route
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
+  '/tools/image-format': typeof ToolsImageFormatRoute
+  '/tools/json-formatter': typeof ToolsJsonFormatterRoute
+  '/tools/regex': typeof ToolsRegexRoute
+  '/tools/text-diff': typeof ToolsTextDiffRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/tools/base64': typeof ToolsBase64Route
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
+  '/tools/image-format': typeof ToolsImageFormatRoute
+  '/tools/json-formatter': typeof ToolsJsonFormatterRoute
+  '/tools/regex': typeof ToolsRegexRoute
+  '/tools/text-diff': typeof ToolsTextDiffRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/tools/hex-rgba' | '/tools/image-compress'
+  fullPaths:
+    | '/'
+    | '/tools/base64'
+    | '/tools/hex-rgba'
+    | '/tools/image-compress'
+    | '/tools/image-format'
+    | '/tools/json-formatter'
+    | '/tools/regex'
+    | '/tools/text-diff'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/tools/hex-rgba' | '/tools/image-compress'
-  id: '__root__' | '/' | '/tools/hex-rgba' | '/tools/image-compress'
+  to:
+    | '/'
+    | '/tools/base64'
+    | '/tools/hex-rgba'
+    | '/tools/image-compress'
+    | '/tools/image-format'
+    | '/tools/json-formatter'
+    | '/tools/regex'
+    | '/tools/text-diff'
+  id:
+    | '__root__'
+    | '/'
+    | '/tools/base64'
+    | '/tools/hex-rgba'
+    | '/tools/image-compress'
+    | '/tools/image-format'
+    | '/tools/json-formatter'
+    | '/tools/regex'
+    | '/tools/text-diff'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ToolsBase64Route: typeof ToolsBase64Route
   ToolsHexRgbaRoute: typeof ToolsHexRgbaRoute
   ToolsImageCompressRoute: typeof ToolsImageCompressRoute
+  ToolsImageFormatRoute: typeof ToolsImageFormatRoute
+  ToolsJsonFormatterRoute: typeof ToolsJsonFormatterRoute
+  ToolsRegexRoute: typeof ToolsRegexRoute
+  ToolsTextDiffRoute: typeof ToolsTextDiffRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -66,6 +141,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/base64': {
+      id: '/tools/base64'
+      path: '/tools/base64'
+      fullPath: '/tools/base64'
+      preLoaderRoute: typeof ToolsBase64RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/hex-rgba': {
@@ -82,13 +164,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsImageCompressRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/image-format': {
+      id: '/tools/image-format'
+      path: '/tools/image-format'
+      fullPath: '/tools/image-format'
+      preLoaderRoute: typeof ToolsImageFormatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/json-formatter': {
+      id: '/tools/json-formatter'
+      path: '/tools/json-formatter'
+      fullPath: '/tools/json-formatter'
+      preLoaderRoute: typeof ToolsJsonFormatterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/regex': {
+      id: '/tools/regex'
+      path: '/tools/regex'
+      fullPath: '/tools/regex'
+      preLoaderRoute: typeof ToolsRegexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/text-diff': {
+      id: '/tools/text-diff'
+      path: '/tools/text-diff'
+      fullPath: '/tools/text-diff'
+      preLoaderRoute: typeof ToolsTextDiffRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ToolsBase64Route: ToolsBase64Route,
   ToolsHexRgbaRoute: ToolsHexRgbaRoute,
   ToolsImageCompressRoute: ToolsImageCompressRoute,
+  ToolsImageFormatRoute: ToolsImageFormatRoute,
+  ToolsJsonFormatterRoute: ToolsJsonFormatterRoute,
+  ToolsRegexRoute: ToolsRegexRoute,
+  ToolsTextDiffRoute: ToolsTextDiffRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
