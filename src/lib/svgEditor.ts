@@ -1,4 +1,4 @@
-export const SAMPLE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="120" viewBox="0 0 160 120">
+export const SAMPLE_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="120" viewBox="0 0 160 120" class="mark">
   <!-- sample mark -->
   <metadata>WebTools sample</metadata>
   <rect x="8" y="8" width="144" height="104" rx="16" fill="#0f766e"/>
