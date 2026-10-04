@@ -5,10 +5,11 @@ import { HexRgbaTool } from '#/components/tools/HexRgbaTool'
 export const Route = createFileRoute('/tools/hex-rgba')({
   head: () => ({
     meta: [
-      { title: 'Hex ↔ RGBA · WebTools' },
+      { title: 'CSS Color · WebTools' },
       {
         name: 'description',
-        content: 'Convert hex colors to CSS rgba and back, with copy buttons.',
+        content:
+          'Convert hex, rgba, hsl/hsla, hwb, and oklch colors live — copy any format.',
       },
     ],
   }),
@@ -18,8 +19,8 @@ export const Route = createFileRoute('/tools/hex-rgba')({
 function HexRgbaPage() {
   return (
     <ToolShell
-      title="Hex ↔ RGBA"
-      description="Client-side color conversion. Paste either form, nudge the channels, copy what you need."
+      title="CSS Color"
+      description="Paste hex, rgba, hsl/hsla, hwb, or oklch. Every field stays in sync — copy the format you need."
     >
       <HexRgbaTool />
     </ToolShell>

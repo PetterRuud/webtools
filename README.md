@@ -39,7 +39,7 @@ Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker.
 | Route | Notes |
 | --- | --- |
 | `/` | Hub |
-| `/tools/hex-rgba` | Client-only hex ↔ rgba |
+| `/tools/hex-rgba` | Client-only hex, rgba, hsl/hsla, hwb, oklch |
 | `/tools/image-compress` | Client-side compress + download |
 
 ## Transparent (local source)
