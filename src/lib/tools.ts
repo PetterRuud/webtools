@@ -41,6 +41,7 @@ export type ToolLink = {
     | '/tools/mime'
     | '/tools/jwt'
     | '/tools/tailwind-cheat-sheet'
+    | '/tools/git-commands'
     | '/tools/xml-json'
   name: string
   shortName: string
@@ -176,6 +177,27 @@ export const TOOLS: ToolLink[] = [
       'snippet',
       'image',
       'export',
+    ],
+  },
+  {
+    to: '/tools/git-commands',
+    name: 'Git commands',
+    shortName: 'Git',
+    blurb: 'Forensics cheatsheet + builders.',
+    category: 'text',
+    keywords: [
+      'git',
+      'log',
+      'shortlog',
+      'churn',
+      'authors',
+      'bugs',
+      'hotfix',
+      'revert',
+      'velocity',
+      'cheat sheet',
+      'commands',
+      'cli',
     ],
   },
   {

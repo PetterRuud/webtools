@@ -19,6 +19,7 @@ import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
 import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
 import { Route as ToolsFaviconRouteImport } from './routes/tools/favicon'
 import { Route as ToolsFlexboxRouteImport } from './routes/tools/flexbox'
+import { Route as ToolsGitCommandsRouteImport } from './routes/tools/git-commands'
 import { Route as ToolsHexRgbaRouteImport } from './routes/tools/hex-rgba'
 import { Route as ToolsHttpStatusRouteImport } from './routes/tools/http-status'
 import { Route as ToolsImageCompressRouteImport } from './routes/tools/image-compress'
@@ -90,6 +91,11 @@ const ToolsFaviconRoute = ToolsFaviconRouteImport.update({
 const ToolsFlexboxRoute = ToolsFlexboxRouteImport.update({
   id: '/tools/flexbox',
   path: '/tools/flexbox',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsGitCommandsRoute = ToolsGitCommandsRouteImport.update({
+  id: '/tools/git-commands',
+  path: '/tools/git-commands',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsHexRgbaRoute = ToolsHexRgbaRouteImport.update({
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
+  '/tools/git-commands': typeof ToolsGitCommandsRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
@@ -248,6 +255,7 @@ export interface FileRoutesByTo {
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
+  '/tools/git-commands': typeof ToolsGitCommandsRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
@@ -283,6 +291,7 @@ export interface FileRoutesById {
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
+  '/tools/git-commands': typeof ToolsGitCommandsRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
@@ -319,6 +328,7 @@ export interface FileRouteTypes {
     | '/tools/dns-lookup'
     | '/tools/favicon'
     | '/tools/flexbox'
+    | '/tools/git-commands'
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
@@ -353,6 +363,7 @@ export interface FileRouteTypes {
     | '/tools/dns-lookup'
     | '/tools/favicon'
     | '/tools/flexbox'
+    | '/tools/git-commands'
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
@@ -387,6 +398,7 @@ export interface FileRouteTypes {
     | '/tools/dns-lookup'
     | '/tools/favicon'
     | '/tools/flexbox'
+    | '/tools/git-commands'
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
@@ -422,6 +434,7 @@ export interface RootRouteChildren {
   ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
   ToolsFaviconRoute: typeof ToolsFaviconRoute
   ToolsFlexboxRoute: typeof ToolsFlexboxRoute
+  ToolsGitCommandsRoute: typeof ToolsGitCommandsRoute
   ToolsHexRgbaRoute: typeof ToolsHexRgbaRoute
   ToolsHttpStatusRoute: typeof ToolsHttpStatusRoute
   ToolsImageCompressRoute: typeof ToolsImageCompressRoute
@@ -516,6 +529,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/flexbox'
       fullPath: '/tools/flexbox'
       preLoaderRoute: typeof ToolsFlexboxRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/git-commands': {
+      id: '/tools/git-commands'
+      path: '/tools/git-commands'
+      fullPath: '/tools/git-commands'
+      preLoaderRoute: typeof ToolsGitCommandsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/hex-rgba': {
@@ -686,6 +706,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsDnsLookupRoute: ToolsDnsLookupRoute,
   ToolsFaviconRoute: ToolsFaviconRoute,
   ToolsFlexboxRoute: ToolsFlexboxRoute,
+  ToolsGitCommandsRoute: ToolsGitCommandsRoute,
   ToolsHexRgbaRoute: ToolsHexRgbaRoute,
   ToolsHttpStatusRoute: ToolsHttpStatusRoute,
   ToolsImageCompressRoute: ToolsImageCompressRoute,
@@ -712,12 +733,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
