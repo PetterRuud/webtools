@@ -40,6 +40,7 @@ Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker.
 | --- | --- |
 | `/` | Hub (search + categories) |
 | `/tools/hex-rgba` | Client-only hex, rgba, hsl/hsla, hwb, oklch |
+| `/tools/flexbox` | Flexbox playground — direction, wrap, justify, align, gap |
 | `/tools/image-compress` | Client-side compress + scale + crop |
 | `/tools/image-format` | Convert PNG ↔ JPEG ↔ WebP (canvas) |
 | `/tools/json-formatter` | Pretty / minify / validate JSON |

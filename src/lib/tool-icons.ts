@@ -11,6 +11,7 @@ import {
   NetworkIcon,
   PaletteIcon,
   RegexIcon,
+  StretchHorizontalIcon,
   TableIcon,
   TextSelectIcon,
 } from 'lucide-react'
@@ -31,6 +32,7 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/image-compress': ImageIcon,
   '/tools/image-format': ImagesIcon,
   '/tools/hex-rgba': PaletteIcon,
+  '/tools/flexbox': StretchHorizontalIcon,
   '/tools/base64': BinaryIcon,
   '/tools/jwt': KeyRoundIcon,
   '/tools/ip-lookup': NetworkIcon,

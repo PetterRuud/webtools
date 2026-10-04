@@ -15,6 +15,7 @@ export type ToolCategory = {
 export type ToolLink = {
   to:
     | '/tools/hex-rgba'
+    | '/tools/flexbox'
     | '/tools/image-compress'
     | '/tools/image-format'
     | '/tools/json-formatter'
@@ -38,7 +39,7 @@ export type ToolLink = {
 export const TOOL_CATEGORIES: ToolCategory[] = [
   { id: 'text', label: 'Text' },
   { id: 'image', label: 'Images' },
-  { id: 'color', label: 'Color' },
+  { id: 'color', label: 'Color / CSS / Layout' },
   { id: 'encode', label: 'Encode' },
   { id: 'network', label: 'Network' },
   { id: 'browser', label: 'Browser' },
@@ -120,6 +121,23 @@ export const TOOLS: ToolLink[] = [
     blurb: 'Hex, rgba, hsl, hwb, oklch.',
     category: 'color',
     keywords: ['color', 'hex', 'rgba', 'hsl', 'hwb', 'oklch', 'css'],
+  },
+  {
+    to: '/tools/flexbox',
+    name: 'Flexbox',
+    shortName: 'Flex',
+    blurb: 'Direction, wrap, justify, align, gap.',
+    category: 'color',
+    keywords: [
+      'flexbox',
+      'flex',
+      'css',
+      'layout',
+      'justify',
+      'align',
+      'gap',
+      'wrap',
+    ],
   },
   {
     to: '/tools/base64',

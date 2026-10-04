@@ -14,6 +14,7 @@ import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
 import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
 import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
+import { Route as ToolsFlexboxRouteImport } from './routes/tools/flexbox'
 import { Route as ToolsHexRgbaRouteImport } from './routes/tools/hex-rgba'
 import { Route as ToolsHttpStatusRouteImport } from './routes/tools/http-status'
 import { Route as ToolsImageCompressRouteImport } from './routes/tools/image-compress'
@@ -48,6 +49,11 @@ const ToolsCsvJsonRoute = ToolsCsvJsonRouteImport.update({
 const ToolsDnsLookupRoute = ToolsDnsLookupRouteImport.update({
   id: '/tools/dns-lookup',
   path: '/tools/dns-lookup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsFlexboxRoute = ToolsFlexboxRouteImport.update({
+  id: '/tools/flexbox',
+  path: '/tools/flexbox',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsHexRgbaRoute = ToolsHexRgbaRouteImport.update({
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
+  '/tools/flexbox': typeof ToolsFlexboxRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
@@ -124,6 +131,7 @@ export interface FileRoutesByTo {
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
+  '/tools/flexbox': typeof ToolsFlexboxRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
@@ -142,6 +150,7 @@ export interface FileRoutesById {
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
+  '/tools/flexbox': typeof ToolsFlexboxRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
@@ -161,6 +170,7 @@ export interface FileRouteTypes {
     | '/tools/browser-info'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
+    | '/tools/flexbox'
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
@@ -178,6 +188,7 @@ export interface FileRouteTypes {
     | '/tools/browser-info'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
+    | '/tools/flexbox'
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
@@ -195,6 +206,7 @@ export interface FileRouteTypes {
     | '/tools/browser-info'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
+    | '/tools/flexbox'
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
@@ -213,6 +225,7 @@ export interface RootRouteChildren {
   ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
   ToolsCsvJsonRoute: typeof ToolsCsvJsonRoute
   ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
+  ToolsFlexboxRoute: typeof ToolsFlexboxRoute
   ToolsHexRgbaRoute: typeof ToolsHexRgbaRoute
   ToolsHttpStatusRoute: typeof ToolsHttpStatusRoute
   ToolsImageCompressRoute: typeof ToolsImageCompressRoute
@@ -260,6 +273,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/dns-lookup'
       fullPath: '/tools/dns-lookup'
       preLoaderRoute: typeof ToolsDnsLookupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/flexbox': {
+      id: '/tools/flexbox'
+      path: '/tools/flexbox'
+      fullPath: '/tools/flexbox'
+      preLoaderRoute: typeof ToolsFlexboxRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/hex-rgba': {
@@ -341,6 +361,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
   ToolsCsvJsonRoute: ToolsCsvJsonRoute,
   ToolsDnsLookupRoute: ToolsDnsLookupRoute,
+  ToolsFlexboxRoute: ToolsFlexboxRoute,
   ToolsHexRgbaRoute: ToolsHexRgbaRoute,
   ToolsHttpStatusRoute: ToolsHttpStatusRoute,
   ToolsImageCompressRoute: ToolsImageCompressRoute,
