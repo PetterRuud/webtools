@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
@@ -17,11 +17,14 @@ type ViewMode = 'edit' | 'split' | 'preview' | 'html'
 export function MarkdownTool() {
   const [source, setSource] = useState(SAMPLE_MARKDOWN)
   const [view, setView] = useState<ViewMode>('split')
+  const [html, setHtml] = useState('')
 
-  const html = useMemo(() => {
-    if (typeof window === 'undefined') return ''
-    if (!source.trim()) return ''
-    return markdownToHtml(source)
+  useEffect(() => {
+    if (!source.trim()) {
+      setHtml('')
+      return
+    }
+    setHtml(markdownToHtml(source))
   }, [source])
 
   const charCount = source.length.toLocaleString()
@@ -226,6 +229,7 @@ function PreviewPane({
         <div
           className="prose prose-sm dark:prose-invert max-w-none prose-headings:font-heading prose-pre:bg-muted/70 prose-code:before:content-none prose-code:after:content-none"
           dangerouslySetInnerHTML={{ __html: html }}
+          suppressHydrationWarning
         />
       )}
     </div>

@@ -29,11 +29,14 @@ const greeting = 'hello'
 [WebTools](/)
 `
 
+export function markdownToUnsafeHtml(source: string): string {
+  return marked.parse(source, { async: false }) as string
+}
+
+/** Prefer this in the browser; falls back to unsanitized marked output on SSR. */
 export function markdownToHtml(source: string): string {
-  const raw = marked.parse(source, { async: false }) as string
-  if (typeof window === 'undefined') {
-    return raw
-  }
+  const raw = markdownToUnsafeHtml(source)
+  if (typeof window === 'undefined') return raw
   return DOMPurify.sanitize(raw, {
     USE_PROFILES: { html: true },
   })
