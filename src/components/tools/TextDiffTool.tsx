@@ -222,21 +222,35 @@ function buildRows(left: string, right: string, view: ViewMode): DiffRow[] {
   return rows
 }
 
+/** Full-line row fills (also used by the legend via opaque equivalents). */
+const ROW_ADDED = 'bg-primary/15 dark:bg-primary/25'
+const ROW_REMOVED = 'bg-destructive/12 dark:bg-destructive/20'
+const ROW_SAME = 'bg-transparent'
+
+/**
+ * Opaque mixes matching the translucent row fills over `--background`,
+ * so tiny legend swatches read the same as full-width diff cells.
+ */
+const SWATCH_ADDED =
+  'bg-[color-mix(in_oklab,var(--primary)_15%,var(--background))] dark:bg-[color-mix(in_oklab,var(--primary)_25%,var(--background))]'
+const SWATCH_REMOVED =
+  'bg-[color-mix(in_oklab,var(--destructive)_12%,var(--background))] dark:bg-[color-mix(in_oklab,var(--destructive)_20%,var(--background))]'
+
 function lineClass(type: LineKind, segments?: Segment[]) {
   if (type === 'empty') {
     return 'bg-muted/40 text-transparent'
   }
   // Intra-line mode: keep the row neutral; only <mark> spans carry color.
   if (segments?.length) {
-    return 'bg-transparent'
+    return ROW_SAME
   }
   if (type === 'added') {
-    return 'bg-primary/15 dark:bg-primary/25'
+    return ROW_ADDED
   }
   if (type === 'removed') {
-    return 'bg-destructive/12 dark:bg-destructive/20'
+    return ROW_REMOVED
   }
-  return 'bg-transparent'
+  return ROW_SAME
 }
 
 function segmentClass(type: SegmentKind) {
@@ -270,33 +284,33 @@ function DiffLegend() {
   return (
     <ul className="m-0 flex list-none flex-wrap items-center gap-x-2.5 gap-y-1 p-0 text-[0.7rem] text-muted-foreground">
       <li className="inline-flex items-center gap-1">
-        <span
-          aria-hidden
-          className="inline-block size-2.5 shrink-0 rounded-[2px] bg-primary/15 dark:bg-primary/25"
-        />
+        <span aria-hidden className={cn('inline-block size-2.5 shrink-0 rounded-[2px]', SWATCH_ADDED)} />
         Added
       </li>
       <li className="inline-flex items-center gap-1">
         <span
           aria-hidden
-          className="inline-block size-2.5 shrink-0 rounded-[2px] bg-destructive/12 dark:bg-destructive/20"
+          className={cn('inline-block size-2.5 shrink-0 rounded-[2px]', SWATCH_REMOVED)}
         />
         Removed
       </li>
       <li className="inline-flex items-center gap-1">
         <span
           aria-hidden
-          className="inline-flex size-2.5 shrink-0 overflow-hidden rounded-[2px]"
+          className="grid size-2.5 shrink-0 grid-cols-2 overflow-hidden rounded-[2px]"
         >
-          <span className="h-full w-1/2 bg-destructive/12 dark:bg-destructive/20" />
-          <span className="h-full w-1/2 bg-primary/15 dark:bg-primary/25" />
+          <span className={SWATCH_REMOVED} />
+          <span className={SWATCH_ADDED} />
         </span>
         Changed
       </li>
       <li className="inline-flex items-center gap-1">
         <span
           aria-hidden
-          className="inline-block size-2.5 shrink-0 rounded-[2px] border border-border bg-transparent"
+          className={cn(
+            'inline-block size-2.5 shrink-0 rounded-[2px] border border-border',
+            ROW_SAME,
+          )}
         />
         Unchanged
       </li>
