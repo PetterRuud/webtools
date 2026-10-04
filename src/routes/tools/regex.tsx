@@ -9,7 +9,7 @@ export const Route = createFileRoute('/tools/regex')({
       {
         name: 'description',
         content:
-          'Test a regular expression with flags and live match highlights in your browser.',
+          'Test regular expressions with common presets, token breakdown, live match highlights, and group details — all in your browser.',
       },
     ],
   }),
@@ -20,7 +20,8 @@ function RegexPage() {
   return (
     <ToolShell
       title="Regex editor"
-      description="Tune a pattern and flags against a test string. Matches highlight as you type — groups listed below."
+      description="Start from a common pattern, read the token breakdown, and inspect matches with highlights and capture groups."
+      wide
     >
       <RegexEditorTool />
     </ToolShell>
