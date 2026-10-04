@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useServerFn } from '@tanstack/react-start'
+import { CopyIcon, Loader2Icon, SearchIcon } from 'lucide-react'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
@@ -67,7 +68,12 @@ export function IpLookupTool() {
           />
         </div>
         <Button type="button" disabled={loading} onClick={() => void lookup(query)}>
-          {loading ? '…' : 'Lookup'}
+          {loading ? (
+            <Loader2Icon data-icon="inline-start" className="animate-spin" />
+          ) : (
+            <SearchIcon data-icon="inline-start" />
+          )}
+          Lookup
         </Button>
         <Button
           type="button"
@@ -105,6 +111,7 @@ export function IpLookupTool() {
               variant="outline"
               onClick={() => void copyText(result.ip, 'IP')}
             >
+              <CopyIcon data-icon="inline-start" />
               Copy
             </Button>
           </div>

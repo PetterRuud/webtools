@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { CopyIcon } from 'lucide-react'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
@@ -284,6 +285,7 @@ export function CssGridTool() {
               size="sm"
               onClick={() => void copyText(css, 'CSS')}
             >
+              <CopyIcon data-icon="inline-start" />
               Copy
             </Button>
           </div>

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { BracesIcon, CopyIcon, Minimize2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
@@ -119,6 +120,7 @@ export function SvgEditorTool() {
             type="button"
             onClick={() => applyTransform('Prettified', (v) => prettifySvg(v))}
           >
+            <BracesIcon data-icon="inline-start" />
             Prettify
           </Button>
           <Button
@@ -126,6 +128,7 @@ export function SvgEditorTool() {
             variant="outline"
             onClick={() => applyTransform('Minified', (v) => minifySvg(v))}
           >
+            <Minimize2Icon data-icon="inline-start" />
             Minify
           </Button>
           <Button
@@ -201,6 +204,7 @@ export function SvgEditorTool() {
                 onClick={() => void copyText(source, 'SVG')}
                 disabled={!source.trim()}
               >
+                <CopyIcon data-icon="inline-start" />
                 Copy
               </Button>
               <Button
@@ -277,6 +281,7 @@ export function SvgEditorTool() {
                 onClick={() => void copyText(reactResult.value, 'React component')}
                 disabled={!reactResult.value}
               >
+                <CopyIcon data-icon="inline-start" />
                 Copy
               </Button>
             ) : null}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
@@ -215,30 +216,45 @@ export function QrCodeTool() {
             disabled={!dataUrl || busy}
             onClick={downloadPng}
           >
+            {busy ? (
+              <Loader2Icon data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <DownloadIcon data-icon="inline-start" />
+            )}
             Download PNG
           </Button>
         </div>
 
-        <div className="flex min-h-64 items-center justify-center rounded-lg border border-dashed border-border bg-background/60 p-4">
+        <div className="flex min-h-64 items-center justify-center p-2">
           {dataUrl ? (
-            <img
-              src={dataUrl}
-              alt="Generated QR code"
-              width={Math.min(size, 360)}
-              height={Math.min(size, 360)}
-              className="max-h-80 max-w-full object-contain"
-            />
+            <div className="relative w-full max-w-72 rounded-2xl border border-border/80 bg-[color-mix(in_oklch,var(--card)_88%,var(--primary)_5%)] p-4 shadow-[0_1px_0_color-mix(in_oklch,var(--foreground)_10%,transparent),0_14px_28px_-16px_rgba(0,0,0,0.55)]">
+              <div
+                aria-hidden
+                className="mb-3 h-1 rounded-full bg-[color-mix(in_oklch,var(--primary)_35%,transparent)]"
+              />
+              <div className="rounded-xl border border-black/5 bg-white p-3 shadow-inner">
+                <img
+                  src={dataUrl}
+                  alt="Generated QR code"
+                  width={Math.min(size, 280)}
+                  height={Math.min(size, 280)}
+                  className="mx-auto max-h-64 max-w-full object-contain"
+                />
+              </div>
+              <p className="m-0 mt-3 truncate text-center font-mono text-[0.65rem] tracking-wide text-muted-foreground">
+                {text.trim() || '—'}
+              </p>
+              <p className="m-0 mt-1 text-center font-mono text-[0.6rem] tabular-nums text-muted-foreground/80">
+                {size}×{size} · ECC {errorCorrection}
+                {busy ? ' · …' : ''}
+              </p>
+            </div>
           ) : (
             <p className="m-0 text-sm text-muted-foreground">
-              {busy ? 'Generating…' : 'Enter text to generate a QR code'}
+              {busy ? 'Generating…' : 'Enter text to generate'}
             </p>
           )}
         </div>
-
-        <p className="m-0 text-xs text-muted-foreground">
-          Client-side only. {size}×{size} · ECC {errorCorrection}
-          {busy ? ' · updating' : ''}
-        </p>
       </div>
     </div>
   )

@@ -11,6 +11,10 @@ export function CoinVisual(props: { side: CoinSide; flipKey: number }) {
         style={{ perspective: '700px' }}
       >
         <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-4 -bottom-1 h-3 rounded-full bg-black/25 blur-[3px]"
+        />
+        <div
           key={props.flipKey}
           className="relative size-full"
           style={{
@@ -23,13 +27,13 @@ export function CoinVisual(props: { side: CoinSide; flipKey: number }) {
           <CoinFace
             label="H"
             caption="Heads"
-            className="bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 text-amber-950"
+            className="bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 text-amber-950 shadow-[inset_0_2px_6px_rgba(255,255,255,0.45),inset_0_-3px_8px_rgba(0,0,0,0.25)]"
             style={{ transform: 'rotateY(0deg)' }}
           />
           <CoinFace
             label="T"
             caption="Tails"
-            className="bg-gradient-to-br from-zinc-300 via-zinc-400 to-zinc-600 text-zinc-950"
+            className="bg-gradient-to-br from-zinc-300 via-zinc-400 to-zinc-600 text-zinc-950 shadow-[inset_0_2px_6px_rgba(255,255,255,0.35),inset_0_-3px_8px_rgba(0,0,0,0.3)]"
             style={{ transform: 'rotateY(180deg)' }}
           />
         </div>
@@ -55,7 +59,7 @@ function CoinFace(props: {
   return (
     <div
       className={cn(
-        'absolute inset-0 flex flex-col items-center justify-center rounded-full border-4 border-black/15 shadow-md',
+        'absolute inset-0 flex flex-col items-center justify-center rounded-full border-[5px] border-black/20 shadow-md ring-1 ring-white/25',
         props.className,
       )}
       style={{
@@ -340,7 +344,7 @@ function StandardDie(props: { value: number; sides: number; index: number }) {
     >
       <svg
         viewBox="0 0 64 64"
-        className="size-14 drop-shadow-sm"
+        className="size-14 drop-shadow-[0_6px_8px_rgba(0,0,0,0.28)]"
         role="img"
         aria-label={`d${props.sides}: ${props.value}`}
       >
@@ -353,6 +357,15 @@ function StandardDie(props: { value: number; sides: number; index: number }) {
           fill={fill}
           stroke={stroke}
           strokeWidth="2"
+        />
+        <rect
+          x="11"
+          y="11"
+          width="42"
+          height="18"
+          rx="6"
+          fill="color-mix(in oklab, white 18%, transparent)"
+          opacity="0.55"
         />
         <rect
           x="12"

@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import { CameraIcon, DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
@@ -157,7 +158,12 @@ export function WebsiteScreenshotTool() {
         </Label>
 
         <Button type="submit" disabled={busy || !url.trim()}>
-          {busy ? 'Capturing…' : 'Capture screenshot'}
+          {busy ? (
+            <Loader2Icon data-icon="inline-start" className="animate-spin" />
+          ) : (
+            <CameraIcon data-icon="inline-start" />
+          )}
+          {busy ? 'Capturing…' : 'Capture'}
         </Button>
 
         {error ? (
@@ -192,13 +198,18 @@ export function WebsiteScreenshotTool() {
           )}
         </div>
         {previewUrl ? (
-          <a
-            href={previewUrl}
-            download="website-screenshot.png"
-            className="text-sm text-primary underline-offset-2 hover:underline"
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="self-start"
+            render={
+              <a href={previewUrl} download="website-screenshot.png" />
+            }
           >
-            Download website-screenshot.png
-          </a>
+            <DownloadIcon data-icon="inline-start" />
+            Download PNG
+          </Button>
         ) : null}
       </section>
     </form>

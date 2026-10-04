@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { CopyIcon } from 'lucide-react'
 import { Button } from '#/components/ui/button'
 import { copyText } from '#/lib/clipboard'
 import { cn } from '#/lib/utils'
@@ -110,6 +111,7 @@ export function BrowserInfoTool() {
           disabled={rows.length === 0}
           onClick={() => void copyText(asText, 'browser info')}
         >
+          <CopyIcon data-icon="inline-start" />
           Copy all
         </Button>
       </div>

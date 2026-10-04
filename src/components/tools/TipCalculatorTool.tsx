@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { MinusIcon, PlusIcon } from 'lucide-react'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
@@ -103,7 +104,7 @@ export function TipCalculatorTool() {
                 }
               }}
             >
-              −
+              <MinusIcon />
             </Button>
             <Input
               id="tip-people"
@@ -123,7 +124,7 @@ export function TipCalculatorTool() {
                 setPeopleDraft(String(next))
               }}
             >
-              +
+              <PlusIcon />
             </Button>
           </div>
         </div>
@@ -143,25 +144,49 @@ export function TipCalculatorTool() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
+      <div
+        className="relative overflow-hidden rounded-sm border border-border/80 bg-[color-mix(in_oklch,var(--card)_92%,var(--primary)_6%)] px-4 pb-4 pt-5 shadow-[0_10px_28px_-18px_rgba(0,0,0,0.55)] sm:px-5"
+        aria-live="polite"
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-2.5 bg-[repeating-linear-gradient(90deg,transparent_0_5px,color-mix(in_oklch,var(--foreground)_14%,transparent)_5px_7px)] opacity-80"
+        />
+        <p className="m-0 mb-3 text-center font-mono text-[0.65rem] tracking-[0.28em] text-muted-foreground uppercase">
+          Receipt
+        </p>
         <ResultRow
-          label="Tip"
+          label="Bill"
+          value={result && bill !== null ? formatMoney(bill) : '—'}
+        />
+        <ResultRow
+          label={`Tip (${tipPercent}%)`}
           value={result ? formatMoney(result.tip) : '—'}
         />
+        <div className="my-2 border-t border-dashed border-border/80" />
         <ResultRow
           label="Total"
           value={result ? formatMoney(result.total) : '—'}
           emphasize
         />
-        <div className="my-1 h-px bg-border/70" />
+        <div className="my-2 border-t border-dashed border-border/80" />
+        <ResultRow
+          label={`Split × ${peopleInt ?? '—'}`}
+          value={result ? formatMoney(result.totalPerPerson) : '—'}
+          emphasize
+        />
         <ResultRow
           label="Tip / person"
           value={result ? formatMoney(result.tipPerPerson) : '—'}
         />
-        <ResultRow
-          label="Total / person"
-          value={result ? formatMoney(result.totalPerPerson) : '—'}
-          emphasize
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-3 bottom-0 h-2 bg-repeat-x"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle at 6px 0, transparent 5px, color-mix(in oklch, var(--background) 100%, transparent) 5.5px)',
+            backgroundSize: '12px 8px',
+          }}
         />
       </div>
     </div>
@@ -178,8 +203,10 @@ function ResultRow({
   emphasize?: boolean
 }) {
   return (
-    <div className="flex items-baseline justify-between gap-3">
-      <span className="text-sm text-muted-foreground">{label}</span>
+    <div className="flex items-baseline justify-between gap-3 py-0.5">
+      <span className="font-mono text-[0.8rem] tracking-wide text-muted-foreground">
+        {label}
+      </span>
       <span
         className={
           emphasize

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import { DownloadIcon, Loader2Icon, ScalingIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
@@ -320,6 +321,11 @@ export function ImageResizeTool() {
             disabled={!file || busy || !targetValid}
             onClick={() => void runResize()}
           >
+            {busy ? (
+              <Loader2Icon data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <ScalingIcon data-icon="inline-start" />
+            )}
             {busy ? 'Resizing…' : 'Resize'}
           </Button>
           <Button
@@ -328,6 +334,7 @@ export function ImageResizeTool() {
             disabled={!output}
             onClick={download}
           >
+            <DownloadIcon data-icon="inline-start" />
             Download
           </Button>
           {file && changed ? (

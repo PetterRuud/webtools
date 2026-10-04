@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { CopyIcon } from 'lucide-react'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
@@ -194,6 +195,7 @@ export function FlexboxTool() {
               variant="outline"
               onClick={() => void copyText(css, 'CSS')}
             >
+              <CopyIcon data-icon="inline-start" />
               Copy CSS
             </Button>
           </div>

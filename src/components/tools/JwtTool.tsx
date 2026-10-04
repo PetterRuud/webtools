@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { CopyIcon } from 'lucide-react'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
@@ -73,9 +74,6 @@ export function JwtTool() {
             Sample
           </Button>
         ) : null}
-        <p className="m-0 text-xs text-muted-foreground md:ml-auto">
-          Secrets stay in this browser. HS256 / none only.
-        </p>
       </div>
 
       {mode === 'decode' ? (
@@ -173,6 +171,7 @@ export function JwtTool() {
                 disabled={!encoded}
                 onClick={() => void copyText(encoded, 'JWT')}
               >
+                <CopyIcon data-icon="inline-start" />
                 Copy
               </Button>
             </div>
@@ -208,6 +207,7 @@ function PartBlock({
       <div className="flex items-center justify-between gap-2">
         <Label>{title}</Label>
         <Button type="button" size="sm" variant="outline" onClick={onCopy}>
+          <CopyIcon data-icon="inline-start" />
           Copy
         </Button>
       </div>

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import imageCompression from 'browser-image-compression'
+import { DownloadIcon, Loader2Icon, Minimize2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
@@ -265,6 +266,11 @@ export function ImageCompressTool() {
             disabled={!file || busy}
             onClick={() => void compress()}
           >
+            {busy ? (
+              <Loader2Icon data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <Minimize2Icon data-icon="inline-start" />
+            )}
             {busy ? 'Compressing…' : 'Compress'}
           </Button>
           <Button
@@ -273,6 +279,7 @@ export function ImageCompressTool() {
             disabled={!output}
             onClick={download}
           >
+            <DownloadIcon data-icon="inline-start" />
             Download
           </Button>
           {file && scalePercent !== 100 ? (

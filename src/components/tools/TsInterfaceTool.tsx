@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { CopyIcon } from 'lucide-react'
 import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
@@ -136,6 +137,7 @@ export function TsInterfaceTool() {
               onClick={() => void copyText(result.value, 'TypeScript')}
               disabled={!result.value}
             >
+              <CopyIcon data-icon="inline-start" />
               Copy
             </Button>
           </>

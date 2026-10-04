@@ -1,10 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import { Loader2Icon, SparklesIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
-import { TRANSPARENT_NODE_NOTE } from '#/lib/transparent/types'
 
 const CHECKER =
   'linear-gradient(45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%)'
@@ -207,12 +207,13 @@ export function TransparentTool() {
         </fieldset>
 
         <Button type="submit" disabled={busy || !white || !black}>
+          {busy ? (
+            <Loader2Icon data-icon="inline-start" className="animate-spin" />
+          ) : (
+            <SparklesIcon data-icon="inline-start" />
+          )}
           {busy ? 'Processing…' : 'Generate PNG'}
         </Button>
-
-        <p className="m-0 text-xs leading-4 text-muted-foreground">
-          {TRANSPARENT_NODE_NOTE}
-        </p>
 
         {error ? (
           <p className="m-0 rounded-lg border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">

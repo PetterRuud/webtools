@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
@@ -307,6 +308,11 @@ export function CodeScreenshotTool() {
 
         <div className="flex flex-wrap gap-1.5 pt-1">
           <Button type="button" onClick={() => void exportPng()} disabled={exporting}>
+            {exporting ? (
+              <Loader2Icon data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <DownloadIcon data-icon="inline-start" />
+            )}
             {exporting ? 'Exporting…' : 'Download PNG'}
           </Button>
           <Button

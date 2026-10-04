@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import samplePanelUrl from '#/assets/samples/nine-slice-panel.png?url'
 import { Button } from '#/components/ui/button'
@@ -431,6 +432,11 @@ export function NineSliceTool() {
             disabled={!dims || busy}
             onClick={() => void exportSlices()}
           >
+            {busy ? (
+              <Loader2Icon data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <DownloadIcon data-icon="inline-start" />
+            )}
             {busy ? 'Exporting…' : 'Download 9 slices'}
           </Button>
           <Button

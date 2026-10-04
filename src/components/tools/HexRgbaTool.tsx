@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { CopyIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
@@ -107,6 +108,7 @@ export function HexRgbaTool() {
                       void copyText(formatColor(format, channels), meta.label)
                     }}
                   >
+                    <CopyIcon data-icon="inline-start" />
                     Copy
                   </Button>
                 </div>

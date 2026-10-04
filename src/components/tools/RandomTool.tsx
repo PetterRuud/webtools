@@ -1,5 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
-import { XIcon } from 'lucide-react'
+import {
+  CoinsIcon,
+  CopyIcon,
+  DicesIcon,
+  RotateCwIcon,
+  SparklesIcon,
+  XIcon,
+} from 'lucide-react'
 import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
 import { Input } from '#/components/ui/input'
@@ -670,7 +677,27 @@ export function RandomTool() {
               onClick={() => generate()}
               disabled={mode === 'roulette' && rouletteSpinning}
             >
-              {mode === 'roulette' ? 'Spin' : 'Generate'}
+              {mode === 'roulette' ? (
+                <RotateCwIcon
+                  data-icon="inline-start"
+                  className={rouletteSpinning ? 'animate-spin' : undefined}
+                />
+              ) : mode === 'coin' ? (
+                <CoinsIcon data-icon="inline-start" />
+              ) : mode === 'dice' || mode === 'dnd' ? (
+                <DicesIcon data-icon="inline-start" />
+              ) : (
+                <SparklesIcon data-icon="inline-start" />
+              )}
+              {mode === 'roulette'
+                ? rouletteSpinning
+                  ? 'Spinning…'
+                  : 'Spin'
+                : mode === 'coin'
+                  ? 'Flip'
+                  : mode === 'dice' || mode === 'dnd'
+                    ? 'Roll'
+                    : 'Generate'}
             </Button>
             <Button
               type="button"
@@ -678,18 +705,13 @@ export function RandomTool() {
               disabled={!output || rouletteSpinning}
               onClick={() => void copyText(output, modeLabel(mode))}
             >
+              <CopyIcon data-icon="inline-start" />
               Copy
             </Button>
           </div>
           {error ? (
             <p className="m-0 text-sm text-destructive">{error}</p>
-          ) : (
-            <p className="m-0 text-xs text-muted-foreground">
-              {mode === 'roulette'
-                ? 'List saved in this browser (localStorage).'
-                : 'Cryptographically random in this browser. Nothing is uploaded.'}
-            </p>
-          )}
+          ) : null}
         </div>
 
         <div className="flex flex-col gap-3">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { CopyIcon, DownloadIcon } from 'lucide-react'
 import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
@@ -70,6 +71,7 @@ export function MarkdownTool() {
             onClick={() => void copyText(source, 'Markdown')}
             disabled={!hasSource}
           >
+            <CopyIcon data-icon="inline-start" />
             Copy MD
           </Button>
           <Button
@@ -79,6 +81,7 @@ export function MarkdownTool() {
             onClick={() => void copyText(html, 'HTML')}
             disabled={!html}
           >
+            <CopyIcon data-icon="inline-start" />
             Copy HTML
           </Button>
           <Button
@@ -88,6 +91,7 @@ export function MarkdownTool() {
             onClick={downloadHtml}
             disabled={!html}
           >
+            <DownloadIcon data-icon="inline-start" />
             Download HTML
           </Button>
           <Button
@@ -177,6 +181,7 @@ export function MarkdownTool() {
                 onClick={() => void copyText(html, 'HTML')}
                 disabled={!html}
               >
+                <CopyIcon data-icon="inline-start" />
                 Copy
               </Button>
             </>

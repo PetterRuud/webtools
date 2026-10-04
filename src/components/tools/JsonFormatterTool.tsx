@@ -1,4 +1,10 @@
 import { useMemo, useState } from 'react'
+import {
+  BracesIcon,
+  CheckCircle2Icon,
+  CopyIcon,
+  Minimize2Icon,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
@@ -73,12 +79,15 @@ export function JsonFormatterTool() {
       <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-1.5">
           <Button type="button" onClick={() => run('pretty')}>
+            <BracesIcon data-icon="inline-start" />
             Pretty
           </Button>
           <Button type="button" variant="outline" onClick={() => run('minify')}>
+            <Minimize2Icon data-icon="inline-start" />
             Minify
           </Button>
           <Button type="button" variant="secondary" onClick={validateOnly}>
+            <CheckCircle2Icon data-icon="inline-start" />
             Validate
           </Button>
           <Button
@@ -121,6 +130,7 @@ export function JsonFormatterTool() {
               onClick={() => void copyText(output, 'JSON')}
               disabled={!output}
             >
+              <CopyIcon data-icon="inline-start" />
               Copy
             </Button>
           </>

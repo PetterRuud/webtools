@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { CopyIcon, DownloadIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
@@ -194,6 +195,7 @@ export function SitemapGeneratorTool() {
                 disabled={!result.xml}
                 onClick={() => void copyText(result.xml, 'sitemap.xml')}
               >
+                <CopyIcon data-icon="inline-start" />
                 Copy
               </Button>
               <Button
@@ -203,6 +205,7 @@ export function SitemapGeneratorTool() {
                 disabled={!result.xml}
                 onClick={download}
               >
+                <DownloadIcon data-icon="inline-start" />
                 Download
               </Button>
             </div>

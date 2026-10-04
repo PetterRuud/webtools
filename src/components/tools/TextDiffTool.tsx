@@ -1,4 +1,5 @@
 import { useMemo, useState, type ReactNode } from 'react'
+import { ArrowLeftRightIcon } from 'lucide-react'
 import * as Diff from 'diff'
 import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
@@ -308,6 +309,7 @@ export function TextDiffTool() {
             setRight(left)
           }}
         >
+          <ArrowLeftRightIcon data-icon="inline-start" />
           Swap
         </Button>
         <Button

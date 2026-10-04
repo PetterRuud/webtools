@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import { ArrowLeftRightIcon, DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
@@ -217,6 +218,11 @@ export function ImageFormatTool() {
             onClick={() => void convert()}
             disabled={busy || !file}
           >
+            {busy ? (
+              <Loader2Icon data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <ArrowLeftRightIcon data-icon="inline-start" />
+            )}
             {busy ? 'Converting…' : `Convert to ${selected.label}`}
           </Button>
           <Button
@@ -225,6 +231,7 @@ export function ImageFormatTool() {
             onClick={download}
             disabled={!output}
           >
+            <DownloadIcon data-icon="inline-start" />
             Download
           </Button>
           <Button

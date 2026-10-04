@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { CopyIcon } from 'lucide-react'
 import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
@@ -100,6 +101,7 @@ export function CsvJsonTool() {
                 )
               }
             >
+              <CopyIcon data-icon="inline-start" />
               Copy
             </Button>
           </>

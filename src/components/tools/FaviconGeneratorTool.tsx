@@ -1,5 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import {
+  CopyIcon,
+  DownloadIcon,
+  Loader2Icon,
+  SparklesIcon,
+} from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
@@ -226,6 +232,11 @@ export function FaviconGeneratorTool() {
             onClick={() => void generate()}
             disabled={busy || !file}
           >
+            {busy ? (
+              <Loader2Icon data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <SparklesIcon data-icon="inline-start" />
+            )}
             {busy ? 'Generating…' : 'Generate pack'}
           </Button>
           <Button
@@ -234,6 +245,7 @@ export function FaviconGeneratorTool() {
             onClick={() => zipBlob && downloadBlob(zipBlob, 'favicons.zip')}
             disabled={!zipBlob}
           >
+            <DownloadIcon data-icon="inline-start" />
             Download ZIP
           </Button>
           <Button
@@ -242,6 +254,7 @@ export function FaviconGeneratorTool() {
             onClick={() => icoBlob && downloadBlob(icoBlob, 'favicon.ico')}
             disabled={!icoBlob}
           >
+            <DownloadIcon data-icon="inline-start" />
             Download ICO
           </Button>
           <Button
@@ -340,6 +353,7 @@ export function FaviconGeneratorTool() {
                   onClick={() => void copyText(html, 'HTML')}
                   disabled={!html}
                 >
+                  <CopyIcon data-icon="inline-start" />
                   Copy
                 </Button>
               </div>

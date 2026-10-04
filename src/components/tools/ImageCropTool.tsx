@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from '@tanstack/react-router'
+import { CropIcon, DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
@@ -230,6 +231,11 @@ export function ImageCropTool() {
             disabled={!file || busy || !activeCrop}
             onClick={() => void exportCrop()}
           >
+            {busy ? (
+              <Loader2Icon data-icon="inline-start" className="animate-spin" />
+            ) : (
+              <CropIcon data-icon="inline-start" />
+            )}
             {busy ? 'Cropping…' : 'Crop'}
           </Button>
           <Button
@@ -238,6 +244,7 @@ export function ImageCropTool() {
             disabled={!output}
             onClick={download}
           >
+            <DownloadIcon data-icon="inline-start" />
             Download
           </Button>
           {file ? (

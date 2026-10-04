@@ -1,3 +1,4 @@
+import { Loader2Icon, SearchIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useServerFn } from '@tanstack/react-start'
 import { Button } from '#/components/ui/button'
@@ -86,7 +87,12 @@ export function DnsLookupTool() {
           />
         </div>
         <Button type="button" disabled={loading} onClick={() => void lookup()}>
-          {loading ? '…' : 'Lookup'}
+          {loading ? (
+            <Loader2Icon data-icon="inline-start" className="animate-spin" />
+          ) : (
+            <SearchIcon data-icon="inline-start" />
+          )}
+          Lookup
         </Button>
       </div>
 

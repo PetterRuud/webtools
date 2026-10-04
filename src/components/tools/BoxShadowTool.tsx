@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { CopyIcon } from 'lucide-react'
 import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
 import { Input } from '#/components/ui/input'
@@ -136,6 +137,7 @@ export function BoxShadowTool() {
 
         <div className="flex flex-wrap gap-1.5 pt-1">
           <Button type="button" onClick={() => void copyText(cssRule, 'CSS')}>
+            <CopyIcon data-icon="inline-start" />
             Copy CSS
           </Button>
           <Button
@@ -143,6 +145,7 @@ export function BoxShadowTool() {
             variant="outline"
             onClick={() => void copyText(cssValue, 'value')}
           >
+            <CopyIcon data-icon="inline-start" />
             Copy value
           </Button>
           <Button
@@ -183,6 +186,7 @@ export function BoxShadowTool() {
               variant="outline"
               onClick={() => void copyText(cssRule, 'CSS')}
             >
+              <CopyIcon data-icon="inline-start" />
               Copy
             </Button>
           </div>
