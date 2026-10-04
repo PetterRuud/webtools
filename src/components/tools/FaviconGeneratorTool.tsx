@@ -114,13 +114,12 @@ export function FaviconGeneratorTool() {
       <div className="flex flex-col gap-3">
         <ImageFileField
           id="favicon-file"
+          file={file}
+          hint="PNG, JPEG, WebP, or SVG"
           onFile={onPick}
           meta={
-            file ? (
-              <p className="m-0 text-xs text-muted-foreground">
-                {file.name} · {formatBytes(file.size)}
-                {file.type ? ` · ${file.type}` : ''}
-              </p>
+            file?.type ? (
+              <p className="m-0 text-xs text-muted-foreground">{file.type}</p>
             ) : null
           }
         />
@@ -133,11 +132,7 @@ export function FaviconGeneratorTool() {
               className={imagePreviewClassName}
             />
           </ImagePreviewFrame>
-        ) : (
-          <p className="m-0 rounded-lg border border-dashed border-border px-3 py-8 text-center text-sm text-muted-foreground">
-            Choose an image
-          </p>
-        )}
+        ) : null}
 
         <div className="grid gap-3 sm:grid-cols-2">
           <div className="flex flex-col gap-1.5">

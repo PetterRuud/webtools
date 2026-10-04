@@ -162,6 +162,8 @@ export function ImageCropTool() {
       <div className="flex flex-col gap-3">
         <ImageFileField
           id="crop-image"
+          file={file}
+          hint="PNG or JPEG"
           onFile={(next) => {
             setFile(next)
             setOutput(null)
@@ -215,10 +217,6 @@ export function ImageCropTool() {
               }}
             />
           </div>
-        ) : !file ? (
-          <p className="m-0 rounded-lg border border-dashed border-border bg-card/50 px-3 py-8 text-center text-sm text-muted-foreground">
-            Choose a PNG or JPEG
-          </p>
         ) : null}
       </div>
 

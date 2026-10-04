@@ -196,6 +196,8 @@ export function ImageResizeTool() {
       <div className="flex flex-col gap-3">
         <ImageFileField
           id="resize-image"
+          file={file}
+          hint="PNG, JPEG, or WebP"
           onFile={(next) => {
             setFile(next)
             setOutput(null)
@@ -225,10 +227,6 @@ export function ImageResizeTool() {
               />
             </ImagePreviewFrame>
           </div>
-        ) : !file ? (
-          <p className="m-0 rounded-lg border border-dashed border-border bg-card/50 px-3 py-8 text-center text-sm text-muted-foreground">
-            Choose a PNG, JPEG, or WebP
-          </p>
         ) : null}
 
         <p className="m-0 text-xs text-muted-foreground">

@@ -77,7 +77,6 @@ export function NineSliceTool() {
   const [centerMode, setCenterMode] = useState<CenterMode>('stretch')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [draggingFile, setDraggingFile] = useState(false)
   const objectUrlRef = useRef<string | null>(null)
 
   useEffect(() => {
@@ -233,36 +232,14 @@ export function NineSliceTool() {
   }
 
   return (
-    <div
-      className="relative grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start"
-      onDragEnter={(e) => {
-        e.preventDefault()
-        if (e.dataTransfer.types.includes('Files')) setDraggingFile(true)
-      }}
-      onDragOver={(e) => {
-        e.preventDefault()
-      }}
-      onDragLeave={(e) => {
-        if (e.currentTarget === e.target) setDraggingFile(false)
-      }}
-      onDrop={(e) => {
-        e.preventDefault()
-        setDraggingFile(false)
-        const next = e.dataTransfer.files?.[0]
-        if (next) void loadFromFile(next)
-      }}
-    >
-      {draggingFile ? (
-        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center rounded-lg border-2 border-dashed border-primary bg-background/80 text-sm font-medium">
-          Drop an image
-        </div>
-      ) : null}
-
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
       <div className="flex flex-col gap-3">
         <div className="flex flex-wrap items-end gap-2">
           <ImageFileField
             id="nine-slice-file"
             className="min-w-[12rem] flex-1"
+            file={file}
+            hint="PNG, JPEG, or WebP"
             inputRef={fileInputRef}
             onFile={(next) => {
               void loadFromFile(next)

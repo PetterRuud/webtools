@@ -138,12 +138,13 @@ export function ImageFormatTool() {
         <ImageFileField
           id="format-file"
           accept={ACCEPT}
+          file={file}
+          hint="PNG, JPEG, WebP, or HEIC"
           onFile={onPick}
           meta={
             file ? (
               <p className="m-0 text-xs text-muted-foreground">
-                {file.name} · {formatBytes(file.size)}
-                {file.type ? ` · ${file.type}` : heicSource ? ' · HEIC' : ''}
+                {file.type ? file.type : heicSource ? 'HEIC' : 'Unknown type'}
                 {heicSource ? ' · decoded locally' : ''}
               </p>
             ) : null
@@ -158,15 +159,13 @@ export function ImageFormatTool() {
               className={imagePreviewClassName}
             />
           </ImagePreviewFrame>
-        ) : (
-          <p className="m-0 rounded-lg border border-dashed border-border px-3 py-8 text-center text-sm text-muted-foreground">
-            {previewBusy
-              ? 'Decoding HEIC preview…'
-              : file
-                ? 'Preview unavailable'
-                : 'PNG, JPEG, WebP, or HEIC'}
+        ) : previewBusy ? (
+          <p className="m-0 text-sm text-muted-foreground">
+            Decoding HEIC preview…
           </p>
-        )}
+        ) : file ? (
+          <p className="m-0 text-sm text-muted-foreground">Preview unavailable</p>
+        ) : null}
 
         <div className="flex flex-col gap-2">
           <Label>Output</Label>

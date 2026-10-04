@@ -117,11 +117,15 @@ export function TransparentTool() {
           <ImageFileField
             id="transparent-white"
             label="On white"
+            file={white}
+            hint="PNG or JPEG"
             onFile={setWhite}
           />
           <ImageFileField
             id="transparent-black"
             label="On black"
+            file={black}
+            hint="PNG or JPEG"
             onFile={setBlack}
           />
         </div>
