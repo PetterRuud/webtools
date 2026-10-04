@@ -35,6 +35,7 @@ export type ToolLink = {
     | '/tools/mime'
     | '/tools/jwt'
     | '/tools/tailwind-cheat-sheet'
+    | '/tools/xml-json'
   name: string
   shortName: string
   blurb: string
@@ -103,7 +104,14 @@ export const TOOLS: ToolLink[] = [
       'sanitize',
     ],
   },
-
+  {
+    to: '/tools/xml-json',
+    name: 'XML ↔ JSON',
+    shortName: 'XML/JSON',
+    blurb: 'Bidirectional convert. Local.',
+    category: 'text',
+    keywords: ['xml', 'json', 'convert', 'parse', 'serialize', 'text'],
+  },
   {
     to: '/tools/image-compress',
     name: 'Image compress',
@@ -238,6 +246,14 @@ export const TOOLS: ToolLink[] = [
     blurb: 'Decode / encode. Secrets stay local.',
     category: 'encode',
     keywords: ['jwt', 'token', 'encode', 'decode', 'hs256', 'json web token'],
+  },
+  {
+    to: '/tools/xml-json',
+    name: 'XML ↔ JSON',
+    shortName: 'XML/JSON',
+    blurb: 'Bidirectional convert. Local.',
+    category: 'encode',
+    keywords: ['xml', 'json', 'convert', 'encode', 'decode', 'transform'],
   },
   {
     to: '/tools/ip-lookup',

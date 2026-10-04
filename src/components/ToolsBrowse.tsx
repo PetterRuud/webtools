@@ -69,7 +69,8 @@ export function ToolsBrowse() {
     [visibleTools],
   )
   const showTransparent = matchesTransparent(query, category)
-  const hasResults = visibleTools.length > 0 || showTransparent
+  const hasResults =
+    new Set(visibleTools.map((tool) => tool.to)).size > 0 || showTransparent
 
   return (
     <section className="flex flex-col gap-4">
@@ -219,9 +220,18 @@ function CategoryGroup({
 }
 
 function ToolGrid({ tools }: { tools: ToolLink[] }) {
+  const uniqueTools = useMemo(() => {
+    const seen = new Set<ToolLink['to']>()
+    return tools.filter((tool) => {
+      if (seen.has(tool.to)) return false
+      seen.add(tool.to)
+      return true
+    })
+  }, [tools])
+
   return (
     <ul className="m-0 grid list-none grid-cols-1 gap-2 p-0 sm:grid-cols-2 lg:grid-cols-3">
-      {tools.map((tool) => {
+      {uniqueTools.map((tool) => {
         const Icon = TOOL_ICONS[tool.to]
         return (
           <li key={tool.to} className="min-w-0">
