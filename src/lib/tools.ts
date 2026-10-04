@@ -27,6 +27,7 @@ export type ToolLink = {
     | '/tools/csv-json'
     | '/tools/regex'
     | '/tools/base64'
+    | '/tools/qrcode'
     | '/tools/text-diff'
     | '/tools/text-cleaner'
     | '/tools/ip-lookup'
@@ -292,6 +293,23 @@ export const TOOLS: ToolLink[] = [
     blurb: 'UTF-8 encode / decode.',
     category: 'encode',
     keywords: ['base64', 'encode', 'decode', 'utf-8', 'b64'],
+  },
+  {
+    to: '/tools/qrcode',
+    name: 'QR code',
+    shortName: 'QR',
+    blurb: 'Text/URL → PNG. Size, ECC.',
+    category: 'encode',
+    keywords: [
+      'qr',
+      'qrcode',
+      'qr code',
+      'barcode',
+      'encode',
+      'url',
+      'png',
+      'scan',
+    ],
   },
   {
     to: '/tools/jwt',

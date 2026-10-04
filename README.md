@@ -50,6 +50,7 @@ Not wired yet. Access is only planned for future **private R2 file hosting** —
 | `/tools/json-formatter` | Pretty / minify / validate JSON |
 | `/tools/regex` | Pattern + flags + match highlights |
 | `/tools/base64` | UTF-8-safe encode / decode |
+| `/tools/qrcode` | Text/URL → QR PNG (size, ECC, colors) |
 | `/tools/text-diff` | Side-by-side or unified line diff |
 | `/tools/jwt` | Decode / encode (HS256 or none); secrets stay local |
 | `/tools/ip-lookup` | Your IP or any address (Worker → ipwho.is) |

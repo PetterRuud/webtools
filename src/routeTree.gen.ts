@@ -28,6 +28,7 @@ import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-form
 import { Route as ToolsJwtRouteImport } from './routes/tools/jwt'
 import { Route as ToolsMimeRouteImport } from './routes/tools/mime'
 import { Route as ToolsNineSliceRouteImport } from './routes/tools/nine-slice'
+import { Route as ToolsQrcodeRouteImport } from './routes/tools/qrcode'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
 import { Route as ToolsSvgEditorRouteImport } from './routes/tools/svg-editor'
 import { Route as ToolsTailwindCheatSheetRouteImport } from './routes/tools/tailwind-cheat-sheet'
@@ -132,6 +133,11 @@ const ToolsNineSliceRoute = ToolsNineSliceRouteImport.update({
   path: '/tools/nine-slice',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsQrcodeRoute = ToolsQrcodeRouteImport.update({
+  id: '/tools/qrcode',
+  path: '/tools/qrcode',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsRegexRoute = ToolsRegexRouteImport.update({
   id: '/tools/regex',
   path: '/tools/regex',
@@ -193,6 +199,7 @@ export interface FileRoutesByFullPath {
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/mime': typeof ToolsMimeRoute
   '/tools/nine-slice': typeof ToolsNineSliceRoute
+  '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
@@ -222,6 +229,7 @@ export interface FileRoutesByTo {
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/mime': typeof ToolsMimeRoute
   '/tools/nine-slice': typeof ToolsNineSliceRoute
+  '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
@@ -252,6 +260,7 @@ export interface FileRoutesById {
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/mime': typeof ToolsMimeRoute
   '/tools/nine-slice': typeof ToolsNineSliceRoute
+  '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
@@ -283,6 +292,7 @@ export interface FileRouteTypes {
     | '/tools/jwt'
     | '/tools/mime'
     | '/tools/nine-slice'
+    | '/tools/qrcode'
     | '/tools/regex'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/tools/jwt'
     | '/tools/mime'
     | '/tools/nine-slice'
+    | '/tools/qrcode'
     | '/tools/regex'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
@@ -341,6 +352,7 @@ export interface FileRouteTypes {
     | '/tools/jwt'
     | '/tools/mime'
     | '/tools/nine-slice'
+    | '/tools/qrcode'
     | '/tools/regex'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
@@ -371,6 +383,7 @@ export interface RootRouteChildren {
   ToolsJwtRoute: typeof ToolsJwtRoute
   ToolsMimeRoute: typeof ToolsMimeRoute
   ToolsNineSliceRoute: typeof ToolsNineSliceRoute
+  ToolsQrcodeRoute: typeof ToolsQrcodeRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
   ToolsSvgEditorRoute: typeof ToolsSvgEditorRoute
   ToolsTailwindCheatSheetRoute: typeof ToolsTailwindCheatSheetRoute
@@ -516,6 +529,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsNineSliceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/qrcode': {
+      id: '/tools/qrcode'
+      path: '/tools/qrcode'
+      fullPath: '/tools/qrcode'
+      preLoaderRoute: typeof ToolsQrcodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/regex': {
       id: '/tools/regex'
       path: '/tools/regex'
@@ -595,6 +615,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsJwtRoute: ToolsJwtRoute,
   ToolsMimeRoute: ToolsMimeRoute,
   ToolsNineSliceRoute: ToolsNineSliceRoute,
+  ToolsQrcodeRoute: ToolsQrcodeRoute,
   ToolsRegexRoute: ToolsRegexRoute,
   ToolsSvgEditorRoute: ToolsSvgEditorRoute,
   ToolsTailwindCheatSheetRoute: ToolsTailwindCheatSheetRoute,
@@ -607,12 +628,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
