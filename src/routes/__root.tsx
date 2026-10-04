@@ -1,5 +1,4 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-import Footer from '../components/Footer'
 import Header from '../components/Header'
 import { ThemeProvider } from '#/components/theme-provider'
 import { Toaster } from '#/components/ui/sonner'
@@ -49,7 +48,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         >
           <Header />
           <div className="relative flex-1">{children}</div>
-          <Footer />
           <Toaster />
         </ThemeProvider>
         <Scripts />
