@@ -6,6 +6,9 @@ export type BackgroundPreset = {
   value: string
 }
 
+export const DEFAULT_PADDING = 32
+export const DEFAULT_LINE_HEIGHT = 1.35
+
 export const SAMPLE_CODE = `function fibonacci(n: number): number {
   if (n <= 1) return n
   return fibonacci(n - 1) + fibonacci(n - 2)
@@ -13,6 +16,7 @@ export const SAMPLE_CODE = `function fibonacci(n: number): number {
 
 const values = Array.from({ length: 10 }, (_, i) => fibonacci(i))
 console.log(values.join(', '))
+console.log('soft-wrap demo: ' + 'x'.repeat(96))
 `
 
 export const LANGUAGES = [

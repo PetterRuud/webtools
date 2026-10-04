@@ -8,6 +8,8 @@ import { Slider } from '#/components/ui/slider'
 import { Textarea } from '#/components/ui/textarea'
 import {
   BACKGROUND_PRESETS,
+  DEFAULT_LINE_HEIGHT,
+  DEFAULT_PADDING,
   FONT_FAMILIES,
   LANGUAGES,
   SAMPLE_CODE,
@@ -34,7 +36,7 @@ export function CodeScreenshotTool() {
   const [chrome, setChrome] = useState<WindowChrome>('macos')
   const [backgroundId, setBackgroundId] = useState(BACKGROUND_PRESETS[0].id)
   const [customBackground, setCustomBackground] = useState('#0f766e')
-  const [padding, setPadding] = useState(48)
+  const [padding, setPadding] = useState(DEFAULT_PADDING)
   const [fontSize, setFontSize] = useState(14)
   const [fontFamily, setFontFamily] = useState<FontFamilyId>('jetbrains')
   const [showLineNumbers, setShowLineNumbers] = useState(true)
@@ -378,14 +380,14 @@ export function CodeScreenshotTool() {
 
               <div
                 className={cn(
-                  'code-shot-preview px-4 pb-4',
+                  'code-shot-preview px-3 pb-3',
                   showLineNumbers && 'code-shot-lines',
-                  chrome === 'none' && !showTitle && 'pt-4',
+                  chrome === 'none' && !showTitle && 'pt-3',
                 )}
                 style={{
                   fontFamily: fontStack,
                   fontSize: `${fontSize}px`,
-                  lineHeight: 1.55,
+                  lineHeight: DEFAULT_LINE_HEIGHT,
                 }}
                 dangerouslySetInnerHTML={{ __html: highlightedHtml }}
               />
@@ -403,18 +405,26 @@ export function CodeScreenshotTool() {
           padding: 0;
           background: transparent !important;
           overflow: visible;
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+          word-break: break-word;
         }
         .code-shot-preview code {
           display: block;
           font-family: inherit;
           font-size: inherit;
           line-height: inherit;
+          white-space: inherit;
+          overflow-wrap: inherit;
+          word-break: inherit;
           counter-reset: code-line;
         }
         .code-shot-preview .line {
           display: block;
-          min-height: 1.55em;
-          white-space: pre;
+          min-height: ${DEFAULT_LINE_HEIGHT}em;
+          white-space: pre-wrap;
+          overflow-wrap: anywhere;
+          word-break: break-word;
         }
         .code-shot-lines .line::before {
           counter-increment: code-line;
@@ -425,6 +435,7 @@ export function CodeScreenshotTool() {
           text-align: right;
           color: color-mix(in oklab, currentColor 35%, transparent);
           user-select: none;
+          vertical-align: top;
         }
       `}</style>
     </div>
