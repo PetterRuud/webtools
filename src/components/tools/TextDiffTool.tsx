@@ -221,19 +221,19 @@ function buildRows(left: string, right: string, view: ViewMode): DiffRow[] {
   return rows
 }
 
-function lineClass(type: LineKind, hasSegments: boolean) {
+function lineClass(type: LineKind, segments?: Segment[]) {
   if (type === 'empty') {
     return 'bg-muted/40 text-transparent'
   }
+  // Intra-line mode: keep the row neutral; only <mark> spans carry color.
+  if (segments?.length) {
+    return 'bg-transparent'
+  }
   if (type === 'added') {
-    return hasSegments
-      ? 'bg-primary/8 dark:bg-primary/12'
-      : 'bg-primary/15 dark:bg-primary/25'
+    return 'bg-primary/15 dark:bg-primary/25'
   }
   if (type === 'removed') {
-    return hasSegments
-      ? 'bg-destructive/8 dark:bg-destructive/12'
-      : 'bg-destructive/12 dark:bg-destructive/20'
+    return 'bg-destructive/12 dark:bg-destructive/20'
   }
   return 'bg-transparent'
 }
@@ -266,8 +266,8 @@ function renderSegments(segments: Segment[] | undefined, fallback: string): Reac
 }
 
 export function TextDiffTool() {
-  const [left, setLeft] = useState('alpha\nbeta\ngamma\n')
-  const [right, setRight] = useState('alpha\nbeta edited\ndelta\n')
+  const [left, setLeft] = useState('alpha\nbeta\ncolour\ngamma\n')
+  const [right, setRight] = useState('alpha\nbeta edited\ncolor\ndelta\n')
   const [view, setView] = useState<ViewMode>('split')
 
   const rows = useMemo(() => buildRows(left, right, view), [left, right, view])
@@ -371,13 +371,12 @@ export function TextDiffTool() {
               <tbody>
                 {rows.map((row, index) => {
                   const cell = row.unified!
-                  const hasSegments = Boolean(cell.segments?.length)
                   return (
                     <tr key={index}>
                       <td
                         className={cn(
                           'whitespace-pre-wrap px-3 py-0.5 align-top',
-                          lineClass(cell.type, hasSegments),
+                          lineClass(cell.type, cell.segments),
                         )}
                       >
                         <span className="mr-2 inline-block w-3 text-muted-foreground">
@@ -413,7 +412,7 @@ export function TextDiffTool() {
                       <td
                         className={cn(
                           'w-1/2 whitespace-pre-wrap px-3 py-0.5 align-top',
-                          lineClass(leftCell.type, Boolean(leftCell.segments?.length)),
+                          lineClass(leftCell.type, leftCell.segments),
                         )}
                       >
                         {renderSegments(leftCell.segments, leftCell.text)}
@@ -421,7 +420,7 @@ export function TextDiffTool() {
                       <td
                         className={cn(
                           'w-1/2 whitespace-pre-wrap px-3 py-0.5 align-top',
-                          lineClass(rightCell.type, Boolean(rightCell.segments?.length)),
+                          lineClass(rightCell.type, rightCell.segments),
                         )}
                       >
                         {renderSegments(rightCell.segments, rightCell.text)}
