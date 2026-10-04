@@ -32,6 +32,7 @@ export type ToolLink = {
     | '/tools/text-diff'
     | '/tools/text-cleaner'
     | '/tools/random'
+    | '/tools/fake-data'
     | '/tools/markdown'
     | '/tools/code-screenshot'
     | '/tools/ip-lookup'
@@ -149,6 +150,32 @@ export const TOOLS: ToolLink[] = [
       'wheel',
       'generator',
       'decision',
+    ],
+  },
+  {
+    to: '/tools/fake-data',
+    name: 'Fake data',
+    shortName: 'Fake',
+    blurb: 'Names, emails, rows → JSON/CSV/SQL/XML.',
+    category: 'text',
+    keywords: [
+      'fake',
+      'data',
+      'generator',
+      'mock',
+      'sample',
+      'fixture',
+      'name',
+      'email',
+      'phone',
+      'address',
+      'json',
+      'csv',
+      'sql',
+      'xml',
+      'schema',
+      'rows',
+      'synthetic',
     ],
   },
   {

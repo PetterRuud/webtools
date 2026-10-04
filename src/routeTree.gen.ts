@@ -17,6 +17,7 @@ import { Route as ToolsCodeScreenshotRouteImport } from './routes/tools/code-scr
 import { Route as ToolsCssGridRouteImport } from './routes/tools/css-grid'
 import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
 import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
+import { Route as ToolsFakeDataRouteImport } from './routes/tools/fake-data'
 import { Route as ToolsFaviconRouteImport } from './routes/tools/favicon'
 import { Route as ToolsFlexboxRouteImport } from './routes/tools/flexbox'
 import { Route as ToolsHexRgbaRouteImport } from './routes/tools/hex-rgba'
@@ -80,6 +81,11 @@ const ToolsCsvJsonRoute = ToolsCsvJsonRouteImport.update({
 const ToolsDnsLookupRoute = ToolsDnsLookupRouteImport.update({
   id: '/tools/dns-lookup',
   path: '/tools/dns-lookup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsFakeDataRoute = ToolsFakeDataRouteImport.update({
+  id: '/tools/fake-data',
+  path: '/tools/fake-data',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsFaviconRoute = ToolsFaviconRouteImport.update({
@@ -212,6 +218,7 @@ export interface FileRoutesByFullPath {
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
+  '/tools/fake-data': typeof ToolsFakeDataRoute
   '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
@@ -246,6 +253,7 @@ export interface FileRoutesByTo {
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
+  '/tools/fake-data': typeof ToolsFakeDataRoute
   '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
@@ -281,6 +289,7 @@ export interface FileRoutesById {
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
+  '/tools/fake-data': typeof ToolsFakeDataRoute
   '/tools/favicon': typeof ToolsFaviconRoute
   '/tools/flexbox': typeof ToolsFlexboxRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
@@ -317,6 +326,7 @@ export interface FileRouteTypes {
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
+    | '/tools/fake-data'
     | '/tools/favicon'
     | '/tools/flexbox'
     | '/tools/hex-rgba'
@@ -351,6 +361,7 @@ export interface FileRouteTypes {
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
+    | '/tools/fake-data'
     | '/tools/favicon'
     | '/tools/flexbox'
     | '/tools/hex-rgba'
@@ -385,6 +396,7 @@ export interface FileRouteTypes {
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
+    | '/tools/fake-data'
     | '/tools/favicon'
     | '/tools/flexbox'
     | '/tools/hex-rgba'
@@ -420,6 +432,7 @@ export interface RootRouteChildren {
   ToolsCssGridRoute: typeof ToolsCssGridRoute
   ToolsCsvJsonRoute: typeof ToolsCsvJsonRoute
   ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
+  ToolsFakeDataRoute: typeof ToolsFakeDataRoute
   ToolsFaviconRoute: typeof ToolsFaviconRoute
   ToolsFlexboxRoute: typeof ToolsFlexboxRoute
   ToolsHexRgbaRoute: typeof ToolsHexRgbaRoute
@@ -502,6 +515,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/dns-lookup'
       fullPath: '/tools/dns-lookup'
       preLoaderRoute: typeof ToolsDnsLookupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/fake-data': {
+      id: '/tools/fake-data'
+      path: '/tools/fake-data'
+      fullPath: '/tools/fake-data'
+      preLoaderRoute: typeof ToolsFakeDataRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/favicon': {
@@ -684,6 +704,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsCssGridRoute: ToolsCssGridRoute,
   ToolsCsvJsonRoute: ToolsCsvJsonRoute,
   ToolsDnsLookupRoute: ToolsDnsLookupRoute,
+  ToolsFakeDataRoute: ToolsFakeDataRoute,
   ToolsFaviconRoute: ToolsFaviconRoute,
   ToolsFlexboxRoute: ToolsFlexboxRoute,
   ToolsHexRgbaRoute: ToolsHexRgbaRoute,
@@ -712,12 +733,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
