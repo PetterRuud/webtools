@@ -5,6 +5,13 @@ import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '#/components/ui/select'
 import { Slider } from '#/components/ui/slider'
 import { Textarea } from '#/components/ui/textarea'
 import {
@@ -25,9 +32,6 @@ import {
   type WindowChrome,
 } from '#/lib/codeScreenshot'
 import { cn } from 'cn'
-
-const selectClass =
-  'h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm dark:bg-input/30'
 
 export function CodeScreenshotTool() {
   const captureRef = useRef<HTMLDivElement>(null)
@@ -127,82 +131,106 @@ export function CodeScreenshotTool() {
         <div className="grid grid-cols-2 gap-2">
           <Label className="flex flex-col gap-1 font-normal">
             <span className="text-xs text-muted-foreground">Language</span>
-            <select
+            <Select
               value={language}
-              onChange={(event) =>
-                setLanguage(event.target.value as LanguageId)
-              }
-              className={selectClass}
+              onValueChange={(value) => {
+                if (value) setLanguage(value as LanguageId)
+              }}
             >
-              {LANGUAGES.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {LANGUAGES.map((item) => (
+                  <SelectItem key={item.id} value={item.id}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Label>
           <Label className="flex flex-col gap-1 font-normal">
             <span className="text-xs text-muted-foreground">Theme</span>
-            <select
+            <Select
               value={theme}
-              onChange={(event) => setTheme(event.target.value as ThemeId)}
-              className={selectClass}
+              onValueChange={(value) => {
+                if (value) setTheme(value as ThemeId)
+              }}
             >
-              {THEMES.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {THEMES.map((item) => (
+                  <SelectItem key={item.id} value={item.id}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Label>
           <Label className="flex flex-col gap-1 font-normal">
             <span className="text-xs text-muted-foreground">Window</span>
-            <select
+            <Select
               value={chrome}
-              onChange={(event) =>
-                setChrome(event.target.value as WindowChrome)
-              }
-              className={selectClass}
+              onValueChange={(value) => {
+                if (value) setChrome(value as WindowChrome)
+              }}
             >
-              {WINDOW_CHROMES.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {WINDOW_CHROMES.map((item) => (
+                  <SelectItem key={item.id} value={item.id}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Label>
           <Label className="flex flex-col gap-1 font-normal">
             <span className="text-xs text-muted-foreground">Font</span>
-            <select
+            <Select
               value={fontFamily}
-              onChange={(event) =>
-                setFontFamily(event.target.value as FontFamilyId)
-              }
-              className={selectClass}
+              onValueChange={(value) => {
+                if (value) setFontFamily(value as FontFamilyId)
+              }}
             >
-              {FONT_FAMILIES.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.label}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {FONT_FAMILIES.map((item) => (
+                  <SelectItem key={item.id} value={item.id}>
+                    {item.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Label>
         </div>
 
         <Label className="flex flex-col gap-1 font-normal">
           <span className="text-xs text-muted-foreground">Background</span>
-          <select
+          <Select
             value={backgroundId}
-            onChange={(event) => setBackgroundId(event.target.value)}
-            className={selectClass}
+            onValueChange={(value) => {
+              if (value) setBackgroundId(value)
+            }}
           >
-            {BACKGROUND_PRESETS.map((preset) => (
-              <option key={preset.id} value={preset.id}>
-                {preset.label}
-              </option>
-            ))}
-            <option value="custom">Custom color</option>
-          </select>
+            <SelectTrigger className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {BACKGROUND_PRESETS.map((preset) => (
+                <SelectItem key={preset.id} value={preset.id}>
+                  {preset.label}
+                </SelectItem>
+              ))}
+              <SelectItem value="custom">Custom color</SelectItem>
+            </SelectContent>
+          </Select>
         </Label>
 
         {backgroundId === 'custom' ? (
