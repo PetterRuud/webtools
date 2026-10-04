@@ -43,6 +43,7 @@ import { Route as ToolsTextCleanerRouteImport } from './routes/tools/text-cleane
 import { Route as ToolsTextDiffRouteImport } from './routes/tools/text-diff'
 import { Route as ToolsTipCalculatorRouteImport } from './routes/tools/tip-calculator'
 import { Route as ToolsTransparentRouteImport } from './routes/tools/transparent'
+import { Route as ToolsTsInterfaceRouteImport } from './routes/tools/ts-interface'
 import { Route as ToolsXmlJsonRouteImport } from './routes/tools/xml-json'
 import { Route as ApiTransparentExtractRouteImport } from './routes/api/transparent.extract'
 
@@ -216,6 +217,11 @@ const ToolsTransparentRoute = ToolsTransparentRouteImport.update({
   path: '/tools/transparent',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsTsInterfaceRoute = ToolsTsInterfaceRouteImport.update({
+  id: '/tools/ts-interface',
+  path: '/tools/ts-interface',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsXmlJsonRoute = ToolsXmlJsonRouteImport.update({
   id: '/tools/xml-json',
   path: '/tools/xml-json',
@@ -262,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/tools/text-diff': typeof ToolsTextDiffRoute
   '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
+  '/tools/ts-interface': typeof ToolsTsInterfaceRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
 }
@@ -300,6 +307,7 @@ export interface FileRoutesByTo {
   '/tools/text-diff': typeof ToolsTextDiffRoute
   '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
+  '/tools/ts-interface': typeof ToolsTsInterfaceRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
 }
@@ -339,6 +347,7 @@ export interface FileRoutesById {
   '/tools/text-diff': typeof ToolsTextDiffRoute
   '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
+  '/tools/ts-interface': typeof ToolsTsInterfaceRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
 }
@@ -379,6 +388,7 @@ export interface FileRouteTypes {
     | '/tools/text-diff'
     | '/tools/tip-calculator'
     | '/tools/transparent'
+    | '/tools/ts-interface'
     | '/tools/xml-json'
     | '/api/transparent/extract'
   fileRoutesByTo: FileRoutesByTo
@@ -417,6 +427,7 @@ export interface FileRouteTypes {
     | '/tools/text-diff'
     | '/tools/tip-calculator'
     | '/tools/transparent'
+    | '/tools/ts-interface'
     | '/tools/xml-json'
     | '/api/transparent/extract'
   id:
@@ -455,6 +466,7 @@ export interface FileRouteTypes {
     | '/tools/text-diff'
     | '/tools/tip-calculator'
     | '/tools/transparent'
+    | '/tools/ts-interface'
     | '/tools/xml-json'
     | '/api/transparent/extract'
   fileRoutesById: FileRoutesById
@@ -494,6 +506,7 @@ export interface RootRouteChildren {
   ToolsTextDiffRoute: typeof ToolsTextDiffRoute
   ToolsTipCalculatorRoute: typeof ToolsTipCalculatorRoute
   ToolsTransparentRoute: typeof ToolsTransparentRoute
+  ToolsTsInterfaceRoute: typeof ToolsTsInterfaceRoute
   ToolsXmlJsonRoute: typeof ToolsXmlJsonRoute
   ApiTransparentExtractRoute: typeof ApiTransparentExtractRoute
 }
@@ -738,6 +751,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsTransparentRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/ts-interface': {
+      id: '/tools/ts-interface'
+      path: '/tools/ts-interface'
+      fullPath: '/tools/ts-interface'
+      preLoaderRoute: typeof ToolsTsInterfaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/xml-json': {
       id: '/tools/xml-json'
       path: '/tools/xml-json'
@@ -790,6 +810,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsTextDiffRoute: ToolsTextDiffRoute,
   ToolsTipCalculatorRoute: ToolsTipCalculatorRoute,
   ToolsTransparentRoute: ToolsTransparentRoute,
+  ToolsTsInterfaceRoute: ToolsTsInterfaceRoute,
   ToolsXmlJsonRoute: ToolsXmlJsonRoute,
   ApiTransparentExtractRoute: ApiTransparentExtractRoute,
 }

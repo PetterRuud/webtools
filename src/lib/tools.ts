@@ -46,6 +46,7 @@ export type ToolLink = {
     | '/tools/xml-json'
     | '/tools/tip-calculator'
     | '/tools/sitemap'
+    | '/tools/ts-interface'
   name: string
   shortName: string
   blurb: string
@@ -179,6 +180,24 @@ export const TOOLS: ToolLink[] = [
     blurb: 'Bidirectional convert. Local.',
     category: 'text',
     keywords: ['xml', 'json', 'convert', 'parse', 'serialize', 'text'],
+  },
+  {
+    to: '/tools/ts-interface',
+    name: 'TS interface',
+    shortName: 'TS iface',
+    blurb: 'JSON → interfaces / types.',
+    category: 'text',
+    keywords: [
+      'typescript',
+      'ts',
+      'interface',
+      'type',
+      'json',
+      'generate',
+      'codegen',
+      'types',
+      'dto',
+    ],
   },
   {
     to: '/tools/code-screenshot',
