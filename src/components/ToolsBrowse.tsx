@@ -246,17 +246,17 @@ function ToolGrid({ tools }: { tools: ToolLink[] }) {
           <li key={tool.to} className="min-w-0">
             <Item
               variant="outline"
-              size="sm"
+              size="xs"
               render={<Link to={tool.to} />}
-              className="tool-row h-full flex-nowrap border-border/70 bg-card/45 no-underline hover:border-primary/35 hover:bg-muted/55"
+              className="tool-row h-full flex-nowrap items-center border-border/70 bg-card/45 py-2 no-underline hover:border-primary/35 hover:bg-muted/55"
             >
               <ItemMedia
                 variant="icon"
-                className="size-8 rounded-lg bg-mist text-primary"
+                className="size-7 translate-y-0 self-center rounded-md bg-mist text-primary"
               >
                 <Icon aria-hidden />
               </ItemMedia>
-              <ItemContent className="min-w-0 gap-0.5">
+              <ItemContent className="min-w-0 gap-0">
                 <ItemTitle className="font-heading text-ink">
                   {tool.name}
                 </ItemTitle>
@@ -276,16 +276,16 @@ function TransparentNote() {
   return (
     <Item
       variant="outline"
-      size="sm"
-      className="flex-nowrap border-dashed border-border/80 bg-card/30"
+      size="xs"
+      className="flex-nowrap items-center border-dashed border-border/80 bg-card/30 py-2"
     >
       <ItemMedia
         variant="icon"
-        className="size-8 rounded-lg bg-mist text-primary"
+        className="size-7 translate-y-0 self-center rounded-md bg-mist text-primary"
       >
         <ImageIcon aria-hidden />
       </ItemMedia>
-      <ItemContent className="min-w-0 gap-0.5">
+      <ItemContent className="min-w-0 gap-0">
         <ItemTitle className="font-heading w-full justify-between gap-2 text-ink">
           Transparent
           <span className="rounded-md bg-muted px-1.5 py-0.5 text-[0.7rem] font-medium text-muted-foreground">
