@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsBoxShadowRouteImport } from './routes/tools/box-shadow'
 import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
+import { Route as ToolsCssGridRouteImport } from './routes/tools/css-grid'
 import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
 import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
 import { Route as ToolsFaviconRouteImport } from './routes/tools/favicon'
@@ -46,6 +47,11 @@ const ToolsBoxShadowRoute = ToolsBoxShadowRouteImport.update({
 const ToolsBrowserInfoRoute = ToolsBrowserInfoRouteImport.update({
   id: '/tools/browser-info',
   path: '/tools/browser-info',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsCssGridRoute = ToolsCssGridRouteImport.update({
+  id: '/tools/css-grid',
+  path: '/tools/css-grid',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsCsvJsonRoute = ToolsCsvJsonRouteImport.update({
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/favicon': typeof ToolsFaviconRoute
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/favicon': typeof ToolsFaviconRoute
@@ -165,6 +173,7 @@ export interface FileRoutesById {
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/favicon': typeof ToolsFaviconRoute
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/tools/base64'
     | '/tools/box-shadow'
     | '/tools/browser-info'
+    | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
     | '/tools/favicon'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/tools/base64'
     | '/tools/box-shadow'
     | '/tools/browser-info'
+    | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
     | '/tools/favicon'
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/tools/base64'
     | '/tools/box-shadow'
     | '/tools/browser-info'
+    | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
     | '/tools/favicon'
@@ -248,6 +260,7 @@ export interface RootRouteChildren {
   ToolsBase64Route: typeof ToolsBase64Route
   ToolsBoxShadowRoute: typeof ToolsBoxShadowRoute
   ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
+  ToolsCssGridRoute: typeof ToolsCssGridRoute
   ToolsCsvJsonRoute: typeof ToolsCsvJsonRoute
   ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
   ToolsFaviconRoute: typeof ToolsFaviconRoute
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/browser-info'
       fullPath: '/tools/browser-info'
       preLoaderRoute: typeof ToolsBrowserInfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/css-grid': {
+      id: '/tools/css-grid'
+      path: '/tools/css-grid'
+      fullPath: '/tools/css-grid'
+      preLoaderRoute: typeof ToolsCssGridRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/csv-json': {
@@ -400,6 +420,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsBase64Route: ToolsBase64Route,
   ToolsBoxShadowRoute: ToolsBoxShadowRoute,
   ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
+  ToolsCssGridRoute: ToolsCssGridRoute,
   ToolsCsvJsonRoute: ToolsCsvJsonRoute,
   ToolsDnsLookupRoute: ToolsDnsLookupRoute,
   ToolsFaviconRoute: ToolsFaviconRoute,
@@ -418,3 +439,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

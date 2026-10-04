@@ -17,6 +17,7 @@ export type ToolLink = {
     | '/tools/hex-rgba'
     | '/tools/flexbox'
     | '/tools/box-shadow'
+    | '/tools/css-grid'
     | '/tools/image-compress'
     | '/tools/image-format'
     | '/tools/favicon'
@@ -163,6 +164,24 @@ export const TOOLS: ToolLink[] = [
       'spread',
       'inset',
       'offset',
+    ],
+  },
+  {
+    to: '/tools/css-grid',
+    name: 'CSS Grid',
+    shortName: 'Grid',
+    blurb: 'Columns, rows, gaps, areas.',
+    category: 'color',
+    keywords: [
+      'css',
+      'grid',
+      'layout',
+      'columns',
+      'rows',
+      'gap',
+      'template',
+      'areas',
+      'fr',
     ],
   },
   {
