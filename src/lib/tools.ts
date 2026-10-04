@@ -21,6 +21,7 @@ export type ToolLink = {
     | '/tools/regex'
     | '/tools/base64'
     | '/tools/text-diff'
+    | '/tools/text-cleaner'
     | '/tools/ip-lookup'
     | '/tools/dns-lookup'
     | '/tools/browser-info'
@@ -68,6 +69,25 @@ export const TOOLS: ToolLink[] = [
     category: 'text',
     keywords: ['diff', 'compare', 'delta', 'changes', 'patch'],
   },
+  {
+    to: '/tools/text-cleaner',
+    name: 'Text cleaner',
+    shortName: 'Clean',
+    blurb: 'Trim, spaces, HTML, quotes.',
+    category: 'text',
+    keywords: [
+      'clean',
+      'trim',
+      'whitespace',
+      'spaces',
+      'blank',
+      'html',
+      'quotes',
+      'normalize',
+      'sanitize',
+    ],
+  },
+
   {
     to: '/tools/image-compress',
     name: 'Image compress',

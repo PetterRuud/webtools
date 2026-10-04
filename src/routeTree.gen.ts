@@ -21,6 +21,7 @@ import { Route as ToolsIpLookupRouteImport } from './routes/tools/ip-lookup'
 import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-formatter'
 import { Route as ToolsJwtRouteImport } from './routes/tools/jwt'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
+import { Route as ToolsTextCleanerRouteImport } from './routes/tools/text-cleaner'
 import { Route as ToolsTextDiffRouteImport } from './routes/tools/text-diff'
 
 const IndexRoute = IndexRouteImport.update({
@@ -83,6 +84,11 @@ const ToolsRegexRoute = ToolsRegexRouteImport.update({
   path: '/tools/regex',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsTextCleanerRoute = ToolsTextCleanerRouteImport.update({
+  id: '/tools/text-cleaner',
+  path: '/tools/text-cleaner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsTextDiffRoute = ToolsTextDiffRouteImport.update({
   id: '/tools/text-diff',
   path: '/tools/text-diff',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
 export interface FileRoutesByTo {
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
 export interface FileRoutesById {
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/text-cleaner': typeof ToolsTextCleanerRoute
   '/tools/text-diff': typeof ToolsTextDiffRoute
 }
 export interface FileRouteTypes {
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/tools/json-formatter'
     | '/tools/jwt'
     | '/tools/regex'
+    | '/tools/text-cleaner'
     | '/tools/text-diff'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/tools/json-formatter'
     | '/tools/jwt'
     | '/tools/regex'
+    | '/tools/text-cleaner'
     | '/tools/text-diff'
   id:
     | '__root__'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
     | '/tools/json-formatter'
     | '/tools/jwt'
     | '/tools/regex'
+    | '/tools/text-cleaner'
     | '/tools/text-diff'
   fileRoutesById: FileRoutesById
 }
@@ -196,6 +208,7 @@ export interface RootRouteChildren {
   ToolsJsonFormatterRoute: typeof ToolsJsonFormatterRoute
   ToolsJwtRoute: typeof ToolsJwtRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
+  ToolsTextCleanerRoute: typeof ToolsTextCleanerRoute
   ToolsTextDiffRoute: typeof ToolsTextDiffRoute
 }
 
@@ -285,6 +298,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsRegexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/text-cleaner': {
+      id: '/tools/text-cleaner'
+      path: '/tools/text-cleaner'
+      fullPath: '/tools/text-cleaner'
+      preLoaderRoute: typeof ToolsTextCleanerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/text-diff': {
       id: '/tools/text-diff'
       path: '/tools/text-diff'
@@ -308,17 +328,9 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsJsonFormatterRoute: ToolsJsonFormatterRoute,
   ToolsJwtRoute: ToolsJwtRoute,
   ToolsRegexRoute: ToolsRegexRoute,
+  ToolsTextCleanerRoute: ToolsTextCleanerRoute,
   ToolsTextDiffRoute: ToolsTextDiffRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

@@ -1,6 +1,7 @@
 import {
   BinaryIcon,
   BracesIcon,
+  EraserIcon,
   GlobeIcon,
   HashIcon,
   ImageIcon,
@@ -24,6 +25,7 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/json-formatter': BracesIcon,
   '/tools/regex': RegexIcon,
   '/tools/text-diff': TextSelectIcon,
+  '/tools/text-cleaner': EraserIcon,
   '/tools/image-compress': ImageIcon,
   '/tools/image-format': ImagesIcon,
   '/tools/hex-rgba': PaletteIcon,
