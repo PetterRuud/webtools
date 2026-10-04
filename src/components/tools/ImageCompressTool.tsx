@@ -179,12 +179,14 @@ export function ImageCompressTool() {
                   : ''}
               </p>
             </div>
-            <div className="overflow-hidden rounded-xl border border-border bg-card/50">
-              <img
-                src={sourceUrl}
-                alt="Source preview"
-                className="mx-auto max-h-80 w-auto object-contain"
-              />
+            <div className="skeuo-film overflow-hidden rounded-xl border border-border/80 p-3">
+              <div className="overflow-hidden rounded-md bg-card/80">
+                <img
+                  src={sourceUrl}
+                  alt="Source preview"
+                  className="mx-auto max-h-80 w-auto object-contain"
+                />
+              </div>
             </div>
           </div>
         ) : !file ? (
@@ -263,6 +265,7 @@ export function ImageCompressTool() {
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
+            className="skeuo-plastic"
             disabled={!file || busy}
             onClick={() => void compress()}
           >
@@ -333,11 +336,13 @@ export function ImageCompressTool() {
         {previewUrl ? (
           <div className="flex flex-col gap-1.5">
             <p className="m-0 text-sm font-medium">Result</p>
-            <img
-              src={previewUrl}
-              alt="Compressed preview"
-              className="max-h-72 w-full rounded-xl border border-border bg-muted object-contain"
-            />
+            <div className="skeuo-film overflow-hidden rounded-xl border border-border/80 p-3">
+              <img
+                src={previewUrl}
+                alt="Compressed preview"
+                className="max-h-72 w-full rounded-md bg-muted object-contain"
+              />
+            </div>
           </div>
         ) : null}
       </div>

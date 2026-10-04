@@ -77,7 +77,7 @@ export function HttpStatusTool() {
               <li
                 key={item.code}
                 className={cn(
-                  'rounded-lg border px-3 py-2.5',
+                  'skeuo-stamp rounded-lg border px-3 py-2.5',
                   tones.card,
                 )}
               >
@@ -85,7 +85,7 @@ export function HttpStatusTool() {
                   <span className="font-heading text-base text-ink">
                     <span
                       className={cn(
-                        'font-mono tabular-nums font-semibold',
+                        'inline-block rounded-sm border border-border/60 px-1.5 py-0.5 font-mono text-[0.95rem] font-bold tabular-nums tracking-tight shadow-[inset_0_1px_0_rgba(255,255,255,0.2)]',
                         tones.code,
                       )}
                     >
@@ -95,7 +95,7 @@ export function HttpStatusTool() {
                   </span>
                   <span
                     className={cn(
-                      'shrink-0 rounded px-1.5 py-0.5 text-[0.65rem] font-medium tabular-nums',
+                      'skeuo-stamp shrink-0 rounded px-1.5 py-0.5 text-[0.65rem] font-medium tracking-wide tabular-nums uppercase',
                       tones.badge,
                     )}
                   >

@@ -37,7 +37,7 @@ export function TipCalculatorTool() {
 
   return (
     <div className="grid gap-3 lg:grid-cols-2 lg:items-start lg:gap-4">
-      <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
+      <div className="skeuo-plastic flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="tip-bill">Bill amount</Label>
           <Input
@@ -47,14 +47,14 @@ export function TipCalculatorTool() {
             onValueChange={setBillDraft}
             aria-invalid={billInvalid}
             placeholder="0.00"
-            className="font-mono tabular-nums text-[0.95rem]"
+            className="font-mono tabular-nums text-[0.95rem] shadow-[inset_0_1px_2px_rgba(0,0,0,0.12)]"
           />
         </div>
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
             <Label htmlFor="tip-percent">Tip %</Label>
-            <span className="text-sm tabular-nums text-muted-foreground">
+            <span className="rounded-md border border-border/70 bg-muted/40 px-1.5 py-0.5 font-mono text-sm tabular-nums text-muted-foreground shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]">
               {tipPercent}%
             </span>
           </div>
@@ -76,6 +76,11 @@ export function TipCalculatorTool() {
                 type="button"
                 size="xs"
                 variant={tipPercent === preset ? 'default' : 'outline'}
+                className={
+                  tipPercent === preset
+                    ? 'shadow-[inset_0_1px_0_rgba(255,255,255,0.2),0_2px_0_color-mix(in_oklch,var(--primary)_70%,black)]'
+                    : 'skeuo-stamp'
+                }
                 onClick={() => setTipPercent(preset)}
               >
                 {preset}%
@@ -97,6 +102,7 @@ export function TipCalculatorTool() {
               variant="outline"
               size="icon-sm"
               aria-label="Fewer people"
+              className="skeuo-plastic"
               disabled={peopleInt === null || peopleInt <= 1}
               onClick={() => {
                 if (peopleInt !== null && peopleInt > 1) {
@@ -112,13 +118,14 @@ export function TipCalculatorTool() {
               value={peopleDraft}
               onValueChange={setPeopleDraft}
               aria-invalid={peopleInvalid}
-              className="text-center font-mono tabular-nums text-[0.95rem]"
+              className="text-center font-mono tabular-nums text-[0.95rem] shadow-[inset_0_1px_2px_rgba(0,0,0,0.12)]"
             />
             <Button
               type="button"
               variant="outline"
               size="icon-sm"
               aria-label="More people"
+              className="skeuo-plastic"
               onClick={() => {
                 const next = peopleInt === null ? 1 : peopleInt + 1
                 setPeopleDraft(String(next))
@@ -145,16 +152,24 @@ export function TipCalculatorTool() {
       </div>
 
       <div
-        className="relative overflow-hidden rounded-sm border border-border/80 bg-[color-mix(in_oklch,var(--card)_92%,var(--primary)_6%)] px-4 pb-4 pt-5 shadow-[0_10px_28px_-18px_rgba(0,0,0,0.55)] sm:px-5"
+        className="skeuo-receipt relative overflow-hidden rounded-sm border border-border/80 px-4 pb-5 pt-5 sm:px-5"
         aria-live="polite"
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-2.5 bg-[repeating-linear-gradient(90deg,transparent_0_5px,color-mix(in_oklch,var(--foreground)_14%,transparent)_5px_7px)] opacity-80"
+          className="pointer-events-none absolute inset-x-0 top-0 h-3 bg-[repeating-linear-gradient(90deg,transparent_0_4px,color-mix(in_oklch,var(--foreground)_16%,transparent)_4px_7px)] opacity-90"
         />
-        <p className="m-0 mb-3 text-center font-mono text-[0.65rem] tracking-[0.28em] text-muted-foreground uppercase">
-          Receipt
+        <p className="m-0 mb-3 text-center font-mono text-[0.65rem] tracking-[0.32em] text-muted-foreground uppercase">
+          ★ Receipt ★
         </p>
+        {result ? (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute right-3 top-10 rotate-12 rounded-sm border-2 border-[color-mix(in_oklch,var(--destructive)_70%,transparent)] px-2 py-0.5 font-heading text-[0.7rem] font-bold tracking-[0.2em] text-[color-mix(in_oklch,var(--destructive)_75%,transparent)] uppercase opacity-70"
+          >
+            Paid
+          </div>
+        ) : null}
         <ResultRow
           label="Bill"
           value={result && bill !== null ? formatMoney(bill) : '—'}
@@ -181,11 +196,11 @@ export function TipCalculatorTool() {
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-3 bottom-0 h-2 bg-repeat-x"
+          className="pointer-events-none absolute inset-x-2 bottom-0 h-2.5 bg-repeat-x"
           style={{
             backgroundImage:
               'radial-gradient(circle at 6px 0, transparent 5px, color-mix(in oklch, var(--background) 100%, transparent) 5.5px)',
-            backgroundSize: '12px 8px',
+            backgroundSize: '12px 10px',
           }}
         />
       </div>

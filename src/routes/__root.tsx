@@ -39,7 +39,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="flex min-h-screen flex-col font-sans antialiased">
+      <body className="flex min-h-screen flex-col bg-background font-sans antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -47,15 +47,6 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           disableTransitionOnChange
           storageKey="webtools-ui-theme"
         >
-          <div
-            aria-hidden
-            className="atmosphere-orb atmosphere-orb-mint pointer-events-none fixed -left-24 top-10 h-72 w-72 rounded-full"
-          />
-          <div
-            aria-hidden
-            className="atmosphere-orb atmosphere-orb-gold pointer-events-none fixed -right-16 top-40 h-80 w-80 rounded-full"
-            style={{ animationDelay: '-6s' }}
-          />
           <Header />
           <div className="relative flex-1">{children}</div>
           <Footer />

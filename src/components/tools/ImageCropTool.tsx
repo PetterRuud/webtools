@@ -228,6 +228,7 @@ export function ImageCropTool() {
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
+            className="skeuo-plastic"
             disabled={!file || busy || !activeCrop}
             onClick={() => void exportCrop()}
           >
@@ -289,11 +290,13 @@ export function ImageCropTool() {
                 {outputDims.width}×{outputDims.height}
               </p>
             </div>
-            <img
-              src={previewUrl}
-              alt="Cropped preview"
-              className="max-h-72 w-full rounded-xl border border-border bg-muted object-contain"
-            />
+            <div className="skeuo-film overflow-hidden rounded-xl border border-border/80 p-3">
+              <img
+                src={previewUrl}
+                alt="Cropped preview"
+                className="max-h-72 w-full rounded-md bg-muted object-contain"
+              />
+            </div>
           </div>
         ) : (
           <div className="flex min-h-32 items-center justify-center rounded-lg border border-dashed border-border px-3 py-8 text-sm text-muted-foreground lg:min-h-48">

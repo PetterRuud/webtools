@@ -556,9 +556,9 @@ export function RandomTool() {
             />
           ) : null}
           {mode === 'coin' ? (
-            <p className="m-0 text-sm text-muted-foreground">
-              Fair coin flip — heads or tails.
-            </p>
+            <div className="skeuo-metal rounded-lg border border-border/70 px-3 py-2 text-center font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
+              Heads · Tails
+            </div>
           ) : null}
           {mode === 'dice' ? (
             <div className="grid grid-cols-2 gap-2">
@@ -674,6 +674,7 @@ export function RandomTool() {
           <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
             <Button
               type="button"
+              className="skeuo-plastic"
               onClick={() => generate()}
               disabled={mode === 'roulette' && rouletteSpinning}
             >
@@ -724,7 +725,16 @@ export function RandomTool() {
             </div>
 
             {showVisual ? (
-              <div className="rounded-lg border border-border/70 bg-card/30 px-3 py-2">
+              <div
+                className={cn(
+                  'rounded-xl border border-border/70 px-3 py-2',
+                  mode === 'roulette'
+                    ? 'bg-card/40'
+                    : mode === 'coin'
+                      ? 'skeuo-felt'
+                      : 'bg-card/30',
+                )}
+              >
                 {visual?.kind === 'coin' ? (
                   <CoinVisual side={visual.side} flipKey={visual.key} />
                 ) : null}
@@ -748,17 +758,12 @@ export function RandomTool() {
                 ) : null}
                 {!visual && mode === 'coin' ? (
                   <p className="m-0 py-6 text-center text-sm text-muted-foreground">
-                    Flip to see the coin.
+                    Flip
                   </p>
                 ) : null}
-                {!visual && mode === 'dice' ? (
+                {!visual && (mode === 'dice' || mode === 'dnd') ? (
                   <p className="m-0 py-6 text-center text-sm text-muted-foreground">
-                    Roll to see the dice.
-                  </p>
-                ) : null}
-                {!visual && mode === 'dnd' ? (
-                  <p className="m-0 py-6 text-center text-sm text-muted-foreground">
-                    Roll to see the dice.
+                    Roll
                   </p>
                 ) : null}
               </div>

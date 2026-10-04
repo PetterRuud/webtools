@@ -75,11 +75,16 @@ export function HexRgbaTool() {
   return (
     <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
       <div className="flex flex-col gap-3">
-        <div
-          className="h-24 w-full rounded-xl border border-border shadow-inner transition-[background] duration-300 ease-out sm:h-28"
-          style={{ background: preview }}
-          aria-label="Color preview"
-        />
+        <div className="skeuo-emboss rounded-xl border border-border/80 p-2">
+          <div
+            className="skeuo-swatch h-24 w-full rounded-lg border border-black/10 transition-[background] duration-300 ease-out sm:h-28"
+            style={{ background: preview }}
+            aria-label="Color preview"
+          />
+          <p className="m-0 mt-2 text-center font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground uppercase">
+            Swatch
+          </p>
+        </div>
 
         <div className="flex flex-col gap-3">
           {FORMATS.map((format) => {
@@ -121,7 +126,7 @@ export function HexRgbaTool() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
+      <div className="skeuo-plastic flex flex-col gap-4 rounded-xl border border-border/80 p-3 sm:p-4">
         <p className="m-0 text-sm font-medium text-ink">Channels</p>
         {(
           [

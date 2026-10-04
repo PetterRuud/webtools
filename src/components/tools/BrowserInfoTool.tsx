@@ -103,11 +103,12 @@ export function BrowserInfoTool() {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex justify-end">
+      <div className="skeuo-metal flex items-center justify-end gap-2 rounded-lg border border-border/80 px-3 py-2">
         <Button
           type="button"
           size="sm"
           variant="outline"
+          className="skeuo-plastic h-7"
           disabled={rows.length === 0}
           onClick={() => void copyText(asText, 'browser info')}
         >
@@ -119,9 +120,9 @@ export function BrowserInfoTool() {
         {rows.map((row) => (
           <div
             key={row.label}
-            className="flex flex-col gap-0.5 rounded-lg border border-border/70 bg-card/40 px-3 py-2"
+            className="skeuo-emboss flex flex-col gap-0.5 rounded-lg border border-border/80 bg-card/50 px-3 py-2"
           >
-            <span className="text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
+            <span className="text-[0.65rem] font-medium tracking-[0.14em] text-muted-foreground uppercase">
               {row.label}
             </span>
             <span

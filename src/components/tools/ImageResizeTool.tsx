@@ -219,12 +219,14 @@ export function ImageResizeTool() {
                   : ''}
               </p>
             </div>
-            <div className="overflow-hidden rounded-xl border border-border bg-card/50">
-              <img
-                src={sourceUrl}
-                alt="Source preview"
-                className="mx-auto max-h-80 w-auto object-contain"
-              />
+            <div className="skeuo-film overflow-hidden rounded-xl border border-border/80 p-3">
+              <div className="overflow-hidden rounded-md bg-card/80">
+                <img
+                  src={sourceUrl}
+                  alt="Source preview"
+                  className="mx-auto max-h-80 w-auto object-contain"
+                />
+              </div>
             </div>
           </div>
         ) : !file ? (
@@ -318,6 +320,7 @@ export function ImageResizeTool() {
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
+            className="skeuo-plastic"
             disabled={!file || busy || !targetValid}
             onClick={() => void runResize()}
           >
@@ -384,11 +387,13 @@ export function ImageResizeTool() {
                 {outputDims.width}×{outputDims.height}
               </p>
             </div>
-            <img
-              src={previewUrl}
-              alt="Resized preview"
-              className="max-h-72 w-full rounded-xl border border-border bg-muted object-contain"
-            />
+            <div className="skeuo-film overflow-hidden rounded-xl border border-border/80 p-3">
+              <img
+                src={previewUrl}
+                alt="Resized preview"
+                className="max-h-72 w-full rounded-md bg-muted object-contain"
+              />
+            </div>
           </div>
         ) : (
           <div className="flex min-h-32 items-center justify-center rounded-lg border border-dashed border-border px-3 py-8 text-sm text-muted-foreground lg:min-h-48">

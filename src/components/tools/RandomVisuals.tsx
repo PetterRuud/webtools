@@ -7,33 +7,32 @@ export function CoinVisual(props: { side: CoinSide; flipKey: number }) {
   return (
     <div className="flex flex-col items-center gap-2 py-2">
       <div
-        className="relative size-28"
-        style={{ perspective: '700px' }}
+        className="relative size-32"
+        style={{ perspective: '800px' }}
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-4 -bottom-1 h-3 rounded-full bg-black/20"
+          className="pointer-events-none absolute inset-x-5 -bottom-0.5 h-3.5 rounded-full bg-black/25"
         />
         <div
           key={props.flipKey}
           className="relative size-full"
           style={{
             transformStyle: 'preserve-3d',
-            animation: 'wt-coin-flip 0.75s ease-out forwards',
-            // end face after full spins
+            animation: 'wt-coin-flip 0.8s ease-out forwards',
             ['--wt-coin-end' as string]: heads ? '720deg' : '900deg',
           }}
         >
           <CoinFace
             label="H"
             caption="Heads"
-            className="bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 text-amber-950 shadow-[inset_0_2px_6px_rgba(255,255,255,0.45),inset_0_-3px_8px_rgba(0,0,0,0.25)]"
+            className="border-[6px] border-amber-700/40 bg-gradient-to-br from-amber-200 via-amber-400 to-amber-700 text-amber-950 shadow-[inset_0_3px_8px_rgba(255,255,255,0.5),inset_0_-4px_10px_rgba(0,0,0,0.28),0_0_0_2px_rgba(180,120,20,0.35)]"
             style={{ transform: 'rotateY(0deg)' }}
           />
           <CoinFace
             label="T"
             caption="Tails"
-            className="bg-gradient-to-br from-zinc-300 via-zinc-400 to-zinc-600 text-zinc-950 shadow-[inset_0_2px_6px_rgba(255,255,255,0.35),inset_0_-3px_8px_rgba(0,0,0,0.3)]"
+            className="border-[6px] border-zinc-600/50 bg-gradient-to-br from-zinc-200 via-zinc-400 to-zinc-700 text-zinc-950 shadow-[inset_0_3px_8px_rgba(255,255,255,0.4),inset_0_-4px_10px_rgba(0,0,0,0.32),0_0_0_2px_rgba(80,80,90,0.35)]"
             style={{ transform: 'rotateY(180deg)' }}
           />
         </div>
@@ -41,9 +40,10 @@ export function CoinVisual(props: { side: CoinSide; flipKey: number }) {
       <p className="m-0 text-sm font-medium tracking-wide">{props.side}</p>
       <style>{`
         @keyframes wt-coin-flip {
-          0% { transform: rotateY(0deg) scale(0.9); }
-          70% { transform: rotateY(calc(var(--wt-coin-end) - 40deg)) scale(1.05); }
-          100% { transform: rotateY(var(--wt-coin-end)) scale(1); }
+          0% { transform: rotateY(0deg) translateY(0) scale(0.92); }
+          35% { transform: rotateY(calc(var(--wt-coin-end) * 0.45)) translateY(-18px) scale(1.06); }
+          70% { transform: rotateY(calc(var(--wt-coin-end) - 40deg)) translateY(2px) scale(1.02); }
+          100% { transform: rotateY(var(--wt-coin-end)) translateY(0) scale(1); }
         }
       `}</style>
     </div>
@@ -59,7 +59,7 @@ function CoinFace(props: {
   return (
     <div
       className={cn(
-        'absolute inset-0 flex flex-col items-center justify-center rounded-full border-[5px] border-black/20 shadow-md ring-1 ring-white/25',
+        'absolute inset-0 flex flex-col items-center justify-center rounded-full shadow-md ring-1 ring-white/30',
         props.className,
       )}
       style={{
@@ -94,7 +94,7 @@ export function DnDVisual(props: { result: DnDRollResult; rollKey: number }) {
   const sides = inferSides(result.expression)
   return (
     <div className="flex flex-col gap-2 py-1">
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className="skeuo-felt flex flex-wrap items-center justify-center gap-2 rounded-xl border border-border/60 px-3 py-4">
         {faces.map((value, index) => (
           <DieFace
             key={`${props.rollKey}-${index}-${value}`}
@@ -260,7 +260,7 @@ export function DiceVisual(props: {
   const total = props.rolls.reduce((sum, n) => sum + n, 0)
   return (
     <div className="flex flex-col gap-2 py-1">
-      <div className="flex flex-wrap items-center justify-center gap-2">
+      <div className="skeuo-felt flex flex-wrap items-center justify-center gap-2 rounded-xl border border-border/60 px-3 py-4">
         {props.rolls.map((value, index) => (
           <StandardDie
             key={`${props.rollKey}-${index}-${value}`}
@@ -431,32 +431,42 @@ export function RouletteVisual(props: {
 
   return (
     <div className="flex flex-col items-center gap-3 py-2">
-      <div className="relative isolate w-full max-w-xs overflow-hidden rounded-lg border border-border/70 bg-muted/25">
-        <ul className="relative z-0 m-0 list-none p-0">
-          {rows.map((row) => {
-            const won =
-              !props.spinning &&
-              props.winner != null &&
-              row.center &&
-              row.text === props.winner
-            return (
-              <li
-                key={`${row.index}-${row.text}-${row.center ? 'c' : 's'}`}
-                className={cn(
-                  'relative z-0 flex h-9 items-center justify-center truncate px-3 font-mono text-sm transition-colors',
-                  row.center ? 'text-foreground' : 'text-muted-foreground/45',
-                  won && 'font-semibold text-primary',
-                )}
-              >
-                {row.text}
-              </li>
-            )
-          })}
-        </ul>
-        <div
-          className="pointer-events-none absolute inset-x-1.5 top-1/2 z-20 h-9 -translate-y-1/2 rounded-md border-2 border-primary/65 bg-primary/12 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--primary)_25%,transparent)]"
-          aria-hidden
-        />
+      <div className="skeuo-metal relative isolate w-full max-w-xs overflow-hidden rounded-xl border border-border/80 p-1.5">
+        <div className="relative overflow-hidden rounded-lg border border-border/70 bg-[color-mix(in_oklch,var(--card)_70%,black_12%)]">
+          <ul className="relative z-0 m-0 list-none p-0">
+            {rows.map((row) => {
+              const won =
+                !props.spinning &&
+                props.winner != null &&
+                row.center &&
+                row.text === props.winner
+              return (
+                <li
+                  key={`${row.index}-${row.text}-${row.center ? 'c' : 's'}`}
+                  className={cn(
+                    'relative z-0 flex h-9 items-center justify-center truncate px-3 font-mono text-sm transition-colors',
+                    row.center ? 'text-foreground' : 'text-muted-foreground/45',
+                    won && 'font-semibold text-primary',
+                  )}
+                >
+                  {row.text}
+                </li>
+              )
+            })}
+          </ul>
+          <div
+            className="pointer-events-none absolute inset-x-1.5 top-1/2 z-20 h-9 -translate-y-1/2 rounded-md border-2 border-primary/70 bg-primary/14 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--primary)_30%,transparent),0_0_12px_color-mix(in_oklab,var(--primary)_18%,transparent)]"
+            aria-hidden
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 left-0 w-1.5 bg-[repeating-linear-gradient(180deg,color-mix(in_oklch,var(--muted)_80%,white)_0_4px,color-mix(in_oklch,var(--border)_90%,black)_4px_8px)]"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 right-0 w-1.5 bg-[repeating-linear-gradient(180deg,color-mix(in_oklch,var(--muted)_80%,white)_0_4px,color-mix(in_oklch,var(--border)_90%,black)_4px_8px)]"
+          />
+        </div>
       </div>
       {props.winner && !props.spinning ? (
         <p className="m-0 text-lg font-semibold tracking-tight">{props.winner}</p>

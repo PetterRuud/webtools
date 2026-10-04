@@ -125,12 +125,14 @@ export function FaviconGeneratorTool() {
         </div>
 
         {sourceUrl ? (
-          <div className="overflow-hidden rounded-lg border border-border bg-card/50">
-            <img
-              src={sourceUrl}
-              alt="Source preview"
-              className="mx-auto max-h-44 w-auto object-contain"
-            />
+          <div className="skeuo-film overflow-hidden rounded-lg border border-border/80 p-3">
+            <div className="overflow-hidden rounded-md bg-card/80 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]">
+              <img
+                src={sourceUrl}
+                alt="Source preview"
+                className="mx-auto max-h-44 w-auto object-contain"
+              />
+            </div>
           </div>
         ) : (
           <p className="m-0 rounded-lg border border-dashed border-border px-3 py-8 text-center text-sm text-muted-foreground">
@@ -229,6 +231,7 @@ export function FaviconGeneratorTool() {
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
+            className="skeuo-plastic"
             onClick={() => void generate()}
             disabled={busy || !file}
           >
@@ -279,7 +282,6 @@ export function FaviconGeneratorTool() {
         ) : null}
 
         <p className="m-0 text-xs text-muted-foreground">
-          Runs in your browser.{' '}
           <Link
             to="/tools/image-compress"
             className="text-foreground underline-offset-4 hover:underline"
@@ -294,7 +296,7 @@ export function FaviconGeneratorTool() {
           <>
             <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
               <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
-                Previews
+                Badges
               </h2>
               <p className="m-0 text-xs text-muted-foreground">
                 PNG + ICO · {formatBytes(zipBlob?.size ?? 0)} zip
@@ -306,12 +308,12 @@ export function FaviconGeneratorTool() {
                 <button
                   key={asset.fileName}
                   type="button"
-                  className="flex flex-col items-center gap-1.5 rounded-lg border border-border bg-card/50 px-2 py-3 text-left transition-colors hover:bg-muted/40"
+                  className="skeuo-stamp flex flex-col items-center gap-1.5 rounded-lg border border-border bg-card/60 px-2 py-3 text-left transition-[transform,box-shadow] hover:translate-y-px"
                   onClick={() => downloadBlob(asset.blob, asset.fileName)}
                   title={`Download ${asset.fileName}`}
                 >
                   <div
-                    className="flex h-16 w-16 items-center justify-center rounded-md border border-border"
+                    className="skeuo-emboss flex h-16 w-16 items-center justify-center rounded-md border border-border/80"
                     style={{
                       backgroundImage:
                         'linear-gradient(45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%)',

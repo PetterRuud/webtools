@@ -60,13 +60,6 @@
   --ink: oklch(0.2 0.03 160);
   --mist: oklch(0.92 0.035 165);
   --spark: oklch(0.8 0.14 75);
-  --atmosphere-mint: oklch(0.88 0.06 165 / 0.55);
-  --atmosphere-gold: oklch(0.9 0.09 75 / 0.32);
-  --atmosphere-base-a: oklch(0.985 0.01 95);
-  --atmosphere-base-b: oklch(0.945 0.025 150);
-  --atmosphere-base-c: oklch(0.96 0.015 120);
-  --orb-mint: oklch(0.82 0.08 165 / 0.45);
-  --orb-gold: oklch(0.86 0.1 75 / 0.35);
 }
 
 .dark {
@@ -92,13 +85,6 @@
   --ink: oklch(0.96 0.012 100);
   --mist: oklch(0.28 0.04 165);
   --spark: oklch(0.82 0.13 75);
-  --atmosphere-mint: oklch(0.42 0.07 165 / 0.45);
-  --atmosphere-gold: oklch(0.48 0.09 75 / 0.28);
-  --atmosphere-base-a: oklch(0.16 0.02 160);
-  --atmosphere-base-b: oklch(0.2 0.03 155);
-  --atmosphere-base-c: oklch(0.18 0.02 145);
-  --orb-mint: oklch(0.48 0.09 165 / 0.4);
-  --orb-gold: oklch(0.52 0.11 75 / 0.3);
 }
 
 @layer base {
@@ -121,16 +107,6 @@
   body {
     @apply bg-background text-foreground antialiased;
     margin: 0;
-    background-image:
-      radial-gradient(1100px 640px at 8% -12%, var(--atmosphere-mint), transparent 60%),
-      radial-gradient(900px 560px at 96% 0%, var(--atmosphere-gold), transparent 55%),
-      linear-gradient(
-        165deg,
-        var(--atmosphere-base-a),
-        var(--atmosphere-base-b) 52%,
-        var(--atmosphere-base-c)
-      );
-    background-attachment: fixed;
   }
 
   a {
@@ -149,22 +125,24 @@
   }
 }
 
-@keyframes drift {
-  0%,
-  100% {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
-  50% {
-    transform: translate3d(1.2%, -1.4%, 0) scale(1.04);
-  }
-}
-
 @keyframes mark-draw {
   from {
     transform: scaleX(0);
   }
   to {
     transform: scaleX(1);
+  }
+}
+
+@keyframes skeuo-press {
+  0% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(1px);
+  }
+  100% {
+    transform: translateY(0);
   }
 }
 
@@ -180,18 +158,6 @@
   animation: rise-in 700ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
 }
 
-.atmosphere-orb {
-  animation: drift 16s ease-in-out infinite;
-}
-
-.atmosphere-orb-mint {
-  background: radial-gradient(circle, var(--orb-mint), transparent 70%);
-}
-
-.atmosphere-orb-gold {
-  background: radial-gradient(circle, var(--orb-gold), transparent 70%);
-}
-
 .tool-row:hover .tool-mark {
   animation: mark-draw 260ms ease forwards;
   transform-origin: left;
@@ -199,4 +165,165 @@
 
 .font-heading {
   font-family: var(--font-heading);
+}
+
+/* Shared physical metaphors — CSS only, no assets */
+.skeuo-paper {
+  background-color: color-mix(in oklch, var(--card) 88%, var(--primary) 8%);
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 27px,
+      color-mix(in oklch, var(--foreground) 6%, transparent) 27px,
+      color-mix(in oklch, var(--foreground) 6%, transparent) 28px
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, white 8%, transparent),
+      transparent 40%
+    );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, white 22%, transparent),
+    0 10px 28px -18px rgba(0, 0, 0, 0.55);
+}
+
+.skeuo-receipt {
+  background-color: color-mix(in oklch, var(--card) 90%, var(--primary) 6%);
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 1px,
+      color-mix(in oklch, var(--foreground) 3%, transparent) 1px 2px
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in oklch, white 10%, transparent),
+      transparent 35%
+    );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, white 18%, transparent),
+    0 12px 30px -18px rgba(0, 0, 0, 0.55);
+}
+
+.skeuo-felt {
+  background-color: color-mix(in oklch, var(--primary) 22%, var(--card));
+  background-image:
+    radial-gradient(
+      circle at 20% 30%,
+      color-mix(in oklch, var(--foreground) 8%, transparent),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at 80% 70%,
+      color-mix(in oklch, black 12%, transparent),
+      transparent 50%
+    );
+  box-shadow:
+    inset 0 2px 8px rgba(0, 0, 0, 0.28),
+    inset 0 -1px 0 color-mix(in oklch, white 8%, transparent),
+    0 1px 0 color-mix(in oklch, white 6%, transparent);
+}
+
+.skeuo-metal {
+  background-image: linear-gradient(
+    165deg,
+    color-mix(in oklch, var(--muted) 70%, white 18%),
+    color-mix(in oklch, var(--muted) 85%, black 8%) 48%,
+    color-mix(in oklch, var(--muted) 75%, white 10%)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, white 35%, transparent),
+    inset 0 -1px 0 color-mix(in oklch, black 18%, transparent),
+    0 2px 6px -2px rgba(0, 0, 0, 0.35);
+}
+
+.skeuo-plastic {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--card) 70%, white 18%),
+    color-mix(in oklch, var(--card) 88%, var(--primary) 6%)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, white 40%, transparent),
+    inset 0 -2px 4px color-mix(in oklch, black 12%, transparent),
+    0 3px 0 color-mix(in oklch, var(--border) 80%, black 12%),
+    0 6px 14px -8px rgba(0, 0, 0, 0.4);
+}
+
+.skeuo-plastic:active {
+  animation: skeuo-press 140ms ease-out;
+  box-shadow:
+    inset 0 2px 4px color-mix(in oklch, black 18%, transparent),
+    0 1px 0 color-mix(in oklch, var(--border) 80%, black 12%);
+}
+
+.skeuo-film {
+  background-color: color-mix(in oklch, var(--card) 55%, black 18%);
+  background-image: repeating-linear-gradient(
+    90deg,
+    transparent 0 10px,
+    color-mix(in oklch, black 35%, transparent) 10px 14px,
+    transparent 14px 24px,
+    color-mix(in oklch, black 35%, transparent) 24px 28px
+  );
+  box-shadow:
+    inset 0 0 0 1px color-mix(in oklch, white 8%, transparent),
+    0 8px 22px -14px rgba(0, 0, 0, 0.55);
+}
+
+.skeuo-ledger {
+  background-color: color-mix(in oklch, var(--card) 92%, var(--primary) 5%);
+  background-image:
+    linear-gradient(
+      90deg,
+      color-mix(in oklch, var(--destructive) 28%, transparent) 0 2px,
+      transparent 2px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 23px,
+      color-mix(in oklch, var(--foreground) 8%, transparent) 23px,
+      color-mix(in oklch, var(--foreground) 8%, transparent) 24px
+    );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, white 14%, transparent),
+    0 8px 20px -16px rgba(0, 0, 0, 0.45);
+}
+
+.skeuo-stamp {
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, white 25%, transparent),
+    inset 0 -1px 0 color-mix(in oklch, black 16%, transparent),
+    0 2px 0 color-mix(in oklch, var(--border) 70%, black 20%),
+    0 4px 10px -6px rgba(0, 0, 0, 0.4);
+}
+
+.skeuo-emboss {
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, white 28%, transparent),
+    inset 0 -2px 4px color-mix(in oklch, black 10%, transparent),
+    0 1px 0 color-mix(in oklch, black 8%, transparent),
+    0 10px 24px -16px rgba(0, 0, 0, 0.45);
+}
+
+.skeuo-window {
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in oklch, var(--muted) 80%, white 12%),
+    color-mix(in oklch, var(--muted) 90%, black 6%)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in oklch, white 30%, transparent),
+    inset 0 -1px 0 color-mix(in oklch, black 14%, transparent),
+    0 12px 28px -16px rgba(0, 0, 0, 0.5);
+}
+
+.skeuo-swatch {
+  box-shadow:
+    inset 0 2px 6px color-mix(in oklch, black 18%, transparent),
+    inset 0 -1px 0 color-mix(in oklch, white 20%, transparent),
+    0 1px 0 color-mix(in oklch, white 12%, transparent),
+    0 8px 18px -12px rgba(0, 0, 0, 0.4);
 }

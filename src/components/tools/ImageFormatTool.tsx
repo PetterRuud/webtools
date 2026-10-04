@@ -149,12 +149,14 @@ export function ImageFormatTool() {
         </div>
 
         {sourceUrl ? (
-          <div className="overflow-hidden rounded-lg border border-border bg-card/50">
-            <img
-              src={sourceUrl}
-              alt="Source preview"
-              className="mx-auto max-h-52 w-auto object-contain"
-            />
+          <div className="skeuo-film overflow-hidden rounded-lg border border-border/80 p-3">
+            <div className="overflow-hidden rounded-md bg-card/80">
+              <img
+                src={sourceUrl}
+                alt="Source preview"
+                className="mx-auto max-h-52 w-auto object-contain"
+              />
+            </div>
           </div>
         ) : (
           <p className="m-0 rounded-lg border border-dashed border-border px-3 py-8 text-center text-sm text-muted-foreground">
@@ -215,6 +217,7 @@ export function ImageFormatTool() {
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
+            className="skeuo-plastic"
             onClick={() => void convert()}
             disabled={busy || !file}
           >
@@ -291,12 +294,14 @@ export function ImageFormatTool() {
                 {formatBytes(output.size)}
               </p>
             </div>
-            <div className="overflow-hidden rounded-lg border border-border bg-card/50">
-              <img
-                src={outputUrl}
-                alt="Converted preview"
-                className="mx-auto max-h-80 w-auto object-contain"
-              />
+            <div className="skeuo-film overflow-hidden rounded-lg border border-border/80 p-3">
+              <div className="overflow-hidden rounded-md bg-card/80">
+                <img
+                  src={outputUrl}
+                  alt="Converted preview"
+                  className="mx-auto max-h-80 w-auto object-contain"
+                />
+              </div>
             </div>
           </>
         ) : (

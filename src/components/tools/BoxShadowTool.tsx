@@ -80,7 +80,7 @@ export function BoxShadowTool() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-      <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
+      <div className="skeuo-plastic flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
         {SLIDERS.map(({ key, label, min, max, step, format }) => (
           <div key={key} className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between gap-3">
@@ -126,7 +126,7 @@ export function BoxShadowTool() {
           </div>
         </div>
 
-        <label className="flex cursor-pointer items-center gap-2 pt-1 text-sm">
+        <label className="skeuo-metal flex cursor-pointer items-center gap-2 rounded-lg border border-border/70 px-2.5 py-1.5 text-sm">
           <Checkbox
             checked={params.inset}
             onCheckedChange={(checked) => update('inset', checked === true)}
@@ -160,14 +160,22 @@ export function BoxShadowTool() {
 
       <div className="flex flex-col gap-3">
         <div
-          className="flex min-h-64 items-center justify-center rounded-xl border border-border bg-[repeating-conic-gradient(var(--muted)_0%_25%,transparent_0%_50%)] bg-size-[16px_16px] p-8 sm:min-h-80"
+          className="skeuo-window relative flex min-h-64 items-center justify-center overflow-hidden rounded-xl border border-border p-8 sm:min-h-80"
           aria-label="Box shadow preview"
         >
           <div
-            className="flex size-36 items-center justify-center rounded-2xl border border-border/60 bg-card text-sm font-medium text-muted-foreground transition-[box-shadow] duration-200 ease-out sm:size-44"
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-[repeating-conic-gradient(color-mix(in_oklch,var(--muted)_80%,transparent)_0%_25%,transparent_0%_50%)] bg-size-[16px_16px] opacity-70"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-[12%] top-[8%] h-24 rounded-full bg-[radial-gradient(ellipse_at_center,color-mix(in_oklch,var(--spark)_28%,transparent),transparent_70%)]"
+          />
+          <div
+            className="skeuo-emboss relative z-[1] flex size-36 items-center justify-center rounded-2xl border border-border/70 bg-card text-sm font-medium text-muted-foreground transition-[box-shadow] duration-200 ease-out sm:size-44"
             style={{ boxShadow: cssValue }}
           >
-            Preview
+            Card
           </div>
         </div>
 
