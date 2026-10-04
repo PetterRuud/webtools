@@ -168,7 +168,7 @@ export function CrontabTool() {
               Seconds
             </label>
           </div>
-          <div className="skeuo-metal flex gap-1.5 rounded-lg border border-border/80 p-1.5">
+          <div className="bg-muted/50 flex gap-1.5 rounded-lg border border-border/80 p-1.5">
             <Input
               id="cron-expression"
               value={draft}
@@ -184,7 +184,7 @@ export function CrontabTool() {
               }}
               spellCheck={false}
               autoComplete="off"
-              className="border-border/60 bg-[color-mix(in_oklch,var(--card)_55%,black_18%)] font-mono text-sm text-[color-mix(in_oklch,var(--primary)_70%,var(--foreground))] shadow-[inset_0_1px_3px_rgba(0,0,0,0.35)]"
+              className="font-mono text-sm"
               aria-invalid={parseError ? true : undefined}
             />
             <Button
@@ -261,7 +261,7 @@ export function CrontabTool() {
       </div>
 
       <div className="flex flex-col gap-3 md:sticky md:top-3">
-        <div className="skeuo-ledger rounded-lg border border-border/80 px-3 py-2.5">
+        <div className="bg-muted/30 rounded-lg border border-border/80 px-3 py-2.5">
           <p className="m-0 text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
             Summary
           </p>
@@ -271,7 +271,7 @@ export function CrontabTool() {
           </p>
         </div>
 
-        <div className="skeuo-ledger rounded-lg border border-border/80 px-3 py-2.5">
+        <div className="bg-muted/30 rounded-lg border border-border/80 px-3 py-2.5">
           <p className="m-0 text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
             Next runs
           </p>

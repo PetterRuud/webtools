@@ -179,7 +179,7 @@ export function ImageCompressTool() {
                   : ''}
               </p>
             </div>
-            <div className="skeuo-film overflow-hidden rounded-xl border border-border/80 p-3">
+            <div className="bg-muted/40 overflow-hidden rounded-xl border border-border/80 p-3">
               <div className="overflow-hidden rounded-md bg-card/80">
                 <img
                   src={sourceUrl}
@@ -335,7 +335,7 @@ export function ImageCompressTool() {
         {previewUrl ? (
           <div className="flex flex-col gap-1.5">
             <p className="m-0 text-sm font-medium">Result</p>
-            <div className="skeuo-film overflow-hidden rounded-xl border border-border/80 p-3">
+            <div className="bg-muted/40 overflow-hidden rounded-xl border border-border/80 p-3">
               <img
                 src={previewUrl}
                 alt="Compressed preview"

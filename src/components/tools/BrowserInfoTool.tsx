@@ -103,7 +103,7 @@ export function BrowserInfoTool() {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="skeuo-metal flex items-center justify-end gap-2 rounded-lg border border-border/80 px-3 py-2">
+      <div className="bg-muted/50 flex items-center justify-end gap-2 rounded-lg border border-border/80 px-3 py-2">
         <Button
           type="button"
           size="sm"
@@ -120,7 +120,7 @@ export function BrowserInfoTool() {
         {rows.map((row) => (
           <div
             key={row.label}
-            className="skeuo-emboss flex flex-col gap-0.5 rounded-lg border border-border/80 bg-card/50 px-3 py-2"
+            className="flex flex-col gap-0.5 rounded-lg border border-border/80 bg-card/50 px-3 py-2"
           >
             <span className="text-[0.65rem] font-medium tracking-[0.14em] text-muted-foreground uppercase">
               {row.label}

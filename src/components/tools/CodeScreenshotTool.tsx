@@ -101,7 +101,7 @@ export function CodeScreenshotTool() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-      <div className="skeuo-panel flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
+      <div className="bg-card flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
             <Label htmlFor="code-shot-source">Code</Label>
@@ -329,17 +329,8 @@ export function CodeScreenshotTool() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="skeuo-window overflow-auto rounded-xl border border-border/80 p-2 sm:p-3">
-          <div
-            aria-hidden
-            className="mb-2 flex items-center gap-1.5 px-1"
-          >
-            <span className="size-2.5 rounded-full bg-[#ff5f57] shadow-[inset_0_-1px_1px_rgba(0,0,0,0.35)]" />
-            <span className="size-2.5 rounded-full bg-[#febc2e] shadow-[inset_0_-1px_1px_rgba(0,0,0,0.35)]" />
-            <span className="size-2.5 rounded-full bg-[#28c840] shadow-[inset_0_-1px_1px_rgba(0,0,0,0.35)]" />
-            <span className="ml-2 h-1.5 flex-1 rounded-full bg-[color-mix(in_oklch,var(--foreground)_10%,transparent)]" />
-          </div>
-          <div className="mx-auto w-full max-w-full overflow-hidden rounded-lg border border-black/20 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]">
+        <div className="overflow-auto rounded-xl border border-border/80 bg-muted/40 p-2 sm:p-3">
+          <div className="mx-auto w-full max-w-full overflow-hidden rounded-lg border border-border/60">
           <div
             ref={captureRef}
             className="w-full max-w-full"
@@ -349,7 +340,7 @@ export function CodeScreenshotTool() {
             }}
           >
             <div
-              className="overflow-hidden rounded-xl shadow-[0_18px_40px_-18px_rgba(0,0,0,0.65),inset_0_1px_0_rgba(255,255,255,0.08)]"
+              className="overflow-hidden rounded-xl border border-black/20"
               style={{ backgroundColor: windowBg }}
             >
               {chrome !== 'none' || showTitle ? (
@@ -364,9 +355,9 @@ export function CodeScreenshotTool() {
                 >
                   {chrome === 'macos' ? (
                     <div className="flex shrink-0 items-center gap-1.5" aria-hidden>
-                      <span className="size-3 rounded-full bg-[#ff5f57] shadow-[inset_0_-1px_1px_rgba(0,0,0,0.4),0_0_0_1px_rgba(0,0,0,0.15)]" />
-                      <span className="size-3 rounded-full bg-[#febc2e] shadow-[inset_0_-1px_1px_rgba(0,0,0,0.4),0_0_0_1px_rgba(0,0,0,0.15)]" />
-                      <span className="size-3 rounded-full bg-[#28c840] shadow-[inset_0_-1px_1px_rgba(0,0,0,0.4),0_0_0_1px_rgba(0,0,0,0.15)]" />
+                      <span className="size-3 rounded-full bg-[#ff5f57]" />
+                      <span className="size-3 rounded-full bg-[#febc2e]" />
+                      <span className="size-3 rounded-full bg-[#28c840]" />
                     </div>
                   ) : null}
                   {chrome === 'windows' ? (

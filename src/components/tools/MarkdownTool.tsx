@@ -224,7 +224,7 @@ function PreviewPane({
   return (
     <div
       className={cn(
-        'skeuo-paper min-h-[28rem] flex-1 overflow-auto rounded-lg border border-border/80 px-4 py-3',
+        'bg-card min-h-[28rem] flex-1 overflow-auto rounded-lg border border-border/80 px-4 py-3',
         tall && 'min-h-[32rem]',
       )}
     >

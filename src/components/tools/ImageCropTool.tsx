@@ -289,7 +289,7 @@ export function ImageCropTool() {
                 {outputDims.width}×{outputDims.height}
               </p>
             </div>
-            <div className="skeuo-film overflow-hidden rounded-xl border border-border/80 p-3">
+            <div className="bg-muted/40 overflow-hidden rounded-xl border border-border/80 p-3">
               <img
                 src={previewUrl}
                 alt="Cropped preview"

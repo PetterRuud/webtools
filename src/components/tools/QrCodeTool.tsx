@@ -83,7 +83,7 @@ export function QrCodeTool() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-      <div className="skeuo-panel flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
+      <div className="bg-card flex flex-col gap-3 rounded-xl border border-border/80 p-3 sm:p-4">
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
             <Label htmlFor="qr-text">Text / URL</Label>
@@ -227,8 +227,8 @@ export function QrCodeTool() {
 
         <div className="flex min-h-64 items-center justify-center p-2">
           {dataUrl ? (
-            <div className="skeuo-emboss relative w-full max-w-72 rounded-2xl border border-border/90 bg-[color-mix(in_oklch,var(--card)_86%,var(--primary)_8%)] p-4">
-              <div className="rounded-xl border border-black/10 bg-white p-3 shadow-[inset_0_2px_6px_rgba(0,0,0,0.12),0_1px_0_rgba(255,255,255,0.5)]">
+            <div className="relative w-full max-w-72 rounded-xl border border-border/90 bg-card p-4">
+              <div className="rounded-lg border border-border/60 bg-white p-3">
                 <img
                   src={dataUrl}
                   alt="Generated QR code"

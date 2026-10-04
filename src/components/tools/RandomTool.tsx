@@ -556,7 +556,7 @@ export function RandomTool() {
             />
           ) : null}
           {mode === 'coin' ? (
-            <div className="skeuo-metal rounded-lg border border-border/70 px-3 py-2 text-center font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
+            <div className="rounded-lg border border-border/70 bg-muted/40 px-3 py-2 text-center font-mono text-xs tracking-[0.2em] text-muted-foreground uppercase">
               Heads · Tails
             </div>
           ) : null}
@@ -730,7 +730,7 @@ export function RandomTool() {
                   mode === 'roulette'
                     ? 'bg-card/40'
                     : mode === 'coin'
-                      ? 'skeuo-felt'
+                      ? 'bg-muted/40'
                       : 'bg-card/30',
                 )}
               >

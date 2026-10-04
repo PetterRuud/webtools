@@ -125,8 +125,8 @@ export function FaviconGeneratorTool() {
         </div>
 
         {sourceUrl ? (
-          <div className="skeuo-film overflow-hidden rounded-lg border border-border/80 p-3">
-            <div className="overflow-hidden rounded-md bg-card/80 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08)]">
+          <div className="overflow-hidden rounded-lg border border-border/80 bg-muted/40 p-3">
+            <div className="overflow-hidden rounded-md bg-card">
               <img
                 src={sourceUrl}
                 alt="Source preview"
@@ -307,12 +307,12 @@ export function FaviconGeneratorTool() {
                 <button
                   key={asset.fileName}
                   type="button"
-                  className="skeuo-stamp flex flex-col items-center gap-1.5 rounded-lg border border-border bg-card/60 px-2 py-3 text-left transition-[transform,box-shadow] hover:translate-y-px"
+                  className="flex flex-col items-center gap-1.5 rounded-lg border border-border bg-card px-2 py-3 text-left hover:bg-muted/40"
                   onClick={() => downloadBlob(asset.blob, asset.fileName)}
                   title={`Download ${asset.fileName}`}
                 >
                   <div
-                    className="skeuo-emboss flex h-16 w-16 items-center justify-center rounded-md border border-border/80"
+                    className="flex h-16 w-16 items-center justify-center rounded-md border border-border/80"
                     style={{
                       backgroundImage:
                         'linear-gradient(45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%)',

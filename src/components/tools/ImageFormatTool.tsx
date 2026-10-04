@@ -149,7 +149,7 @@ export function ImageFormatTool() {
         </div>
 
         {sourceUrl ? (
-          <div className="skeuo-film overflow-hidden rounded-lg border border-border/80 p-3">
+          <div className="bg-muted/40 overflow-hidden rounded-lg border border-border/80 p-3">
             <div className="overflow-hidden rounded-md bg-card/80">
               <img
                 src={sourceUrl}
@@ -293,7 +293,7 @@ export function ImageFormatTool() {
                 {formatBytes(output.size)}
               </p>
             </div>
-            <div className="skeuo-film overflow-hidden rounded-lg border border-border/80 p-3">
+            <div className="bg-muted/40 overflow-hidden rounded-lg border border-border/80 p-3">
               <div className="overflow-hidden rounded-md bg-card/80">
                 <img
                   src={outputUrl}
