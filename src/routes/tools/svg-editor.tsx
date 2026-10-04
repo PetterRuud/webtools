@@ -8,7 +8,8 @@ export const Route = createFileRoute('/tools/svg-editor')({
       { title: 'SVG editor · WebTools' },
       {
         name: 'description',
-        content: 'Paste and edit SVG with live preview, minify, and export.',
+        content:
+          'Paste and edit SVG with live preview, minify, PNG export, and React component output.',
       },
     ],
   }),

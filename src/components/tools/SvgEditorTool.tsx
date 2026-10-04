@@ -17,6 +17,9 @@ import {
   stripMetadata,
   svgToPngBlob,
 } from '#/lib/svgEditor'
+import { svgToReactComponent } from '#/lib/svgToReact'
+
+type RightPane = 'preview' | 'react'
 
 export function SvgEditorTool() {
   const [source, setSource] = useState(SAMPLE_SVG)
@@ -24,6 +27,7 @@ export function SvgEditorTool() {
   const [busyPng, setBusyPng] = useState(false)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [parseError, setParseError] = useState<string | null>(null)
+  const [rightPane, setRightPane] = useState<RightPane>('preview')
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -49,6 +53,23 @@ export function SvgEditorTool() {
   }, [source])
 
   const charCount = useMemo(() => source.length.toLocaleString(), [source])
+
+  const reactResult = useMemo(() => {
+    if (typeof window === 'undefined') {
+      return { value: '', error: null as string | null }
+    }
+    if (!source.trim()) {
+      return { value: '', error: null as string | null }
+    }
+    try {
+      return { value: svgToReactComponent(source), error: null }
+    } catch (err) {
+      return {
+        value: '',
+        error: err instanceof Error ? err.message : 'React export failed',
+      }
+    }
+  }, [source])
 
   function applyTransform(
     label: string,
@@ -87,6 +108,8 @@ export function SvgEditorTool() {
   }
 
   const statusError = error ?? parseError
+  const reactError = reactResult.error
+  const paneError = rightPane === 'react' ? (reactError ?? statusError) : statusError
 
   return (
     <div className="flex flex-col gap-3">
@@ -227,37 +250,90 @@ export function SvgEditorTool() {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <Label>Preview</Label>
-          <div
-            className="relative flex min-h-80 items-center justify-center overflow-auto rounded-lg border border-border p-4"
-            style={{
-              backgroundImage:
-                'linear-gradient(45deg, color-mix(in oklch, var(--muted) 70%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in oklch, var(--muted) 70%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in oklch, var(--muted) 70%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in oklch, var(--muted) 70%, transparent) 75%)',
-              backgroundSize: '16px 16px',
-              backgroundPosition: '0 0, 0 8px, 8px -8px, -8px 0',
-              backgroundColor: 'var(--background)',
-            }}
-          >
-            {!source.trim() ? (
-              <p className="m-0 text-sm text-muted-foreground">Paste SVG…</p>
-            ) : statusError ? (
-              <p className="m-0 max-w-sm text-center text-sm text-destructive">
-                {statusError}
-              </p>
-            ) : previewUrl ? (
-              <img
-                src={previewUrl}
-                alt="SVG preview"
-                className="max-h-[28rem] max-w-full object-contain"
-              />
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex flex-wrap gap-1">
+              <Button
+                type="button"
+                size="sm"
+                variant={rightPane === 'preview' ? 'default' : 'outline'}
+                onClick={() => setRightPane('preview')}
+              >
+                Preview
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                variant={rightPane === 'react' ? 'default' : 'outline'}
+                onClick={() => setRightPane('react')}
+              >
+                React
+              </Button>
+            </div>
+            {rightPane === 'react' ? (
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => void copyText(reactResult.value, 'React component')}
+                disabled={!reactResult.value}
+              >
+                Copy
+              </Button>
             ) : null}
           </div>
+
+          {rightPane === 'preview' ? (
+            <div
+              className="relative flex min-h-80 items-center justify-center overflow-auto rounded-lg border border-border p-4"
+              style={{
+                backgroundImage:
+                  'linear-gradient(45deg, color-mix(in oklch, var(--muted) 70%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in oklch, var(--muted) 70%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in oklch, var(--muted) 70%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in oklch, var(--muted) 70%, transparent) 75%)',
+                backgroundSize: '16px 16px',
+                backgroundPosition: '0 0, 0 8px, 8px -8px, -8px 0',
+                backgroundColor: 'var(--background)',
+              }}
+            >
+              {!source.trim() ? (
+                <p className="m-0 text-sm text-muted-foreground">Paste SVG…</p>
+              ) : paneError ? (
+                <p className="m-0 max-w-sm text-center text-sm text-destructive">
+                  {paneError}
+                </p>
+              ) : previewUrl ? (
+                <img
+                  src={previewUrl}
+                  alt="SVG preview"
+                  className="max-h-[28rem] max-w-full object-contain"
+                />
+              ) : null}
+            </div>
+          ) : (
+            <Textarea
+              id="svg-react"
+              value={
+                !source.trim()
+                  ? ''
+                  : reactResult.value ||
+                    (reactError ? `// ${reactError}` : '')
+              }
+              readOnly
+              spellCheck={false}
+              placeholder="React component…"
+              className="min-h-80 font-mono text-[0.8rem] leading-5"
+              aria-invalid={Boolean(reactError)}
+            />
+          )}
+          {rightPane === 'react' ? (
+            <p className="m-0 text-xs text-muted-foreground">
+              JSX · camelCase attrs · {'{...props}'} on root
+            </p>
+          ) : null}
         </div>
       </div>
 
-      {statusError ? (
+      {statusError || (rightPane === 'react' && reactError) ? (
         <p className="m-0 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {statusError}
+          {(rightPane === 'react' && reactError) || statusError}
         </p>
       ) : null}
     </div>
