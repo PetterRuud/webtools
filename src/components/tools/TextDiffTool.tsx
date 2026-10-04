@@ -32,7 +32,20 @@ function splitLines(value: string): string[] {
   return value.replace(/\n$/, '').split('\n')
 }
 
-/** Prefer word-level hunks; refine dense single-token edits with char LCS. */
+/** True when tokens share enough characters to justify char-level marks. */
+function similarEnough(a: string, b: string): boolean {
+  const maxLen = Math.max(a.length, b.length)
+  if (maxLen === 0) return true
+  if (maxLen > 48) return false
+  if (/\s/.test(a) || /\s/.test(b)) return false
+  let same = 0
+  for (const part of Diff.diffChars(a, b)) {
+    if (!part.added && !part.removed) same += part.value.length
+  }
+  return same / maxLen >= 0.45
+}
+
+/** Prefer word-level hunks; refine similar single-token edits with char LCS. */
 function inlineSegments(before: string, after: string): {
   left: Segment[]
   right: Segment[]
@@ -49,14 +62,8 @@ function inlineSegments(before: string, after: string): {
     if (part.removed && next?.added) {
       const removed = part.value
       const added = next.value
-      const useChars =
-        !/\s/.test(removed) &&
-        !/\s/.test(added) &&
-        removed.length > 0 &&
-        added.length > 0 &&
-        Math.max(removed.length, added.length) <= 48
 
-      if (useChars) {
+      if (similarEnough(removed, added)) {
         for (const sub of Diff.diffChars(removed, added)) {
           if (sub.added) {
             right.push({ text: sub.value, type: 'added' })
