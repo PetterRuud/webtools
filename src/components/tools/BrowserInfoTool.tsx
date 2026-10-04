@@ -1,8 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Button } from '#/components/ui/button'
 import { copyText } from '#/lib/clipboard'
+import { cn } from '#/lib/utils'
 
 type InfoRow = { label: string; value: string }
+
+function booleanValueClass(value: string): string | undefined {
+  if (value === 'true') return 'text-emerald-800 dark:text-emerald-300'
+  if (value === 'false') return 'text-red-800 dark:text-red-300'
+  return undefined
+}
 
 function collect(): InfoRow[] {
   const nav = navigator
@@ -115,7 +122,12 @@ export function BrowserInfoTool() {
             <span className="text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
               {row.label}
             </span>
-            <span className="break-all font-mono text-[0.8rem] leading-5 text-ink">
+            <span
+              className={cn(
+                'break-all font-mono text-[0.8rem] leading-5 text-ink',
+                booleanValueClass(row.value),
+              )}
+            >
               {row.value}
             </span>
           </div>
