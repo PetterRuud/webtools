@@ -96,8 +96,9 @@ function CountControl({
         step={1}
         value={[value]}
         onValueChange={(next) => {
-          const n = Array.isArray(next) ? next[0] : value
-          onChange(Math.min(MAX_TRACKS, Math.max(MIN_TRACKS, n ?? value)))
+          const n = Array.isArray(next) ? next[0] : next
+          if (typeof n !== 'number' || !Number.isFinite(n)) return
+          onChange(Math.min(MAX_TRACKS, Math.max(MIN_TRACKS, n)))
         }}
       />
     </div>
@@ -142,8 +143,9 @@ function GapControl({
         step={1}
         value={[value]}
         onValueChange={(next) => {
-          const n = Array.isArray(next) ? next[0] : value
-          onChange(Math.min(MAX_GAP, Math.max(0, n ?? value)))
+          const n = Array.isArray(next) ? next[0] : next
+          if (typeof n !== 'number' || !Number.isFinite(n)) return
+          onChange(Math.min(MAX_GAP, Math.max(0, n)))
         }}
       />
     </div>
