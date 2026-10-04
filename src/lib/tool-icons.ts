@@ -24,6 +24,7 @@ import {
   LayoutGridIcon,
   MapIcon,
   MonitorSmartphoneIcon,
+  PanelTopIcon,
   NetworkIcon,
   PaletteIcon,
   QrCodeIcon,
@@ -79,4 +80,5 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/crontab': TimerIcon,
   '/tools/sitemap': MapIcon,
   '/tools/tailwind-cheat-sheet': WindIcon,
+  '/tools/website-screenshot': PanelTopIcon,
 }

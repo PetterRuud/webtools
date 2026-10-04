@@ -44,8 +44,10 @@ import { Route as ToolsTextDiffRouteImport } from './routes/tools/text-diff'
 import { Route as ToolsTipCalculatorRouteImport } from './routes/tools/tip-calculator'
 import { Route as ToolsTransparentRouteImport } from './routes/tools/transparent'
 import { Route as ToolsTsInterfaceRouteImport } from './routes/tools/ts-interface'
+import { Route as ToolsWebsiteScreenshotRouteImport } from './routes/tools/website-screenshot'
 import { Route as ToolsXmlJsonRouteImport } from './routes/tools/xml-json'
 import { Route as ApiTransparentExtractRouteImport } from './routes/api/transparent.extract'
+import { Route as ApiWebsiteScreenshotCaptureRouteImport } from './routes/api/website-screenshot.capture'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -222,6 +224,11 @@ const ToolsTsInterfaceRoute = ToolsTsInterfaceRouteImport.update({
   path: '/tools/ts-interface',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsWebsiteScreenshotRoute = ToolsWebsiteScreenshotRouteImport.update({
+  id: '/tools/website-screenshot',
+  path: '/tools/website-screenshot',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsXmlJsonRoute = ToolsXmlJsonRouteImport.update({
   id: '/tools/xml-json',
   path: '/tools/xml-json',
@@ -232,6 +239,12 @@ const ApiTransparentExtractRoute = ApiTransparentExtractRouteImport.update({
   path: '/api/transparent/extract',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiWebsiteScreenshotCaptureRoute =
+  ApiWebsiteScreenshotCaptureRouteImport.update({
+    id: '/api/website-screenshot/capture',
+    path: '/api/website-screenshot/capture',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -269,8 +282,10 @@ export interface FileRoutesByFullPath {
   '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
   '/tools/ts-interface': typeof ToolsTsInterfaceRoute
+  '/tools/website-screenshot': typeof ToolsWebsiteScreenshotRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
+  '/api/website-screenshot/capture': typeof ApiWebsiteScreenshotCaptureRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -308,8 +323,10 @@ export interface FileRoutesByTo {
   '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
   '/tools/ts-interface': typeof ToolsTsInterfaceRoute
+  '/tools/website-screenshot': typeof ToolsWebsiteScreenshotRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
+  '/api/website-screenshot/capture': typeof ApiWebsiteScreenshotCaptureRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -348,8 +365,10 @@ export interface FileRoutesById {
   '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
   '/tools/ts-interface': typeof ToolsTsInterfaceRoute
+  '/tools/website-screenshot': typeof ToolsWebsiteScreenshotRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
+  '/api/website-screenshot/capture': typeof ApiWebsiteScreenshotCaptureRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -389,8 +408,10 @@ export interface FileRouteTypes {
     | '/tools/tip-calculator'
     | '/tools/transparent'
     | '/tools/ts-interface'
+    | '/tools/website-screenshot'
     | '/tools/xml-json'
     | '/api/transparent/extract'
+    | '/api/website-screenshot/capture'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -428,8 +449,10 @@ export interface FileRouteTypes {
     | '/tools/tip-calculator'
     | '/tools/transparent'
     | '/tools/ts-interface'
+    | '/tools/website-screenshot'
     | '/tools/xml-json'
     | '/api/transparent/extract'
+    | '/api/website-screenshot/capture'
   id:
     | '__root__'
     | '/'
@@ -467,8 +490,10 @@ export interface FileRouteTypes {
     | '/tools/tip-calculator'
     | '/tools/transparent'
     | '/tools/ts-interface'
+    | '/tools/website-screenshot'
     | '/tools/xml-json'
     | '/api/transparent/extract'
+    | '/api/website-screenshot/capture'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -507,8 +532,10 @@ export interface RootRouteChildren {
   ToolsTipCalculatorRoute: typeof ToolsTipCalculatorRoute
   ToolsTransparentRoute: typeof ToolsTransparentRoute
   ToolsTsInterfaceRoute: typeof ToolsTsInterfaceRoute
+  ToolsWebsiteScreenshotRoute: typeof ToolsWebsiteScreenshotRoute
   ToolsXmlJsonRoute: typeof ToolsXmlJsonRoute
   ApiTransparentExtractRoute: typeof ApiTransparentExtractRoute
+  ApiWebsiteScreenshotCaptureRoute: typeof ApiWebsiteScreenshotCaptureRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -758,6 +785,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsTsInterfaceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/website-screenshot': {
+      id: '/tools/website-screenshot'
+      path: '/tools/website-screenshot'
+      fullPath: '/tools/website-screenshot'
+      preLoaderRoute: typeof ToolsWebsiteScreenshotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/xml-json': {
       id: '/tools/xml-json'
       path: '/tools/xml-json'
@@ -770,6 +804,13 @@ declare module '@tanstack/react-router' {
       path: '/api/transparent/extract'
       fullPath: '/api/transparent/extract'
       preLoaderRoute: typeof ApiTransparentExtractRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/website-screenshot/capture': {
+      id: '/api/website-screenshot/capture'
+      path: '/api/website-screenshot/capture'
+      fullPath: '/api/website-screenshot/capture'
+      preLoaderRoute: typeof ApiWebsiteScreenshotCaptureRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -811,8 +852,10 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsTipCalculatorRoute: ToolsTipCalculatorRoute,
   ToolsTransparentRoute: ToolsTransparentRoute,
   ToolsTsInterfaceRoute: ToolsTsInterfaceRoute,
+  ToolsWebsiteScreenshotRoute: ToolsWebsiteScreenshotRoute,
   ToolsXmlJsonRoute: ToolsXmlJsonRoute,
   ApiTransparentExtractRoute: ApiTransparentExtractRoute,
+  ApiWebsiteScreenshotCaptureRoute: ApiWebsiteScreenshotCaptureRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

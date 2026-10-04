@@ -7,6 +7,7 @@ import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
 import { transparentApiPlugin } from "./vite-plugins/transparentApi.ts";
+import { websiteScreenshotApiPlugin } from "./vite-plugins/websiteScreenshotApi.ts";
 
 const config = defineConfig({
   fmt: {},
@@ -19,6 +20,7 @@ const config = defineConfig({
   plugins: lazyPlugins(() => [
     // Node middleware for sharp — must stay out of the Workers graph.
     transparentApiPlugin(),
+    websiteScreenshotApiPlugin(),
     devtools(),
     cloudflare({ viteEnvironment: { name: "ssr" } }),
     tailwindcss(),

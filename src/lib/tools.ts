@@ -47,6 +47,7 @@ export type ToolLink = {
     | '/tools/tip-calculator'
     | '/tools/sitemap'
     | '/tools/ts-interface'
+    | '/tools/website-screenshot'
   name: string
   shortName: string
   blurb: string
@@ -598,6 +599,25 @@ export const TOOLS: ToolLink[] = [
       'web',
       'browser',
       'network',
+    ],
+  },
+  {
+    to: '/tools/website-screenshot',
+    name: 'Website screenshot',
+    shortName: 'Web shot',
+    blurb: 'URL → PNG. Viewport or full page.',
+    category: 'web',
+    keywords: [
+      'screenshot',
+      'website',
+      'url',
+      'capture',
+      'png',
+      'viewport',
+      'full page',
+      'browser',
+      'render',
+      'web',
     ],
   },
   {

@@ -61,6 +61,19 @@ Not wired yet. Access is only planned for future **private R2 file hosting** —
 | `/tools/browser-info` | UA, viewport, languages, storage flags |
 | `/tools/http-status` | Searchable HTTP status reference |
 | `/tools/tailwind-cheat-sheet` | Searchable Tailwind utility cheat sheet |
+| `/tools/website-screenshot` | URL → PNG (local Chrome / mock; Workers Browser Rendering) |
+
+
+## Website screenshot
+
+UI at **`/tools/website-screenshot`**.
+
+| Runtime | Capture |
+| --- | --- |
+| `vp run dev` / `vp preview` | Vite Node middleware — system Chrome headless, optional Playwright, else **mock PNG** |
+| Cloudflare Workers | `env.BROWSER.quickAction("screenshot")` when the browser binding is set; else mock PNG |
+
+Prod setup: `wrangler.jsonc` already declares `"browser": { "binding": "BROWSER", "remote": true }` and `compatibility_date` ≥ `2026-03-24`. Enable Browser Rendering in the Cloudflare dashboard if prompted. Optional local full-page: `pnpm add -D playwright && pnpm exec playwright install chromium`.
 
 ## Transparent (Node + sharp)
 
