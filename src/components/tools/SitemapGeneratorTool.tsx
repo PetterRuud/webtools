@@ -5,6 +5,13 @@ import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '#/components/ui/select'
 import { Textarea } from '#/components/ui/textarea'
 import { copyText } from '#/lib/clipboard'
 import {
@@ -120,37 +127,47 @@ export function SitemapGeneratorTool() {
         <div className="grid grid-cols-2 gap-2">
           <div className="flex flex-col gap-1">
             <Label htmlFor="sitemap-changefreq">changefreq</Label>
-            <select
-              id="sitemap-changefreq"
-              value={changefreq}
-              onChange={(event) =>
-                setChangefreq(event.target.value as ChangeFreq | '')
-              }
-              className="h-8 w-full rounded-lg border border-input bg-transparent px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
+            <Select
+              value={changefreq === '' ? 'none' : changefreq}
+              onValueChange={(value) => {
+                if (value === 'none') setChangefreq('')
+                else if (value) setChangefreq(value as ChangeFreq)
+              }}
             >
-              <option value="">—</option>
-              {CHANGE_FREQS.map((freq) => (
-                <option key={freq} value={freq}>
-                  {freq}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger id="sitemap-changefreq" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">—</SelectItem>
+                {CHANGE_FREQS.map((freq) => (
+                  <SelectItem key={freq} value={freq}>
+                    {freq}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex flex-col gap-1">
             <Label htmlFor="sitemap-priority">priority</Label>
-            <select
-              id="sitemap-priority"
-              value={priority}
-              onChange={(event) => setPriority(event.target.value)}
-              className="h-8 w-full rounded-lg border border-input bg-transparent px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
+            <Select
+              value={priority === '' ? 'none' : priority}
+              onValueChange={(value) => {
+                if (value === 'none') setPriority('')
+                else if (value) setPriority(value)
+              }}
             >
-              <option value="">—</option>
-              {PRIORITIES.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger id="sitemap-priority" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">—</SelectItem>
+                {PRIORITIES.map((value) => (
+                  <SelectItem key={value} value={value}>
+                    {value}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>

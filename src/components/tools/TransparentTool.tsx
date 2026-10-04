@@ -6,6 +6,13 @@ import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '#/components/ui/select'
 
 const CHECKER =
   'linear-gradient(45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%)'
@@ -158,18 +165,23 @@ export function TransparentTool() {
               <Label htmlFor="transparent-fit" className="text-xs font-normal text-muted-foreground">
                 Fit mode
               </Label>
-              <select
-                id="transparent-fit"
+              <Select
                 value={resizeFit}
-                onChange={(e) => setResizeFit(e.target.value as FitMode)}
-                className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm dark:bg-input/30"
+                onValueChange={(value) => {
+                  if (value) setResizeFit(value as FitMode)
+                }}
               >
-                <option value="inside">Inside</option>
-                <option value="outside">Outside</option>
-                <option value="cover">Cover</option>
-                <option value="contain">Contain</option>
-                <option value="fill">Fill</option>
-              </select>
+                <SelectTrigger id="transparent-fit" className="w-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="inside">Inside</SelectItem>
+                  <SelectItem value="outside">Outside</SelectItem>
+                  <SelectItem value="cover">Cover</SelectItem>
+                  <SelectItem value="contain">Contain</SelectItem>
+                  <SelectItem value="fill">Fill</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
