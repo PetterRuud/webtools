@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { cn } from 'cn'
 
@@ -24,12 +23,6 @@ export function ToolShell({
       )}
     >
       <div className="animate-rise flex flex-col gap-1">
-        <Link
-          to="/"
-          className="w-fit text-xs text-muted-foreground no-underline transition-colors hover:text-foreground"
-        >
-          ← WebTools
-        </Link>
         <h1 className="font-heading m-0 text-xl tracking-tight text-ink sm:text-2xl">
           {title}
         </h1>
