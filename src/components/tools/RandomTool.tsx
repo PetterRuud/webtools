@@ -480,31 +480,145 @@ export function RandomTool() {
     mode === 'coin' || mode === 'dice' || mode === 'dnd' || mode === 'roulette'
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Generator">
-        {MODES.map((item) => {
-          const selected = mode === item.id
-          return (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              aria-selected={selected}
-              onClick={() => selectMode(item.id)}
+    <div className="grid items-start gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(16rem,22rem)]">
+      <div className="flex min-w-0 flex-col gap-3">
+        <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Generator">
+          {MODES.map((item) => {
+            const selected = mode === item.id
+            return (
+              <button
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                onClick={() => selectMode(item.id)}
+                className={cn(
+                  'inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors',
+                  selected
+                    ? 'border-transparent bg-primary text-primary-foreground'
+                    : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground',
+                )}
+              >
+                {item.label}
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-between gap-2">
+            <Label htmlFor="random-output">Result</Label>
+            <span className="text-[0.7rem] tracking-wide text-muted-foreground uppercase">
+              {modeLabel(mode)}
+            </span>
+          </div>
+
+          {showVisual ? (
+            <div
               className={cn(
-                'inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors',
-                selected
-                  ? 'border-transparent bg-primary text-primary-foreground'
-                  : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground',
+                'rounded-xl border border-border/70 px-3 py-2',
+                mode === 'roulette'
+                  ? 'bg-card/40'
+                  : mode === 'coin'
+                    ? 'bg-muted/40'
+                    : 'bg-card/30',
               )}
             >
-              {item.label}
-            </button>
-          )
-        })}
+              {visual?.kind === 'coin' ? (
+                <CoinVisual side={visual.side} flipKey={visual.key} />
+              ) : null}
+              {visual?.kind === 'dice' ? (
+                <DiceVisual
+                  rolls={visual.rolls}
+                  sides={visual.sides}
+                  rollKey={visual.key}
+                />
+              ) : null}
+              {visual?.kind === 'dnd' ? (
+                <DnDVisual result={visual.result} rollKey={visual.key} />
+              ) : null}
+              {visual?.kind === 'roulette' ? (
+                <RouletteVisual
+                  options={visual.options}
+                  winner={visual.winner}
+                  spinning={visual.spinning}
+                  highlightIndex={visual.highlightIndex}
+                />
+              ) : null}
+              {!visual && mode === 'coin' ? (
+                <p className="m-0 py-6 text-center text-sm text-muted-foreground">
+                  Flip
+                </p>
+              ) : null}
+              {!visual && (mode === 'dice' || mode === 'dnd') ? (
+                <p className="m-0 py-6 text-center text-sm text-muted-foreground">
+                  Roll
+                </p>
+              ) : null}
+            </div>
+          ) : null}
+
+          <Textarea
+            id="random-output"
+            value={ready ? output : ''}
+            readOnly
+            spellCheck={false}
+            placeholder={
+              mode === 'roulette'
+                ? 'Spin to pick a winner…'
+                : 'Generate to see a result…'
+            }
+            className={cn(
+              'w-full font-mono text-[0.85rem] leading-5',
+              showVisual ? 'min-h-24' : 'min-h-48',
+            )}
+          />
+        </div>
+
+        <div className="flex flex-wrap gap-1.5">
+          <Button
+            type="button"
+            onClick={() => generate()}
+            disabled={mode === 'roulette' && rouletteSpinning}
+          >
+            {mode === 'roulette' ? (
+              <RotateCwIcon
+                data-icon="inline-start"
+                className={rouletteSpinning ? 'animate-spin' : undefined}
+              />
+            ) : mode === 'coin' ? (
+              <CoinsIcon data-icon="inline-start" />
+            ) : mode === 'dice' || mode === 'dnd' ? (
+              <DicesIcon data-icon="inline-start" />
+            ) : (
+              <SparklesIcon data-icon="inline-start" />
+            )}
+            {mode === 'roulette'
+              ? rouletteSpinning
+                ? 'Spinning…'
+                : 'Spin'
+              : mode === 'coin'
+                ? 'Flip'
+                : mode === 'dice' || mode === 'dnd'
+                  ? 'Roll'
+                  : 'Generate'}
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            disabled={!output || rouletteSpinning}
+            onClick={() => void copyText(output, modeLabel(mode))}
+          >
+            <CopyIcon data-icon="inline-start" />
+            Copy
+          </Button>
+        </div>
+        {error ? (
+          <p className="m-0 text-sm text-destructive">{error}</p>
+        ) : null}
       </div>
 
-      <div className="grid gap-3 lg:grid-cols-2">
+      <aside className="flex min-w-0 flex-col gap-3">
         <div className="flex flex-col gap-3 rounded-lg border border-border/70 bg-card/30 p-3">
           {mode === 'number' ? (
             <NumberControls
@@ -670,166 +784,52 @@ export function RandomTool() {
               }}
             />
           ) : null}
-
-          <div className="mt-auto flex flex-wrap gap-1.5 pt-1">
-            <Button
-              type="button"
-              onClick={() => generate()}
-              disabled={mode === 'roulette' && rouletteSpinning}
-            >
-              {mode === 'roulette' ? (
-                <RotateCwIcon
-                  data-icon="inline-start"
-                  className={rouletteSpinning ? 'animate-spin' : undefined}
-                />
-              ) : mode === 'coin' ? (
-                <CoinsIcon data-icon="inline-start" />
-              ) : mode === 'dice' || mode === 'dnd' ? (
-                <DicesIcon data-icon="inline-start" />
-              ) : (
-                <SparklesIcon data-icon="inline-start" />
-              )}
-              {mode === 'roulette'
-                ? rouletteSpinning
-                  ? 'Spinning…'
-                  : 'Spin'
-                : mode === 'coin'
-                  ? 'Flip'
-                  : mode === 'dice' || mode === 'dnd'
-                    ? 'Roll'
-                    : 'Generate'}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              disabled={!output || rouletteSpinning}
-              onClick={() => void copyText(output, modeLabel(mode))}
-            >
-              <CopyIcon data-icon="inline-start" />
-              Copy
-            </Button>
-          </div>
-          {error ? (
-            <p className="m-0 text-sm text-destructive">{error}</p>
-          ) : null}
         </div>
 
-        <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between gap-2">
-              <Label htmlFor="random-output">Result</Label>
-              <span className="text-[0.7rem] tracking-wide text-muted-foreground uppercase">
-                {modeLabel(mode)}
-              </span>
-            </div>
-
-            {showVisual ? (
-              <div
-                className={cn(
-                  'rounded-xl border border-border/70 px-3 py-2',
-                  mode === 'roulette'
-                    ? 'bg-card/40'
-                    : mode === 'coin'
-                      ? 'bg-muted/40'
-                      : 'bg-card/30',
-                )}
-              >
-                {visual?.kind === 'coin' ? (
-                  <CoinVisual side={visual.side} flipKey={visual.key} />
-                ) : null}
-                {visual?.kind === 'dice' ? (
-                  <DiceVisual
-                    rolls={visual.rolls}
-                    sides={visual.sides}
-                    rollKey={visual.key}
-                  />
-                ) : null}
-                {visual?.kind === 'dnd' ? (
-                  <DnDVisual result={visual.result} rollKey={visual.key} />
-                ) : null}
-                {visual?.kind === 'roulette' ? (
-                  <RouletteVisual
-                    options={visual.options}
-                    winner={visual.winner}
-                    spinning={visual.spinning}
-                    highlightIndex={visual.highlightIndex}
-                  />
-                ) : null}
-                {!visual && mode === 'coin' ? (
-                  <p className="m-0 py-6 text-center text-sm text-muted-foreground">
-                    Flip
-                  </p>
-                ) : null}
-                {!visual && (mode === 'dice' || mode === 'dnd') ? (
-                  <p className="m-0 py-6 text-center text-sm text-muted-foreground">
-                    Roll
-                  </p>
-                ) : null}
-              </div>
-            ) : null}
-
-            <Textarea
-              id="random-output"
-              value={ready ? output : ''}
-              readOnly
-              spellCheck={false}
-              placeholder={
-                mode === 'roulette'
-                  ? 'Spin to pick a winner…'
-                  : 'Generate to see a result…'
-              }
-              className={cn(
-                'font-mono text-[0.85rem] leading-5',
-                showVisual ? 'min-h-24' : 'min-h-48',
-              )}
-            />
+        <div className="rounded-lg border border-border/70 bg-card/30">
+          <div className="flex items-center justify-between gap-2 border-b border-border/60 px-3 py-1.5">
+            <span className="text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
+              Recent
+            </span>
+            <Button
+              type="button"
+              size="sm"
+              variant="ghost"
+              className="h-7 px-2 text-xs"
+              disabled={history.length === 0}
+              onClick={() => setHistory([])}
+            >
+              Clear
+            </Button>
           </div>
-
-          <div className="rounded-lg border border-border/70 bg-card/30">
-            <div className="flex items-center justify-between gap-2 border-b border-border/60 px-3 py-1.5">
-              <span className="text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
-                Recent
-              </span>
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                className="h-7 px-2 text-xs"
-                disabled={history.length === 0}
-                onClick={() => setHistory([])}
-              >
-                Clear
-              </Button>
-            </div>
-            {history.length === 0 ? (
-              <p className="m-0 px-3 py-4 text-sm text-muted-foreground">
-                History appears after you generate.
-              </p>
-            ) : (
-              <ul className="m-0 max-h-48 list-none overflow-y-auto p-0">
-                {history.map((item, index) => (
-                  <li
-                    key={`${index}-${item.slice(0, 24)}`}
-                    className="flex items-start gap-2 border-b border-border/50 px-3 py-1.5 last:border-b-0"
+          {history.length === 0 ? (
+            <p className="m-0 px-3 py-4 text-sm text-muted-foreground">
+              History appears after you generate.
+            </p>
+          ) : (
+            <ul className="m-0 max-h-48 list-none overflow-y-auto p-0">
+              {history.map((item, index) => (
+                <li
+                  key={`${index}-${item.slice(0, 24)}`}
+                  className="flex items-start gap-2 border-b border-border/50 px-3 py-1.5 last:border-b-0"
+                >
+                  <button
+                    type="button"
+                    className="m-0 min-w-0 flex-1 border-0 bg-transparent p-0 text-left font-mono text-xs break-all text-muted-foreground hover:text-foreground"
+                    onClick={() => {
+                      setOutput(item)
+                      void copyText(item, 'result')
+                    }}
+                    title="Copy"
                   >
-                    <button
-                      type="button"
-                      className="m-0 min-w-0 flex-1 border-0 bg-transparent p-0 text-left font-mono text-xs break-all text-muted-foreground hover:text-foreground"
-                      onClick={() => {
-                        setOutput(item)
-                        void copyText(item, 'result')
-                      }}
-                      title="Copy"
-                    >
-                      {item}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+                    {item}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-      </div>
+      </aside>
     </div>
   )
 }
