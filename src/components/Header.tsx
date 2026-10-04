@@ -1,5 +1,13 @@
 import { Link } from '@tanstack/react-router'
+import { ChevronDownIcon } from 'lucide-react'
 import { ModeToggle } from '#/components/mode-toggle'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '#/components/ui/dropdown-menu'
+import { TOOLS } from '#/lib/tools'
 
 export default function Header() {
   return (
@@ -10,21 +18,24 @@ export default function Header() {
       >
         WebTools
       </Link>
-      <nav className="flex items-center gap-4 text-sm text-muted-foreground sm:gap-5">
-        <Link
-          to="/tools/hex-rgba"
-          className="no-underline transition-colors hover:text-foreground"
-          activeProps={{ className: 'text-foreground no-underline' }}
-        >
-          CSS Color
-        </Link>
-        <Link
-          to="/tools/image-compress"
-          className="no-underline transition-colors hover:text-foreground"
-          activeProps={{ className: 'text-foreground no-underline' }}
-        >
-          Compress
-        </Link>
+      <nav className="flex items-center gap-3 text-sm text-muted-foreground sm:gap-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger className="inline-flex items-center gap-1 rounded-lg px-2 py-1.5 no-underline transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+            Tools
+            <ChevronDownIcon className="size-3.5 opacity-70" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="min-w-44">
+            {TOOLS.map((tool) => (
+              <DropdownMenuItem
+                key={tool.to}
+                render={<Link to={tool.to} />}
+                className="cursor-pointer"
+              >
+                {tool.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         <ModeToggle />
       </nav>
     </header>

@@ -1,15 +1,27 @@
 import { Link } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
+import { cn } from 'cn'
 
 type ToolShellProps = {
   title: string
   description: string
   children: ReactNode
+  wide?: boolean
 }
 
-export function ToolShell({ title, description, children }: ToolShellProps) {
+export function ToolShell({
+  title,
+  description,
+  children,
+  wide = false,
+}: ToolShellProps) {
   return (
-    <main className="mx-auto flex w-full max-w-3xl flex-col gap-8 px-6 pb-16 pt-2">
+    <main
+      className={cn(
+        'mx-auto flex w-full flex-col gap-8 px-6 pb-16 pt-2',
+        wide ? 'max-w-5xl' : 'max-w-3xl',
+      )}
+    >
       <div className="animate-rise flex flex-col gap-3">
         <Link
           to="/"

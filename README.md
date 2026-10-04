@@ -40,7 +40,11 @@ Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker.
 | --- | --- |
 | `/` | Hub |
 | `/tools/hex-rgba` | Client-only hex, rgba, hsl/hsla, hwb, oklch |
-| `/tools/image-compress` | Client-side compress + download |
+| `/tools/image-compress` | Client-side compress + scale + crop |
+| `/tools/json-formatter` | Pretty / minify / validate JSON |
+| `/tools/regex` | Pattern + flags + match highlights |
+| `/tools/base64` | UTF-8-safe encode / decode |
+| `/tools/text-diff` | Side-by-side or unified line diff |
 
 ## Transparent (local source)
 
