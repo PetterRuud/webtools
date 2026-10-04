@@ -12,7 +12,7 @@ export function CoinVisual(props: { side: CoinSide; flipKey: number }) {
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-4 -bottom-1 h-3 rounded-full bg-black/25 blur-[3px]"
+          className="pointer-events-none absolute inset-x-4 -bottom-1 h-3 rounded-full bg-black/20"
         />
         <div
           key={props.flipKey}
