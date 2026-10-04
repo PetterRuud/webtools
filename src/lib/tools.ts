@@ -16,6 +16,7 @@ export type ToolLink = {
   to:
     | '/tools/hex-rgba'
     | '/tools/flexbox'
+    | '/tools/box-shadow'
     | '/tools/image-compress'
     | '/tools/image-format'
     | '/tools/json-formatter'
@@ -137,6 +138,22 @@ export const TOOLS: ToolLink[] = [
       'align',
       'gap',
       'wrap',
+    ],
+  },
+  {
+    to: '/tools/box-shadow',
+    name: 'Box shadow',
+    shortName: 'Shadow',
+    blurb: 'Offset, blur, spread, color, inset.',
+    category: 'color',
+    keywords: [
+      'box-shadow',
+      'shadow',
+      'css',
+      'blur',
+      'spread',
+      'inset',
+      'offset',
     ],
   },
   {

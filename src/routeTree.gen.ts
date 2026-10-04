@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
+import { Route as ToolsBoxShadowRouteImport } from './routes/tools/box-shadow'
 import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
 import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
 import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
 const ToolsBase64Route = ToolsBase64RouteImport.update({
   id: '/tools/base64',
   path: '/tools/base64',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsBoxShadowRoute = ToolsBoxShadowRouteImport.update({
+  id: '/tools/box-shadow',
+  path: '/tools/box-shadow',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsBrowserInfoRoute = ToolsBrowserInfoRouteImport.update({
@@ -110,6 +116,7 @@ const ToolsTextDiffRoute = ToolsTextDiffRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
+  '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
@@ -128,6 +135,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
+  '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
+  '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
@@ -167,6 +176,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/tools/base64'
+    | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/tools/base64'
+    | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
@@ -203,6 +214,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/tools/base64'
+    | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
@@ -222,6 +234,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ToolsBase64Route: typeof ToolsBase64Route
+  ToolsBoxShadowRoute: typeof ToolsBoxShadowRoute
   ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
   ToolsCsvJsonRoute: typeof ToolsCsvJsonRoute
   ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
@@ -252,6 +265,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/base64'
       fullPath: '/tools/base64'
       preLoaderRoute: typeof ToolsBase64RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/box-shadow': {
+      id: '/tools/box-shadow'
+      path: '/tools/box-shadow'
+      fullPath: '/tools/box-shadow'
+      preLoaderRoute: typeof ToolsBoxShadowRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/browser-info': {
@@ -358,6 +378,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ToolsBase64Route: ToolsBase64Route,
+  ToolsBoxShadowRoute: ToolsBoxShadowRoute,
   ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
   ToolsCsvJsonRoute: ToolsCsvJsonRoute,
   ToolsDnsLookupRoute: ToolsDnsLookupRoute,
