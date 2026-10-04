@@ -116,7 +116,8 @@ export const GIT_COMMANDS: GitCommand[] = [
 ]
 
 function shellQuote(value: string): string {
-  if (/^[A-Za-z0-9_|./:-]+$/.test(value)) return value
+  // Always quote when shell metacharacters (esp. |) are present.
+  if (/^[A-Za-z0-9_./:-]+$/.test(value)) return value
   return `"${value.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`
 }
 
