@@ -6,8 +6,8 @@ export type BackgroundPreset = {
   value: string
 }
 
-export const DEFAULT_PADDING = 32
-export const DEFAULT_LINE_HEIGHT = 1.35
+export const DEFAULT_PADDING = 8
+export const DEFAULT_LINE_HEIGHT = 1.18
 
 export const SAMPLE_CODE = `function fibonacci(n: number): number {
   if (n <= 1) return n

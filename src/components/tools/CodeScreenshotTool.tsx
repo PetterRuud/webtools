@@ -236,9 +236,9 @@ export function CodeScreenshotTool() {
           </div>
           <Slider
             id="code-shot-padding"
-            min={16}
-            max={96}
-            step={4}
+            min={0}
+            max={16}
+            step={1}
             value={[padding]}
             onValueChange={(value) => {
               const next = Array.isArray(value) ? value[0] : value
