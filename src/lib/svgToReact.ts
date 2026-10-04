@@ -285,18 +285,20 @@ export function svgToReactComponent(
   }
   attrs.push('{...props}')
 
+  // Depth: function → return (1) → <svg> (2) → children (3)
   const childJsx = Array.from(svg.childNodes)
-    .map((child) => serializeNode(child, indent, 2))
+    .map((child) => serializeNode(child, indent, 3))
     .filter(Boolean)
 
   const openAttrs = attrs
-    .map((a) => `${indent.repeat(2)}${a}`)
+    .map((a) => `${indent.repeat(3)}${a}`)
     .join('\n')
 
+  const svgPad = indent.repeat(2)
   const body =
     childJsx.length > 0
-      ? `${indent}<svg\n${openAttrs}\n${indent}>\n${childJsx.join('\n')}\n${indent}</svg>`
-      : `${indent}<svg\n${openAttrs}\n${indent}/>`
+      ? `${svgPad}<svg\n${openAttrs}\n${svgPad}>\n${childJsx.join('\n')}\n${svgPad}</svg>`
+      : `${svgPad}<svg\n${openAttrs}\n${svgPad}/>`
 
   return `function ${name}(props) {\n${indent}return (\n${body}\n${indent})\n}\n`
 }
