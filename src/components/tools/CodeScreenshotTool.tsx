@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { toPng } from 'html-to-image'
-import { codeToHtml } from 'shiki'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Checkbox } from '#/components/ui/checkbox'
@@ -16,7 +14,8 @@ import {
   THEMES,
   WINDOW_CHROMES,
   downloadDataUrl,
-  extractShikiBackground,
+  exportElementToPng,
+  highlightCode,
   type FontFamilyId,
   type LanguageId,
   type ThemeId,
@@ -57,29 +56,15 @@ export function CodeScreenshotTool() {
     FONT_FAMILIES[0].stack
 
   useEffect(() => {
-    let cancelled = false
-
-    async function highlight() {
-      try {
-        const html = await codeToHtml(code || ' ', {
-          lang: language,
-          theme,
-        })
-        if (cancelled) return
-        setHighlightedHtml(html)
-        setWindowBg(extractShikiBackground(html) ?? '#1e1e1e')
-        setHighlightError(null)
-      } catch (error) {
-        if (cancelled) return
-        setHighlightError(
-          error instanceof Error ? error.message : 'Highlight failed',
-        )
-      }
-    }
-
-    void highlight()
-    return () => {
-      cancelled = true
+    try {
+      const { html, background } = highlightCode(code || ' ', language, theme)
+      setHighlightedHtml(html)
+      setWindowBg(background)
+      setHighlightError(null)
+    } catch (error) {
+      setHighlightError(
+        error instanceof Error ? error.message : 'Highlight failed',
+      )
     }
   }, [code, language, theme])
 
@@ -96,10 +81,7 @@ export function CodeScreenshotTool() {
 
     setExporting(true)
     try {
-      const dataUrl = await toPng(node, {
-        pixelRatio: 2,
-        cacheBust: true,
-      })
+      const dataUrl = await exportElementToPng(node, { pixelRatio: 2 })
       const safeName = (title.trim() || 'code')
         .replace(/[^\w.-]+/g, '-')
         .replace(/^-+|-+$/g, '')
