@@ -1,27 +1,33 @@
-import { defineConfig } from 'vite'
-import { devtools } from '@tanstack/devtools-vite'
+import { defineConfig, lazyPlugins } from "vite-plus";
+import { devtools } from "@tanstack/devtools-vite";
 
-import { tanstackStart } from '@tanstack/react-start/plugin/vite'
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
-import viteReact from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import { cloudflare } from '@cloudflare/vite-plugin'
-import { transparentApiPlugin } from './vite-plugins/transparentApi.ts'
+import viteReact from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import { cloudflare } from "@cloudflare/vite-plugin";
+import { transparentApiPlugin } from "./vite-plugins/transparentApi.ts";
 
 const config = defineConfig({
+  fmt: {},
+  lint: {
+    jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
+    rules: { "vite-plus/prefer-vite-plus-imports": "error" },
+    options: { typeAware: true, typeCheck: true },
+  },
   resolve: { tsconfigPaths: true },
-  plugins: [
+  plugins: lazyPlugins(() => [
     // Node middleware for sharp — must stay out of the Workers graph.
     transparentApiPlugin(),
     devtools(),
-    cloudflare({ viteEnvironment: { name: 'ssr' } }),
+    cloudflare({ viteEnvironment: { name: "ssr" } }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
-  ],
+  ]),
   optimizeDeps: {
-    exclude: ['sharp'],
+    exclude: ["sharp"],
   },
-})
+});
 
-export default config
+export default config;

@@ -6,8 +6,8 @@ Alpha extraction from a white/black photo pair. Processing lives in `src/lib/tra
 
 ```bash
 # from repo root
-npm install
-npm run dev
+vp install   # or: pnpm install
+vp run dev
 # → http://127.0.0.1:43127/tools/transparent
 # POST /api/transparent/extract is handled by Vite Node middleware (sharp)
 ```
@@ -16,7 +16,7 @@ npm run dev
 
 ```bash
 # from repo root
-npm run transparent
+vp run transparent
 # → POST http://localhost:3847/api/extract
 ```
 

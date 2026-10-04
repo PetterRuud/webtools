@@ -5,7 +5,8 @@ Personal browser-tool hub on **TanStack Start** + **Cloudflare Workers**.
 ## Stack
 
 - TanStack Start (React, file routes)
-- Vite + Cloudflare Vite plugin
+- Vite+ (`vp`) + Cloudflare Vite plugin
+- pnpm 12
 - Tailwind CSS + shadcn/ui primitives (mint theme, light / dark / system)
 - Deploy target: `workers.dev` (Cloudflare Access with email later)
 
@@ -13,9 +14,11 @@ Theme preference is stored in `localStorage` (`webtools-ui-theme`) and applied a
 
 ## Develop
 
+Requires Node.js 24+ and pnpm 12+ (or a global `vp` CLI).
+
 ```bash
-npm install
-npm run dev
+vp install   # or: pnpm install
+vp run dev   # or: pnpm run dev / vp dev
 ```
 
 Dev server binds to **http://127.0.0.1:43127**.
@@ -23,12 +26,12 @@ Dev server binds to **http://127.0.0.1:43127**.
 ## Deploy
 
 ```bash
-npm run build
-npm run deploy
-# or: npx wrangler deploy
+vp run build
+vp run deploy
+# or: pnpm exec wrangler deploy
 ```
 
-Wrangler config: `wrangler.jsonc` (Worker name `webtools`). Authenticate with `npx wrangler login` first.
+Wrangler config: `wrangler.jsonc` (Worker name `webtools`). Authenticate with `pnpm exec wrangler login` first.
 
 ## Auth / Access
 
@@ -65,8 +68,8 @@ UI lives at **`/tools/transparent`** in the hub shell.
 
 | Runtime | Processing |
 | --- | --- |
-| `npm run dev` / `vite preview` | **Works** — Vite Node middleware handles `POST /api/transparent/extract` with sharp |
-| `npm run transparent` | **Works** — optional Express sidecar on port **3847** (`POST /api/extract`) |
+| `vp run dev` / `vp run preview` | **Works** — Vite Node middleware handles `POST /api/transparent/extract` with sharp |
+| `vp run transparent` | **Works** — optional Express sidecar on port **3847** (`POST /api/extract`) |
 | Cloudflare Workers Isolates | **UI loads; extract returns 501** — native sharp cannot load in Isolates |
 
 Shared code: `src/lib/transparent/`. Containers only if a Node path is not enough later.

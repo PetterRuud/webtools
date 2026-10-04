@@ -28,4 +28,4 @@ export type ExtractRequestOptions = PairPrepOptions & {
 
 /** Honest copy for UI / Workers 501 — sharp is Node-native, not Isolates. */
 export const TRANSPARENT_NODE_NOTE =
-  'Processing uses Node + sharp. It works with npm run dev (Vite Node middleware) or npm run transparent. Cloudflare Workers Isolates cannot load sharp; Containers only if a Node path is not enough.'
+  'Processing uses Node + sharp. It works with vp run dev (Vite Node middleware) or vp run transparent. Cloudflare Workers Isolates cannot load sharp; Containers only if a Node path is not enough.'

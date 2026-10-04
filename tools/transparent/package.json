@@ -2,7 +2,7 @@
   "name": "webtools-transparent-api",
   "private": true,
   "type": "module",
-  "description": "Optional Express sidecar — prefer repo-root npm run transparent / npm run dev",
+  "description": "Optional Express sidecar — prefer repo-root vp run transparent / vp run dev",
   "scripts": {
     "web": "tsx server.ts"
   }

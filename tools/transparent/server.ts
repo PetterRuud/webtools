@@ -1,9 +1,9 @@
 /**
  * Optional Node sidecar for Transparent processing (sharp).
- * Prefer the TanStack UI at /tools/transparent with `npm run dev`
+ * Prefer the TanStack UI at /tools/transparent with `vp run dev`
  * (Vite Node middleware serves POST /api/transparent/extract).
  *
- * Run from repo root: npm run transparent → http://localhost:3847/api/extract
+ * Run from repo root: vp run transparent → http://localhost:3847/api/extract
  */
 import express from 'express'
 import multer from 'multer'
@@ -26,7 +26,7 @@ app.get('/', (_req, res) => {
     [
       'Transparent API (Node + sharp)',
       '',
-      'UI: npm run dev → /tools/transparent',
+      'UI: vp run dev → /tools/transparent',
       'API: POST /api/extract  multipart fields white + black',
       '',
       'Workers Isolates cannot load sharp; use this Node path or Vite middleware.',
@@ -70,5 +70,5 @@ app.post('/api/extract', fields, async (req, res) => {
 const port = Number(process.env.PORT) || 3847
 app.listen(port, () => {
   console.log(`Transparent API http://localhost:${port}/api/extract`)
-  console.log(`Hub UI: npm run dev → /tools/transparent`)
+  console.log(`Hub UI: vp run dev → /tools/transparent`)
 })
