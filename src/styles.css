@@ -1,0 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  color-scheme: light;
+  --background: oklch(0.975 0.012 95);
+  --foreground: oklch(0.22 0.025 160);
+  --card: oklch(0.99 0.008 95 / 0.82);
+  --card-foreground: oklch(0.22 0.025 160);
+  --popover: oklch(0.99 0.008 95);
+  --popover-foreground: oklch(0.22 0.025 160);
+  --primary: oklch(0.38 0.07 165);
+  --primary-foreground: oklch(0.98 0.01 95);
+  --secondary: oklch(0.93 0.02 145);
+  --secondary-foreground: oklch(0.28 0.03 155);
+  --muted: oklch(0.94 0.015 120);
+  --muted-foreground: oklch(0.45 0.025 155);
+  --accent: oklch(0.8 0.12 75);
+  --accent-foreground: oklch(0.24 0.04 70);
+  --destructive: oklch(0.55 0.2 25);
+  --border: oklch(0.84 0.02 145);
+  --input: oklch(0.9 0.015 140);
+  --ring: oklch(0.5 0.08 165);
+  --radius: 0.55rem;
+  --ink: oklch(0.2 0.03 160);
+  --mist: oklch(0.92 0.035 165);
+  --spark: oklch(0.8 0.14 75);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #app {
+    min-height: 100%;
+  }
+
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    margin: 0;
+    background-image:
+      radial-gradient(1100px 640px at 8% -12%, oklch(0.88 0.06 165 / 0.55), transparent 60%),
+      radial-gradient(900px 560px at 96% 0%, oklch(0.9 0.09 75 / 0.32), transparent 55%),
+      linear-gradient(165deg, oklch(0.985 0.01 95), oklch(0.945 0.025 150) 52%, oklch(0.96 0.015 120));
+    background-attachment: fixed;
+  }
+
+  a {
+    color: inherit;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(1.2%, -1.4%, 0) scale(1.04);
+  }
+}
+
+@keyframes mark-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.animate-rise {
+  animation: rise-in 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-rise-delay-1 {
+  animation: rise-in 700ms cubic-bezier(0.22, 1, 0.36, 1) 110ms both;
+}
+
+.animate-rise-delay-2 {
+  animation: rise-in 700ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
+}
+
+.atmosphere-orb {
+  animation: drift 16s ease-in-out infinite;
+}
+
+.tool-row:hover .tool-mark {
+  animation: mark-draw 260ms ease forwards;
+  transform-origin: left;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
