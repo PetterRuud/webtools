@@ -44,6 +44,7 @@ export type ToolLink = {
     | '/tools/tailwind-cheat-sheet'
     | '/tools/git-commands'
     | '/tools/xml-json'
+    | '/tools/sitemap'
   name: string
   shortName: string
   blurb: string
@@ -510,6 +511,25 @@ export const TOOLS: ToolLink[] = [
       'web',
       'browser',
       'network',
+    ],
+  },
+  {
+    to: '/tools/sitemap',
+    name: 'Sitemap generator',
+    shortName: 'Sitemap',
+    blurb: 'URL list → sitemap.xml.',
+    category: 'web',
+    keywords: [
+      'sitemap',
+      'xml',
+      'seo',
+      'urls',
+      'urlset',
+      'lastmod',
+      'changefreq',
+      'priority',
+      'robots',
+      'web',
     ],
   },
   {

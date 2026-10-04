@@ -36,6 +36,7 @@ import { Route as ToolsNineSliceRouteImport } from './routes/tools/nine-slice'
 import { Route as ToolsQrcodeRouteImport } from './routes/tools/qrcode'
 import { Route as ToolsRandomRouteImport } from './routes/tools/random'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
+import { Route as ToolsSitemapRouteImport } from './routes/tools/sitemap'
 import { Route as ToolsSvgEditorRouteImport } from './routes/tools/svg-editor'
 import { Route as ToolsTailwindCheatSheetRouteImport } from './routes/tools/tailwind-cheat-sheet'
 import { Route as ToolsTextCleanerRouteImport } from './routes/tools/text-cleaner'
@@ -179,6 +180,11 @@ const ToolsRegexRoute = ToolsRegexRouteImport.update({
   path: '/tools/regex',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsSitemapRoute = ToolsSitemapRouteImport.update({
+  id: '/tools/sitemap',
+  path: '/tools/sitemap',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsSvgEditorRoute = ToolsSvgEditorRouteImport.update({
   id: '/tools/svg-editor',
   path: '/tools/svg-editor',
@@ -243,6 +249,7 @@ export interface FileRoutesByFullPath {
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
@@ -279,6 +286,7 @@ export interface FileRoutesByTo {
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
@@ -316,6 +324,7 @@ export interface FileRoutesById {
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
@@ -354,6 +363,7 @@ export interface FileRouteTypes {
     | '/tools/qrcode'
     | '/tools/random'
     | '/tools/regex'
+    | '/tools/sitemap'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
@@ -390,6 +400,7 @@ export interface FileRouteTypes {
     | '/tools/qrcode'
     | '/tools/random'
     | '/tools/regex'
+    | '/tools/sitemap'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
@@ -426,6 +437,7 @@ export interface FileRouteTypes {
     | '/tools/qrcode'
     | '/tools/random'
     | '/tools/regex'
+    | '/tools/sitemap'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
@@ -463,6 +475,7 @@ export interface RootRouteChildren {
   ToolsQrcodeRoute: typeof ToolsQrcodeRoute
   ToolsRandomRoute: typeof ToolsRandomRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
+  ToolsSitemapRoute: typeof ToolsSitemapRoute
   ToolsSvgEditorRoute: typeof ToolsSvgEditorRoute
   ToolsTailwindCheatSheetRoute: typeof ToolsTailwindCheatSheetRoute
   ToolsTextCleanerRoute: typeof ToolsTextCleanerRoute
@@ -663,6 +676,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsRegexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/sitemap': {
+      id: '/tools/sitemap'
+      path: '/tools/sitemap'
+      fullPath: '/tools/sitemap'
+      preLoaderRoute: typeof ToolsSitemapRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/svg-editor': {
       id: '/tools/svg-editor'
       path: '/tools/svg-editor'
@@ -743,6 +763,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsQrcodeRoute: ToolsQrcodeRoute,
   ToolsRandomRoute: ToolsRandomRoute,
   ToolsRegexRoute: ToolsRegexRoute,
+  ToolsSitemapRoute: ToolsSitemapRoute,
   ToolsSvgEditorRoute: ToolsSvgEditorRoute,
   ToolsTailwindCheatSheetRoute: ToolsTailwindCheatSheetRoute,
   ToolsTextCleanerRoute: ToolsTextCleanerRoute,
@@ -754,3 +775,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

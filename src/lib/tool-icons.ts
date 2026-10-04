@@ -20,6 +20,7 @@ import {
   KeyRoundIcon,
   LayersIcon,
   LayoutGridIcon,
+  MapIcon,
   MonitorSmartphoneIcon,
   NetworkIcon,
   PaletteIcon,
@@ -72,5 +73,6 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/http-status': HashIcon,
   '/tools/mime': FileTypeIcon,
   '/tools/crontab': TimerIcon,
+  '/tools/sitemap': MapIcon,
   '/tools/tailwind-cheat-sheet': WindIcon,
 }
