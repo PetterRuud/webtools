@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Transparent — alpha from white & black</title>
+    <style>
+      :root {
+        --bg: #0f1218;
+        --surface: #181c26;
+        --border: #2a3142;
+        --text: #e8ecf4;
+        --muted: #8b95a8;
+        --accent: #6ea8ff;
+        --danger: #f87171;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        padding: 2rem 1.25rem 3rem;
+      }
+      .wrap {
+        max-width: 42rem;
+        margin: 0 auto;
+      }
+      h1 {
+        font-size: 1.35rem;
+        font-weight: 600;
+        margin: 0 0 0.35rem;
+        letter-spacing: -0.02em;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-bottom: 1.75rem;
+      }
+      fieldset {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem 1.1rem;
+        margin: 0 0 1rem;
+        background: var(--surface);
+      }
+      legend {
+        padding: 0 0.35rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+      }
+      label.file {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        cursor: pointer;
+      }
+      label.file span.title {
+        font-size: 0.95rem;
+      }
+      label.file input[type='file'] {
+        font-size: 0.85rem;
+        color: var(--muted);
+      }
+      .row {
+        display: grid;
+        gap: 1rem;
+      }
+      @media (min-width: 520px) {
+        .row {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      button {
+        appearance: none;
+        border: none;
+        border-radius: 8px;
+        padding: 0.65rem 1.15rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        background: var(--accent);
+        color: #0a0e14;
+        width: 100%;
+        margin-top: 0.25rem;
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .out {
+        margin-top: 1.75rem;
+      }
+      .out h2 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin: 0 0 0.65rem;
+      }
+      .checker {
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        overflow: hidden;
+        background-color: #2a2a2a;
+        background-image: linear-gradient(45deg, #3d3d3d 25%, transparent 25%),
+          linear-gradient(-45deg, #3d3d3d 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #3d3d3d 75%),
+          linear-gradient(-45deg, transparent 75%, #3d3d3d 75%);
+        background-size: 16px 16px;
+        background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+        min-height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+      }
+      .checker img {
+        max-width: 100%;
+        height: auto;
+        vertical-align: middle;
+      }
+      .placeholder {
+        color: var(--muted);
+        font-size: 0.9rem;
+        text-align: center;
+        padding: 1.5rem;
+      }
+      .err {
+        margin-top: 1rem;
+        padding: 0.65rem 0.85rem;
+        border-radius: 8px;
+        background: rgba(248, 113, 113, 0.12);
+        border: 1px solid rgba(248, 113, 113, 0.35);
+        color: var(--danger);
+        font-size: 0.9rem;
+        display: none;
+      }
+      .err.visible {
+        display: block;
+      }
+      .busy {
+        margin-top: 0.75rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+        display: none;
+      }
+      .busy.visible {
+        display: block;
+      }
+      .tools {
+        margin-top: 0.15rem;
+      }
+      .tools .hint {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin: 0 0 0.75rem;
+        line-height: 1.45;
+      }
+      .num-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.6rem 0.75rem;
+      }
+      .num-grid label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .num-grid input[type='number'],
+      select {
+        padding: 0.45rem 0.5rem;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--text);
+        font-size: 0.9rem;
+      }
+      label.chk {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.9rem;
+        cursor: pointer;
+        margin: 0.35rem 0 0;
+      }
+      label.chk input {
+        width: 1rem;
+        height: 1rem;
+        accent-color: var(--accent);
+      }
+      .resize-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.6rem 0.75rem;
+        align-items: end;
+      }
+      .resize-row label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.8rem;
+        color: var(--muted);
+      }
+      .resize-fit {
+        grid-column: 1 / -1;
+      }
+      .resize-fit select {
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>Extract transparency</h1>
+      <p class="sub">
+        Upload the same subject on a <strong>white</strong> background and on a
+        <strong>black</strong> background. Optional crop, resize, and trim are
+        applied to <strong>both</strong> images in order (crop → resize → trim),
+        then alpha is extracted. Trimming removes <strong>transparent</strong>
+        margins so only visible content remains (threshold controls edge softness).
+      </p>
+
+      <form id="form">
+        <div class="row">
+          <fieldset>
+            <legend>White background</legend>
+            <label class="file">
+              <span class="title">Image on white</span>
+              <input id="white" name="white" type="file" accept="image/*" required />
+            </label>
+          </fieldset>
+          <fieldset>
+            <legend>Black background</legend>
+            <label class="file">
+              <span class="title">Image on black</span>
+              <input id="black" name="black" type="file" accept="image/*" required />
+            </label>
+          </fieldset>
+        </div>
+
+        <fieldset class="tools">
+          <legend>Adjust (both images)</legend>
+          <p class="hint">
+            Leave crop / resize blank to skip. Trimming crops away pixels that are
+            fully transparent (alpha). Solid JPEG/PNG shots with no transparency are
+            unchanged—use crop for those. Use matching framing on both layers when
+            trimming transparent PNGs so sizes stay aligned.
+          </p>
+
+          <div class="num-grid" style="margin-bottom: 0.75rem">
+            <label>
+              Crop left (px)
+              <input name="cropLeft" type="number" min="0" placeholder="—" />
+            </label>
+            <label>
+              Crop top (px)
+              <input name="cropTop" type="number" min="0" placeholder="—" />
+            </label>
+            <label>
+              Crop width (px)
+              <input name="cropWidth" type="number" min="1" placeholder="—" />
+            </label>
+            <label>
+              Crop height (px)
+              <input name="cropHeight" type="number" min="1" placeholder="—" />
+            </label>
+          </div>
+
+          <div class="resize-row">
+            <label>
+              Resize width (px)
+              <input name="resizeWidth" type="number" min="1" placeholder="—" />
+            </label>
+            <label>
+              Resize height (px)
+              <input name="resizeHeight" type="number" min="1" placeholder="—" />
+            </label>
+            <label class="resize-fit">
+              Fit mode
+              <select name="resizeFit">
+                <option value="inside" selected>Inside (fit within box)</option>
+                <option value="outside">Outside</option>
+                <option value="cover">Cover</option>
+                <option value="contain">Contain</option>
+                <option value="fill">Fill (stretch)</option>
+              </select>
+            </label>
+          </div>
+          <label class="chk">
+            <input name="resizeNoUpscale" type="checkbox" />
+            Do not enlarge (only shrink if larger than target)
+          </label>
+
+          <label class="chk" style="margin-top: 0.65rem">
+            <input name="trimInputs" type="checkbox" />
+            Trim transparent margins on inputs (requires alpha)
+          </label>
+          <div class="num-grid" style="margin-top: 0.35rem">
+            <label>
+              Input trim threshold (edge softness, 0–255)
+              <input
+                name="trimThreshold"
+                type="number"
+                min="0"
+                max="255"
+                placeholder="10"
+              />
+            </label>
+          </div>
+
+          <label class="chk" style="margin-top: 0.85rem">
+            <input name="trimResult" type="checkbox" />
+            Crop result to content (remove transparent border — tightest fit)
+          </label>
+          <div class="num-grid" style="margin-top: 0.35rem">
+            <label>
+              Max alpha treated as empty (0 = only fully transparent; higher =
+              trim softer semi-transparent edges)
+              <input
+                name="trimResultThreshold"
+                type="number"
+                min="0"
+                max="255"
+                placeholder="10"
+              />
+            </label>
+          </div>
+        </fieldset>
+
+        <button type="submit" id="submit">Generate PNG</button>
+      </form>
+
+      <p class="busy" id="busy">Processing…</p>
+      <div class="err" id="err"></div>
+
+      <section class="out">
+        <h2>Result</h2>
+        <div class="checker" id="checker">
+          <span class="placeholder" id="placeholder"
+            >PNG preview appears here after processing.</span
+          >
+          <img id="preview" alt="Result" hidden />
+        </div>
+        <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--muted)">
+          <a id="download" href="#" download="transparent.png" hidden
+            >Download transparent.png</a
+          >
+        </p>
+      </section>
+    </div>
+
+    <script>
+      const form = document.getElementById('form');
+      const busy = document.getElementById('busy');
+      const err = document.getElementById('err');
+      const preview = document.getElementById('preview');
+      const placeholder = document.getElementById('placeholder');
+      const download = document.getElementById('download');
+      const submit = document.getElementById('submit');
+
+      let lastUrl = null;
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        err.classList.remove('visible');
+        err.textContent = '';
+        busy.classList.add('visible');
+        submit.disabled = true;
+        if (lastUrl) {
+          URL.revokeObjectURL(lastUrl);
+          lastUrl = null;
+        }
+        preview.hidden = true;
+        placeholder.hidden = false;
+        download.hidden = true;
+
+        const fd = new FormData(form);
+
+        try {
+          const res = await fetch('/api/extract', {
+            method: 'POST',
+            body: fd,
+          });
+          if (!res.ok) {
+            let msg = res.statusText;
+            try {
+              const j = await res.json();
+              if (j.error) msg = j.error;
+            } catch (_) {}
+            throw new Error(msg);
+          }
+          const blob = await res.blob();
+          lastUrl = URL.createObjectURL(blob);
+          preview.src = lastUrl;
+          preview.hidden = false;
+          placeholder.hidden = true;
+          download.href = lastUrl;
+          download.hidden = false;
+        } catch (x) {
+          err.textContent = x instanceof Error ? x.message : String(x);
+          err.classList.add('visible');
+        } finally {
+          busy.classList.remove('visible');
+          submit.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>
