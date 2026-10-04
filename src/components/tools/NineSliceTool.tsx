@@ -304,10 +304,12 @@ export function NineSliceTool() {
 
         <div className="grid gap-3 sm:grid-cols-2">
           {MARGIN_FIELDS.map(({ key, label }) => {
-            const max =
+            const max = Math.max(
+              1,
               key === 'left' || key === 'right'
-                ? Math.max(0, (dims?.width ?? 1) - 1)
-                : Math.max(0, (dims?.height ?? 1) - 1)
+                ? (dims?.width ?? 2) - 1
+                : (dims?.height ?? 2) - 1,
+            )
             return (
               <div key={key} className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between gap-2">
