@@ -222,19 +222,10 @@ function buildRows(left: string, right: string, view: ViewMode): DiffRow[] {
   return rows
 }
 
-/** Full-line row fills (also used by the legend via opaque equivalents). */
-const ROW_ADDED = 'bg-primary/15 dark:bg-primary/25'
-const ROW_REMOVED = 'bg-destructive/12 dark:bg-destructive/20'
-const ROW_SAME = 'bg-transparent'
-
-/**
- * Opaque mixes matching the translucent row fills over `--background`,
- * so tiny legend swatches read the same as full-width diff cells.
- */
-const SWATCH_ADDED =
-  'bg-[color-mix(in_oklab,var(--primary)_15%,var(--background))] dark:bg-[color-mix(in_oklab,var(--primary)_25%,var(--background))]'
-const SWATCH_REMOVED =
-  'bg-[color-mix(in_oklab,var(--destructive)_12%,var(--background))] dark:bg-[color-mix(in_oklab,var(--destructive)_20%,var(--background))]'
+/** Shared highlight fills — used by row cells, inline marks, and legend swatches. */
+const DIFF_ADDED = 'bg-primary/35 dark:bg-primary/45'
+const DIFF_REMOVED = 'bg-destructive/30 dark:bg-destructive/40'
+const DIFF_SAME = 'bg-transparent'
 
 function lineClass(type: LineKind, segments?: Segment[]) {
   if (type === 'empty') {
@@ -242,23 +233,23 @@ function lineClass(type: LineKind, segments?: Segment[]) {
   }
   // Intra-line mode: keep the row neutral; only <mark> spans carry color.
   if (segments?.length) {
-    return ROW_SAME
+    return DIFF_SAME
   }
   if (type === 'added') {
-    return ROW_ADDED
+    return DIFF_ADDED
   }
   if (type === 'removed') {
-    return ROW_REMOVED
+    return DIFF_REMOVED
   }
-  return ROW_SAME
+  return DIFF_SAME
 }
 
 function segmentClass(type: SegmentKind) {
   if (type === 'added') {
-    return 'rounded-[2px] bg-primary/35 text-foreground dark:bg-primary/45'
+    return cn('rounded-[2px] text-foreground', DIFF_ADDED)
   }
   if (type === 'removed') {
-    return 'rounded-[2px] bg-destructive/30 text-foreground dark:bg-destructive/40'
+    return cn('rounded-[2px] text-foreground', DIFF_REMOVED)
   }
   return undefined
 }
@@ -284,13 +275,16 @@ function DiffLegend() {
   return (
     <ul className="m-0 flex list-none flex-wrap items-center gap-x-2.5 gap-y-1 p-0 text-[0.7rem] text-muted-foreground">
       <li className="inline-flex items-center gap-1">
-        <span aria-hidden className={cn('inline-block size-2.5 shrink-0 rounded-[2px]', SWATCH_ADDED)} />
+        <span
+          aria-hidden
+          className={cn('inline-block size-2.5 shrink-0 rounded-[2px]', DIFF_ADDED)}
+        />
         Added
       </li>
       <li className="inline-flex items-center gap-1">
         <span
           aria-hidden
-          className={cn('inline-block size-2.5 shrink-0 rounded-[2px]', SWATCH_REMOVED)}
+          className={cn('inline-block size-2.5 shrink-0 rounded-[2px]', DIFF_REMOVED)}
         />
         Removed
       </li>
@@ -299,8 +293,8 @@ function DiffLegend() {
           aria-hidden
           className="grid size-2.5 shrink-0 grid-cols-2 overflow-hidden rounded-[2px]"
         >
-          <span className={SWATCH_REMOVED} />
-          <span className={SWATCH_ADDED} />
+          <span className={DIFF_REMOVED} />
+          <span className={DIFF_ADDED} />
         </span>
         Changed
       </li>
@@ -309,7 +303,7 @@ function DiffLegend() {
           aria-hidden
           className={cn(
             'inline-block size-2.5 shrink-0 rounded-[2px] border border-border',
-            ROW_SAME,
+            DIFF_SAME,
           )}
         />
         Unchanged
