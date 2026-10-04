@@ -42,14 +42,10 @@ export default function Header() {
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger
             render={
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-1.5 text-muted-foreground hover:text-foreground"
-              />
+              <Button variant="outline" size="default" className="gap-1.5" />
             }
           >
-            <MenuIcon className="size-3.5 opacity-80" aria-hidden />
+            <MenuIcon className="size-4 opacity-80" aria-hidden />
             Tools
           </SheetTrigger>
           <SheetContent
