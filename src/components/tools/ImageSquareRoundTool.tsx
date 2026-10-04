@@ -60,11 +60,16 @@ export function ImageSquareRoundTool() {
     return { width: size, height: size }
   }, [sourceDims, padToSquare])
 
-  const maxRadius = outSize
-    ? Math.floor(Math.min(outSize.width, outSize.height) / 2)
+  // Solid bg rounds the padded canvas; clear rounds the source image bounds.
+  const radiusBounds =
+    background === 'transparent' && sourceDims
+      ? sourceDims
+      : outSize
+  const maxRadius = radiusBounds
+    ? Math.floor(Math.min(radiusBounds.width, radiusBounds.height) / 2)
     : 0
-  const effectiveRadius = outSize
-    ? clampRadius(radius, outSize.width, outSize.height)
+  const effectiveRadius = radiusBounds
+    ? clampRadius(radius, radiusBounds.width, radiusBounds.height)
     : 0
 
   useEffect(() => {
@@ -346,15 +351,7 @@ export function ImageSquareRoundTool() {
                 <Loader2Icon className="size-3.5 animate-spin text-muted-foreground" />
               ) : null}
             </div>
-            <ImagePreviewFrame
-              innerClassName={
-                background === 'white'
-                  ? 'bg-white'
-                  : background === 'black'
-                    ? 'bg-black'
-                    : undefined
-              }
-            >
+            <ImagePreviewFrame>
               <img
                 key={`${previewUrl}-${effectiveRadius}-${padToSquare}-${background}`}
                 src={previewUrl}

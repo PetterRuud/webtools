@@ -2,7 +2,7 @@ export type PadBackground = 'white' | 'black' | 'transparent'
 
 export type SquareRoundOptions = {
   padToSquare: boolean
-  /** Corner radius in source pixels (applied after padding). */
+  /** Corner radius in source pixels. */
   radius: number
   background: PadBackground
 }
@@ -28,6 +28,8 @@ export function clampRadius(
 /** Rounded rect path using quadratic curves (matches common canvas corner clips). */
 function roundedRectPath(
   ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
   width: number,
   height: number,
   radius: number,
@@ -35,19 +37,21 @@ function roundedRectPath(
   const r = clampRadius(radius, width, height)
   ctx.beginPath()
   if (r <= 0) {
-    ctx.rect(0, 0, width, height)
+    ctx.rect(x, y, width, height)
     ctx.closePath()
     return
   }
-  ctx.moveTo(r, 0)
-  ctx.lineTo(width - r, 0)
-  ctx.quadraticCurveTo(width, 0, width, r)
-  ctx.lineTo(width, height - r)
-  ctx.quadraticCurveTo(width, height, width - r, height)
-  ctx.lineTo(r, height)
-  ctx.quadraticCurveTo(0, height, 0, height - r)
-  ctx.lineTo(0, r)
-  ctx.quadraticCurveTo(0, 0, r, 0)
+  const right = x + width
+  const bottom = y + height
+  ctx.moveTo(x + r, y)
+  ctx.lineTo(right - r, y)
+  ctx.quadraticCurveTo(right, y, right, y + r)
+  ctx.lineTo(right, bottom - r)
+  ctx.quadraticCurveTo(right, bottom, right - r, bottom)
+  ctx.lineTo(x + r, bottom)
+  ctx.quadraticCurveTo(x, bottom, x, bottom - r)
+  ctx.lineTo(x, y + r)
+  ctx.quadraticCurveTo(x, y, x + r, y)
   ctx.closePath()
 }
 
@@ -116,7 +120,12 @@ export async function readSourceDimensions(
 }
 
 /**
- * Pad an image to a square (optional) and clip rounded corners. Always PNG.
+ * Pad an image to a square (optional) and apply corner radius. Always PNG.
+ *
+ * - Solid background (white/black): radius rounds the full padded canvas,
+ *   including the fill (clip, then paint fill + image).
+ * - Transparent: radius clips the image itself (rounded image content on a
+ *   clear canvas — padding stays empty).
  */
 export async function renderSquareRound(
   file: File,
@@ -135,7 +144,6 @@ export async function renderSquareRound(
     const height = options.padToSquare ? size : srcH
     const offsetX = options.padToSquare ? Math.round((width - srcW) / 2) : 0
     const offsetY = options.padToSquare ? Math.round((height - srcH) / 2) : 0
-    const radius = clampRadius(options.radius, width, height)
 
     const canvas = document.createElement('canvas')
     canvas.width = width
@@ -143,21 +151,29 @@ export async function renderSquareRound(
     const ctx = canvas.getContext('2d')
     if (!ctx) throw new Error('Canvas unavailable in this browser')
 
-    // Clear fully, then clip BEFORE painting so radius cuts the whole
-    // composite (padding + background + image). Painting the background
-    // first left sharp opaque corners and made radius look like a no-op
-    // when pad+transparent left only empty padding in the corner zones.
     ctx.clearRect(0, 0, width, height)
     ctx.save()
-    if (radius > 0) {
-      roundedRectPath(ctx, width, height, radius)
-      ctx.clip()
-    }
-    if (options.background !== 'transparent') {
+
+    if (options.background === 'transparent') {
+      // Round the image content, not empty padding.
+      const radius = clampRadius(options.radius, srcW, srcH)
+      if (radius > 0) {
+        roundedRectPath(ctx, offsetX, offsetY, srcW, srcH, radius)
+        ctx.clip()
+      }
+      ctx.drawImage(drawable.source, offsetX, offsetY)
+    } else {
+      // Round the whole padded square, including the solid fill.
+      const radius = clampRadius(options.radius, width, height)
+      if (radius > 0) {
+        roundedRectPath(ctx, 0, 0, width, height, radius)
+        ctx.clip()
+      }
       ctx.fillStyle = options.background
       ctx.fillRect(0, 0, width, height)
+      ctx.drawImage(drawable.source, offsetX, offsetY)
     }
-    ctx.drawImage(drawable.source, offsetX, offsetY)
+
     ctx.restore()
 
     const blob = await canvasToPngBlob(canvas)
