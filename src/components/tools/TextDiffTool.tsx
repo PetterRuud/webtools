@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import * as Diff from 'diff'
+import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
 import { Textarea } from '#/components/ui/textarea'
@@ -149,30 +150,30 @@ export function TextDiffTool() {
         </Button>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="diff-left">Original</Label>
+      <DualTextareas
+        leftHeader={<Label htmlFor="diff-left">Original</Label>}
+        rightHeader={<Label htmlFor="diff-right">Changed</Label>}
+        left={
           <Textarea
             id="diff-left"
             value={left}
             onChange={(event) => setLeft(event.target.value)}
             spellCheck={false}
             placeholder="Original…"
-            className="min-h-36 font-mono text-[0.85rem] leading-6"
+            className="min-h-36 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
           />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="diff-right">Changed</Label>
+        }
+        right={
           <Textarea
             id="diff-right"
             value={right}
             onChange={(event) => setRight(event.target.value)}
             spellCheck={false}
             placeholder="Changed…"
-            className="min-h-36 font-mono text-[0.85rem] leading-6"
+            className="min-h-36 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
           />
-        </div>
-      </div>
+        }
+      />
 
       <div className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between gap-3">

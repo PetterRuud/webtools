@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
 import { Textarea } from '#/components/ui/textarea'
@@ -76,25 +77,14 @@ export function CsvJsonTool() {
         </label>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2">
-        <div className="flex flex-col gap-1.5">
+      <DualTextareas
+        leftHeader={
           <Label htmlFor="csv-json-input">
             {mode === 'csv-to-json' ? 'CSV' : 'JSON'}
           </Label>
-          <Textarea
-            id="csv-json-input"
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            spellCheck={false}
-            placeholder={
-              mode === 'csv-to-json' ? 'Paste CSV…' : 'Paste JSON…'
-            }
-            className="min-h-56 font-mono text-[0.85rem] leading-6"
-            aria-invalid={Boolean(result.error)}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between gap-2">
+        }
+        rightHeader={
+          <>
             <Label htmlFor="csv-json-output">
               {mode === 'csv-to-json' ? 'JSON' : 'CSV'}
             </Label>
@@ -112,7 +102,22 @@ export function CsvJsonTool() {
             >
               Copy
             </Button>
-          </div>
+          </>
+        }
+        left={
+          <Textarea
+            id="csv-json-input"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            spellCheck={false}
+            placeholder={
+              mode === 'csv-to-json' ? 'Paste CSV…' : 'Paste JSON…'
+            }
+            className="min-h-56 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
+            aria-invalid={Boolean(result.error)}
+          />
+        }
+        right={
           <Textarea
             id="csv-json-output"
             value={result.value}
@@ -121,10 +126,10 @@ export function CsvJsonTool() {
             placeholder={
               !input.trim() ? 'Result…' : result.error ? 'Fix input…' : ''
             }
-            className="min-h-56 font-mono text-[0.85rem] leading-6"
+            className="min-h-56 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
           />
-        </div>
-      </div>
+        }
+      />
 
       {result.error ? (
         <p className="m-0 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">

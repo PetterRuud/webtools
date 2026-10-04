@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
 import { Textarea } from '#/components/ui/textarea'
@@ -112,23 +113,10 @@ export function XmlJsonTool() {
         ) : null}
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="xml-json-input">{inputLabel}</Label>
-          <Textarea
-            id="xml-json-input"
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            spellCheck={false}
-            placeholder={
-              mode === 'xml-to-json' ? 'Paste XML…' : 'Paste JSON…'
-            }
-            className="min-h-64 font-mono text-[0.85rem] leading-6"
-            aria-invalid={Boolean(result.error)}
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between gap-2">
+      <DualTextareas
+        leftHeader={<Label htmlFor="xml-json-input">{inputLabel}</Label>}
+        rightHeader={
+          <>
             <Label htmlFor="xml-json-output">{outputLabel}</Label>
             <Button
               type="button"
@@ -139,7 +127,22 @@ export function XmlJsonTool() {
             >
               Copy
             </Button>
-          </div>
+          </>
+        }
+        left={
+          <Textarea
+            id="xml-json-input"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            spellCheck={false}
+            placeholder={
+              mode === 'xml-to-json' ? 'Paste XML…' : 'Paste JSON…'
+            }
+            className="min-h-64 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
+            aria-invalid={Boolean(result.error)}
+          />
+        }
+        right={
           <Textarea
             id="xml-json-output"
             value={result.value}
@@ -152,10 +155,10 @@ export function XmlJsonTool() {
                   ? 'Fix input…'
                   : ''
             }
-            className="min-h-64 font-mono text-[0.85rem] leading-6"
+            className="min-h-64 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
           />
-        </div>
-      </div>
+        }
+      />
 
       {result.error ? (
         <p className="m-0 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">

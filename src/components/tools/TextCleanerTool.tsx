@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
 import { Textarea } from '#/components/ui/textarea'
@@ -99,20 +100,10 @@ export function TextCleanerTool() {
         {stats.charsOut} chars · {stats.linesIn}→{stats.linesOut} lines
       </p>
 
-      <div className="grid gap-3 md:grid-cols-2">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="text-cleaner-input">Input</Label>
-          <Textarea
-            id="text-cleaner-input"
-            value={input}
-            onChange={(event) => setInput(event.target.value)}
-            spellCheck={false}
-            placeholder="Paste messy text…"
-            className="min-h-64 font-mono text-[0.85rem] leading-6"
-          />
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <div className="flex items-center justify-between gap-2">
+      <DualTextareas
+        leftHeader={<Label htmlFor="text-cleaner-input">Input</Label>}
+        rightHeader={
+          <>
             <Label htmlFor="text-cleaner-output">Output</Label>
             <Button
               type="button"
@@ -123,17 +114,29 @@ export function TextCleanerTool() {
             >
               Copy
             </Button>
-          </div>
+          </>
+        }
+        left={
+          <Textarea
+            id="text-cleaner-input"
+            value={input}
+            onChange={(event) => setInput(event.target.value)}
+            spellCheck={false}
+            placeholder="Paste messy text…"
+            className="min-h-64 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
+          />
+        }
+        right={
           <Textarea
             id="text-cleaner-output"
             value={output}
             readOnly
             spellCheck={false}
             placeholder={input ? '' : 'Cleaned text…'}
-            className="min-h-64 font-mono text-[0.85rem] leading-6"
+            className="min-h-64 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
           />
-        </div>
-      </div>
+        }
+      />
     </div>
   )
 }
