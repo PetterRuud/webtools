@@ -79,10 +79,11 @@ export function ImageCompressTool() {
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-2">
         <Label htmlFor="image">Image</Label>
-        <Input
+        <input
           id="image"
           type="file"
           accept="image/*"
+          className="block w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium"
           onChange={(e) => {
             const next = e.target.files?.[0] ?? null
             setFile(next)

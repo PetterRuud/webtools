@@ -126,7 +126,7 @@ export function HexRgbaTool() {
             <Input
               id="rgba"
               value={rgbaText}
-              onChange={(e) => onRgbaTextChange(e.target.value)}
+              onValueChange={onRgbaTextChange}
               aria-invalid={Boolean(rgbaError)}
               spellCheck={false}
             />
