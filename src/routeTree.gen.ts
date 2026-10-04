@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
+import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
 import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
 import { Route as ToolsHexRgbaRouteImport } from './routes/tools/hex-rgba'
 import { Route as ToolsHttpStatusRouteImport } from './routes/tools/http-status'
@@ -36,6 +37,11 @@ const ToolsBase64Route = ToolsBase64RouteImport.update({
 const ToolsBrowserInfoRoute = ToolsBrowserInfoRouteImport.update({
   id: '/tools/browser-info',
   path: '/tools/browser-info',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsCsvJsonRoute = ToolsCsvJsonRouteImport.update({
+  id: '/tools/csv-json',
+  path: '/tools/csv-json',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsDnsLookupRoute = ToolsDnsLookupRouteImport.update({
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
+  '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
@@ -141,6 +150,7 @@ export interface FileRouteTypes {
     | '/'
     | '/tools/base64'
     | '/tools/browser-info'
+    | '/tools/csv-json'
     | '/tools/dns-lookup'
     | '/tools/hex-rgba'
     | '/tools/http-status'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/'
     | '/tools/base64'
     | '/tools/browser-info'
+    | '/tools/csv-json'
     | '/tools/dns-lookup'
     | '/tools/hex-rgba'
     | '/tools/http-status'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/'
     | '/tools/base64'
     | '/tools/browser-info'
+    | '/tools/csv-json'
     | '/tools/dns-lookup'
     | '/tools/hex-rgba'
     | '/tools/http-status'
@@ -187,6 +199,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ToolsBase64Route: typeof ToolsBase64Route
   ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
+  ToolsCsvJsonRoute: typeof ToolsCsvJsonRoute
   ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
   ToolsHexRgbaRoute: typeof ToolsHexRgbaRoute
   ToolsHttpStatusRoute: typeof ToolsHttpStatusRoute
@@ -220,6 +233,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/browser-info'
       fullPath: '/tools/browser-info'
       preLoaderRoute: typeof ToolsBrowserInfoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/csv-json': {
+      id: '/tools/csv-json'
+      path: '/tools/csv-json'
+      fullPath: '/tools/csv-json'
+      preLoaderRoute: typeof ToolsCsvJsonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/dns-lookup': {
@@ -299,6 +319,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ToolsBase64Route: ToolsBase64Route,
   ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
+  ToolsCsvJsonRoute: ToolsCsvJsonRoute,
   ToolsDnsLookupRoute: ToolsDnsLookupRoute,
   ToolsHexRgbaRoute: ToolsHexRgbaRoute,
   ToolsHttpStatusRoute: ToolsHttpStatusRoute,

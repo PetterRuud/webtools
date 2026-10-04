@@ -10,6 +10,7 @@ import {
   NetworkIcon,
   PaletteIcon,
   RegexIcon,
+  TableIcon,
   TextSelectIcon,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
@@ -22,6 +23,7 @@ export type ToolIcon = ComponentType<{
 
 export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/json-formatter': BracesIcon,
+  '/tools/csv-json': TableIcon,
   '/tools/regex': RegexIcon,
   '/tools/text-diff': TextSelectIcon,
   '/tools/image-compress': ImageIcon,
