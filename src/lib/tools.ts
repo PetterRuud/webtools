@@ -30,6 +30,7 @@ export type ToolLink = {
     | '/tools/qrcode'
     | '/tools/text-diff'
     | '/tools/text-cleaner'
+    | '/tools/markdown'
     | '/tools/ip-lookup'
     | '/tools/dns-lookup'
     | '/tools/browser-info'
@@ -102,6 +103,23 @@ export const TOOLS: ToolLink[] = [
       'quotes',
       'normalize',
       'sanitize',
+    ],
+  },
+  {
+    to: '/tools/markdown',
+    name: 'Markdown',
+    shortName: 'MD',
+    blurb: 'Edit, live preview, HTML export.',
+    category: 'text',
+    keywords: [
+      'markdown',
+      'md',
+      'preview',
+      'gfm',
+      'readme',
+      'html',
+      'editor',
+      'render',
     ],
   },
   {

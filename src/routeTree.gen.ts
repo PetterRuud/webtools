@@ -26,6 +26,7 @@ import { Route as ToolsImageFormatRouteImport } from './routes/tools/image-forma
 import { Route as ToolsIpLookupRouteImport } from './routes/tools/ip-lookup'
 import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-formatter'
 import { Route as ToolsJwtRouteImport } from './routes/tools/jwt'
+import { Route as ToolsMarkdownRouteImport } from './routes/tools/markdown'
 import { Route as ToolsMimeRouteImport } from './routes/tools/mime'
 import { Route as ToolsNineSliceRouteImport } from './routes/tools/nine-slice'
 import { Route as ToolsQrcodeRouteImport } from './routes/tools/qrcode'
@@ -123,6 +124,11 @@ const ToolsJwtRoute = ToolsJwtRouteImport.update({
   path: '/tools/jwt',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsMarkdownRoute = ToolsMarkdownRouteImport.update({
+  id: '/tools/markdown',
+  path: '/tools/markdown',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsMimeRoute = ToolsMimeRouteImport.update({
   id: '/tools/mime',
   path: '/tools/mime',
@@ -197,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
+  '/tools/markdown': typeof ToolsMarkdownRoute
   '/tools/mime': typeof ToolsMimeRoute
   '/tools/nine-slice': typeof ToolsNineSliceRoute
   '/tools/qrcode': typeof ToolsQrcodeRoute
@@ -227,6 +234,7 @@ export interface FileRoutesByTo {
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
+  '/tools/markdown': typeof ToolsMarkdownRoute
   '/tools/mime': typeof ToolsMimeRoute
   '/tools/nine-slice': typeof ToolsNineSliceRoute
   '/tools/qrcode': typeof ToolsQrcodeRoute
@@ -258,6 +266,7 @@ export interface FileRoutesById {
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
   '/tools/jwt': typeof ToolsJwtRoute
+  '/tools/markdown': typeof ToolsMarkdownRoute
   '/tools/mime': typeof ToolsMimeRoute
   '/tools/nine-slice': typeof ToolsNineSliceRoute
   '/tools/qrcode': typeof ToolsQrcodeRoute
@@ -290,6 +299,7 @@ export interface FileRouteTypes {
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
     | '/tools/jwt'
+    | '/tools/markdown'
     | '/tools/mime'
     | '/tools/nine-slice'
     | '/tools/qrcode'
@@ -320,6 +330,7 @@ export interface FileRouteTypes {
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
     | '/tools/jwt'
+    | '/tools/markdown'
     | '/tools/mime'
     | '/tools/nine-slice'
     | '/tools/qrcode'
@@ -350,6 +361,7 @@ export interface FileRouteTypes {
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
     | '/tools/jwt'
+    | '/tools/markdown'
     | '/tools/mime'
     | '/tools/nine-slice'
     | '/tools/qrcode'
@@ -381,6 +393,7 @@ export interface RootRouteChildren {
   ToolsIpLookupRoute: typeof ToolsIpLookupRoute
   ToolsJsonFormatterRoute: typeof ToolsJsonFormatterRoute
   ToolsJwtRoute: typeof ToolsJwtRoute
+  ToolsMarkdownRoute: typeof ToolsMarkdownRoute
   ToolsMimeRoute: typeof ToolsMimeRoute
   ToolsNineSliceRoute: typeof ToolsNineSliceRoute
   ToolsQrcodeRoute: typeof ToolsQrcodeRoute
@@ -515,6 +528,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsJwtRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/markdown': {
+      id: '/tools/markdown'
+      path: '/tools/markdown'
+      fullPath: '/tools/markdown'
+      preLoaderRoute: typeof ToolsMarkdownRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/mime': {
       id: '/tools/mime'
       path: '/tools/mime'
@@ -613,6 +633,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsIpLookupRoute: ToolsIpLookupRoute,
   ToolsJsonFormatterRoute: ToolsJsonFormatterRoute,
   ToolsJwtRoute: ToolsJwtRoute,
+  ToolsMarkdownRoute: ToolsMarkdownRoute,
   ToolsMimeRoute: ToolsMimeRoute,
   ToolsNineSliceRoute: ToolsNineSliceRoute,
   ToolsQrcodeRoute: ToolsQrcodeRoute,
@@ -628,3 +649,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
