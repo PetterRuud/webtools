@@ -3,6 +3,7 @@ import {
   BinaryIcon,
   BracesIcon,
   EraserIcon,
+  FileTypeIcon,
   GlobeIcon,
   Grid3x3Icon,
   HashIcon,
@@ -48,5 +49,6 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/dns-lookup': GlobeIcon,
   '/tools/browser-info': MonitorSmartphoneIcon,
   '/tools/http-status': HashIcon,
+  '/tools/mime': FileTypeIcon,
   '/tools/tailwind-cheat-sheet': WindIcon,
 }

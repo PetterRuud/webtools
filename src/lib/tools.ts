@@ -32,6 +32,7 @@ export type ToolLink = {
     | '/tools/dns-lookup'
     | '/tools/browser-info'
     | '/tools/http-status'
+    | '/tools/mime'
     | '/tools/jwt'
     | '/tools/tailwind-cheat-sheet'
   name: string
@@ -277,6 +278,22 @@ export const TOOLS: ToolLink[] = [
     blurb: 'Searchable status codes.',
     category: 'http',
     keywords: ['http', 'status', 'code', '404', '500', 'response'],
+  },
+  {
+    to: '/tools/mime',
+    name: 'MIME types',
+    shortName: 'MIME',
+    blurb: 'Extension ↔ Content-Type.',
+    category: 'http',
+    keywords: [
+      'mime',
+      'content-type',
+      'content type',
+      'extension',
+      'media type',
+      'mimetype',
+      'file type',
+    ],
   },
 ]
 
