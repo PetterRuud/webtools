@@ -181,10 +181,10 @@ function GuideLine({
       aria-label={`${label} slice guide`}
       tabIndex={0}
       className={cn(
-        'absolute z-10 touch-none',
+        'group absolute z-10 touch-none',
         vertical
-          ? 'top-0 bottom-0 w-3 -translate-x-1/2 cursor-ew-resize'
-          : 'left-0 right-0 h-3 -translate-y-1/2 cursor-ns-resize',
+          ? 'top-0 bottom-0 w-4 -translate-x-1/2 cursor-ew-resize'
+          : 'left-0 right-0 h-4 -translate-y-1/2 cursor-ns-resize',
       )}
       style={style}
       onPointerDown={onPointerDown}
@@ -194,7 +194,7 @@ function GuideLine({
     >
       <div
         className={cn(
-          'absolute bg-amber-400 shadow-[0_0_0_1px_rgb(0_0_0_/_0.35)]',
+          'absolute bg-cyan-300 shadow-[0_0_0_1px_rgb(0_0_0_/_0.4)] group-hover:bg-cyan-200 group-active:bg-cyan-100',
           vertical
             ? 'left-1/2 top-0 h-full w-0.5 -translate-x-1/2'
             : 'top-1/2 left-0 h-0.5 w-full -translate-y-1/2',
@@ -202,7 +202,7 @@ function GuideLine({
       />
       <span
         className={cn(
-          'absolute rounded bg-amber-400 px-1 py-0.5 text-[10px] font-semibold leading-none text-black',
+          'absolute rounded bg-cyan-300 px-1 py-0.5 text-[10px] font-semibold leading-none text-black group-hover:bg-cyan-200',
           vertical
             ? 'left-1/2 top-1 -translate-x-1/2'
             : 'left-1 top-1/2 -translate-y-1/2',

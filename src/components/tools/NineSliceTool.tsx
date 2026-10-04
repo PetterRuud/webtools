@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { toast } from 'sonner'
+import samplePanelUrl from '#/assets/samples/nine-slice-panel.png?url'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
@@ -8,6 +9,8 @@ import { Textarea } from '#/components/ui/textarea'
 import { NineSliceGuides } from '#/components/tools/NineSliceGuides'
 import { copyText } from '#/lib/clipboard'
 import {
+  SAMPLE_PANEL_FILE_NAME,
+  SAMPLE_SLICE_MARGINS,
   clampSliceMargins,
   defaultSliceMargins,
   downloadBlob,
@@ -19,12 +22,13 @@ import {
 } from '#/lib/nineSlice'
 
 type MarginKey = keyof SliceMargins
+type SourceKind = 'sample' | 'file'
 
 const MARGIN_FIELDS: Array<{ key: MarginKey; label: string }> = [
-  { key: 'left', label: 'Left' },
-  { key: 'right', label: 'Right' },
   { key: 'top', label: 'Top' },
+  { key: 'right', label: 'Right' },
   { key: 'bottom', label: 'Bottom' },
+  { key: 'left', label: 'Left' },
 ]
 
 const CENTER_MODES: Array<{ id: CenterMode; label: string }> = [
@@ -33,78 +37,167 @@ const CENTER_MODES: Array<{ id: CenterMode; label: string }> = [
   { id: 'round', label: 'Round' },
 ]
 
+const PREVIEW_FRAMES: Array<{
+  id: string
+  width: number
+  height: number
+  text: string
+}> = [
+  {
+    id: 'wide',
+    width: 280,
+    height: 160,
+    text: 'Quiet winds slice through serene landscapes in bounded moments.',
+  },
+  {
+    id: 'tall',
+    width: 140,
+    height: 220,
+    text: 'Slice of life',
+  },
+  {
+    id: 'bar',
+    width: 240,
+    height: 96,
+    text: 'Contours of change',
+  },
+]
+
 export function NineSliceTool() {
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [sourceKind, setSourceKind] = useState<SourceKind>('sample')
   const [file, setFile] = useState<File | null>(null)
   const [sourceUrl, setSourceUrl] = useState<string | null>(null)
   const [dims, setDims] = useState<{ width: number; height: number } | null>(
     null,
   )
-  const [margins, setMargins] = useState<SliceMargins>({
-    left: 32,
-    right: 32,
-    top: 32,
-    bottom: 32,
-  })
+  const [margins, setMargins] = useState<SliceMargins>(SAMPLE_SLICE_MARGINS)
   const [centerMode, setCenterMode] = useState<CenterMode>('stretch')
-  const [previewW, setPreviewW] = useState(320)
-  const [previewH, setPreviewH] = useState(200)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [draggingFile, setDraggingFile] = useState(false)
+  const objectUrlRef = useRef<string | null>(null)
 
   useEffect(() => {
-    if (!file) {
-      setSourceUrl(null)
-      setDims(null)
-      return
-    }
-    const url = URL.createObjectURL(file)
-    setSourceUrl(url)
     let cancelled = false
-    void loadImage(url)
-      .then((img) => {
+    void (async () => {
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current)
+        objectUrlRef.current = null
+      }
+      if (fileInputRef.current) fileInputRef.current.value = ''
+      try {
+        const img = await loadImage(samplePanelUrl)
         if (cancelled) return
         const width = img.naturalWidth
         const height = img.naturalHeight
         setDims({ width, height })
-        setMargins(defaultSliceMargins(width, height))
-        setPreviewW(Math.max(width + 80, 280))
-        setPreviewH(Math.max(height + 60, 180))
-      })
-      .catch((err) => {
+        setSourceUrl(samplePanelUrl)
+        setSourceKind('sample')
+        setFile(null)
+        setMargins(clampSliceMargins(SAMPLE_SLICE_MARGINS, width, height))
+      } catch (err) {
         if (cancelled) return
         setDims(null)
+        setSourceUrl(null)
         setError(err instanceof Error ? err.message : 'Could not read image')
-      })
+      }
+    })()
     return () => {
       cancelled = true
-      URL.revokeObjectURL(url)
+      if (objectUrlRef.current) {
+        URL.revokeObjectURL(objectUrlRef.current)
+        objectUrlRef.current = null
+      }
     }
-  }, [file])
+  }, [])
+
+  async function applySource(
+    url: string,
+    kind: SourceKind,
+    nextFile: File | null,
+    preferSampleMargins: boolean,
+  ) {
+    setError(null)
+    try {
+      const img = await loadImage(url)
+      const width = img.naturalWidth
+      const height = img.naturalHeight
+      setDims({ width, height })
+      setSourceUrl(url)
+      setSourceKind(kind)
+      setFile(nextFile)
+      setMargins(
+        preferSampleMargins
+          ? clampSliceMargins(SAMPLE_SLICE_MARGINS, width, height)
+          : defaultSliceMargins(width, height),
+      )
+    } catch (err) {
+      setDims(null)
+      setSourceUrl(null)
+      setError(err instanceof Error ? err.message : 'Could not read image')
+    }
+  }
+
+  async function loadSample() {
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current)
+      objectUrlRef.current = null
+    }
+    if (fileInputRef.current) fileInputRef.current.value = ''
+    await applySource(samplePanelUrl, 'sample', null, true)
+  }
+
+  async function loadFromFile(next: File | null) {
+    if (!next) return
+    if (objectUrlRef.current) {
+      URL.revokeObjectURL(objectUrlRef.current)
+      objectUrlRef.current = null
+    }
+    const url = URL.createObjectURL(next)
+    objectUrlRef.current = url
+    await applySource(url, 'file', next, false)
+  }
+
+  const displayName =
+    sourceKind === 'sample'
+      ? SAMPLE_PANEL_FILE_NAME
+      : file?.name || 'slice.png'
 
   const css = useMemo(() => {
-    if (!file || !dims) return ''
+    if (!dims) return ''
     return formatBorderImageCss({
-      fileName: file.name || 'slice.png',
+      fileName: displayName,
       margins,
       centerMode,
     })
-  }, [file, dims, margins, centerMode])
+  }, [dims, margins, centerMode, displayName])
 
-  const previewStyle = useMemo(() => {
+  function previewStyle(width: number, height: number) {
     if (!sourceUrl || !dims) return undefined
-    const width = `${margins.top}px ${margins.right}px ${margins.bottom}px ${margins.left}px`
+    const border = `${margins.top}px ${margins.right}px ${margins.bottom}px ${margins.left}px`
     return {
-      width: previewW,
-      height: previewH,
+      width,
+      height,
+      boxSizing: 'border-box' as const,
       borderStyle: 'solid',
-      borderWidth: width,
+      borderWidth: border,
       borderImageSource: `url("${sourceUrl}")`,
       borderImageSlice: `${margins.top} ${margins.right} ${margins.bottom} ${margins.left} fill`,
-      borderImageWidth: width,
+      borderImageWidth: border,
       borderImageRepeat: centerMode,
+      padding: border,
       background: 'transparent',
-    } as const
-  }, [sourceUrl, dims, margins, centerMode, previewW, previewH])
+      overflow: 'hidden' as const,
+      resize: 'both' as const,
+      minWidth: 96,
+      minHeight: 72,
+      maxWidth: '100%',
+      color: 'var(--foreground)',
+      fontSize: 13,
+      lineHeight: 1.35,
+    }
+  }
 
   function updateMargin(key: MarginKey, value: number) {
     if (!dims) return
@@ -114,7 +207,7 @@ export function NineSliceTool() {
   }
 
   async function exportSlices() {
-    if (!sourceUrl || !dims || !file) {
+    if (!sourceUrl || !dims) {
       setError('Choose an image first.')
       return
     }
@@ -138,26 +231,62 @@ export function NineSliceTool() {
   }
 
   return (
-    <div className="grid gap-4 lg:grid-cols-2 lg:items-start">
-      <div className="flex flex-col gap-3">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="nine-slice-file">Image</Label>
-          <input
-            id="nine-slice-file"
-            type="file"
-            accept="image/*"
-            className="block w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium"
-            onChange={(e) => {
-              setFile(e.target.files?.[0] ?? null)
-              setError(null)
-            }}
-          />
-          {file && dims ? (
-            <p className="m-0 text-xs tabular-nums text-muted-foreground">
-              {file.name} · {dims.width}×{dims.height}
-            </p>
-          ) : null}
+    <div
+      className="relative grid gap-4 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start"
+      onDragEnter={(e) => {
+        e.preventDefault()
+        if (e.dataTransfer.types.includes('Files')) setDraggingFile(true)
+      }}
+      onDragOver={(e) => {
+        e.preventDefault()
+      }}
+      onDragLeave={(e) => {
+        if (e.currentTarget === e.target) setDraggingFile(false)
+      }}
+      onDrop={(e) => {
+        e.preventDefault()
+        setDraggingFile(false)
+        const next = e.dataTransfer.files?.[0]
+        if (next) void loadFromFile(next)
+      }}
+    >
+      {draggingFile ? (
+        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center rounded-lg border-2 border-dashed border-primary bg-background/80 text-sm font-medium">
+          Drop an image
         </div>
+      ) : null}
+
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="flex min-w-[12rem] flex-1 flex-col gap-1.5">
+            <Label htmlFor="nine-slice-file">Image</Label>
+            <input
+              ref={fileInputRef}
+              id="nine-slice-file"
+              type="file"
+              accept="image/*"
+              className="block w-full rounded-lg border border-input bg-transparent px-2.5 py-2 text-sm file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium"
+              onChange={(e) => {
+                void loadFromFile(e.target.files?.[0] ?? null)
+              }}
+            />
+          </div>
+          <Button
+            type="button"
+            variant={sourceKind === 'sample' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => void loadSample()}
+          >
+            Sample
+          </Button>
+        </div>
+
+        {dims ? (
+          <p className="m-0 text-xs tabular-nums text-muted-foreground">
+            {displayName} · {dims.width}×{dims.height}
+            {sourceKind === 'sample' ? ' · demo panel' : ''}
+          </p>
+        ) : null}
 
         {sourceUrl && dims ? (
           <NineSliceGuides
@@ -169,7 +298,7 @@ export function NineSliceTool() {
           />
         ) : (
           <p className="m-0 rounded-lg border border-dashed border-border bg-card/50 px-3 py-10 text-center text-sm text-muted-foreground">
-            Choose a PNG or JPEG with clear borders
+            Loading sample…
           </p>
         )}
 
@@ -217,74 +346,6 @@ export function NineSliceTool() {
       </div>
 
       <div className="flex flex-col gap-3">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <Label>Center</Label>
-          <div className="flex flex-wrap gap-1.5">
-            {CENTER_MODES.map((mode) => (
-              <Button
-                key={mode.id}
-                type="button"
-                size="sm"
-                variant={centerMode === mode.id ? 'default' : 'outline'}
-                onClick={() => setCenterMode(mode.id)}
-              >
-                {mode.label}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="preview-w">Preview W</Label>
-              <span className="text-sm tabular-nums text-muted-foreground">
-                {previewW}px
-              </span>
-            </div>
-            <Slider
-              id="preview-w"
-              min={120}
-              max={720}
-              step={4}
-              value={[previewW]}
-              onValueChange={(value) => {
-                const next = Array.isArray(value) ? value[0] : value
-                if (typeof next === 'number') setPreviewW(next)
-              }}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="preview-h">Preview H</Label>
-              <span className="text-sm tabular-nums text-muted-foreground">
-                {previewH}px
-              </span>
-            </div>
-            <Slider
-              id="preview-h"
-              min={80}
-              max={520}
-              step={4}
-              value={[previewH]}
-              onValueChange={(value) => {
-                const next = Array.isArray(value) ? value[0] : value
-                if (typeof next === 'number') setPreviewH(next)
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="overflow-auto rounded-lg border border-border bg-[linear-gradient(45deg,#80808020_25%,transparent_25%,transparent_75%,#80808020_75%),linear-gradient(45deg,#80808020_25%,transparent_25%,transparent_75%,#80808020_75%)] bg-[length:16px_16px] bg-[position:0_0,8px_8px] p-4">
-          {previewStyle ? (
-            <div className="mx-auto" style={previewStyle} />
-          ) : (
-            <p className="m-0 py-10 text-center text-sm text-muted-foreground">
-              Preview appears after upload
-            </p>
-          )}
-        </div>
-
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
             <Label htmlFor="nine-slice-css">CSS</Label>
@@ -303,14 +364,69 @@ export function NineSliceTool() {
             readOnly
             value={css}
             placeholder="border-image CSS…"
-            className="min-h-36 font-mono text-xs"
+            className="min-h-32 font-mono text-xs"
           />
+          <p className="m-0 text-xs text-muted-foreground">
+            Tip: try{' '}
+            <a
+              className="underline underline-offset-2"
+              href="https://developer.mozilla.org/en-US/docs/Web/CSS/border-image-repeat"
+              target="_blank"
+              rel="noreferrer"
+            >
+              border-image-repeat
+            </a>{' '}
+            — Stretch / Tile / Round below.
+          </p>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <Label>Center</Label>
+          <div className="flex flex-wrap gap-1.5">
+            {CENTER_MODES.map((mode) => (
+              <Button
+                key={mode.id}
+                type="button"
+                size="sm"
+                variant={centerMode === mode.id ? 'default' : 'outline'}
+                onClick={() => setCenterMode(mode.id)}
+              >
+                {mode.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <Label>Preview</Label>
+          <div className="flex flex-wrap content-start gap-3 rounded-lg border border-border bg-[linear-gradient(45deg,#80808020_25%,transparent_25%,transparent_75%,#80808020_75%),linear-gradient(45deg,#80808020_25%,transparent_25%,transparent_75%,#80808020_75%)] bg-[length:16px_16px] bg-[position:0_0,8px_8px] p-3">
+            {sourceUrl && dims ? (
+              PREVIEW_FRAMES.map((frame) => (
+                <div
+                  key={frame.id}
+                  className="outline-none"
+                  style={previewStyle(frame.width, frame.height)}
+                  contentEditable
+                  suppressContentEditableWarning
+                >
+                  {frame.text}
+                </div>
+              ))
+            ) : (
+              <p className="m-0 w-full py-8 text-center text-sm text-muted-foreground">
+                Preview appears with the sample
+              </p>
+            )}
+          </div>
+          <p className="m-0 text-xs text-muted-foreground">
+            Drag the bottom-right grip on each frame to resize.
+          </p>
         </div>
 
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
-            disabled={!file || busy}
+            disabled={!dims || busy}
             onClick={() => void exportSlices()}
           >
             {busy ? 'Exporting…' : 'Download 9 slices'}
@@ -321,7 +437,11 @@ export function NineSliceTool() {
             disabled={!dims}
             onClick={() => {
               if (!dims) return
-              setMargins(defaultSliceMargins(dims.width, dims.height))
+              setMargins(
+                sourceKind === 'sample'
+                  ? clampSliceMargins(SAMPLE_SLICE_MARGINS, dims.width, dims.height)
+                  : defaultSliceMargins(dims.width, dims.height),
+              )
             }}
           >
             Reset guides
