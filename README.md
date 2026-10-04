@@ -41,7 +41,8 @@ Not wired yet. Plan: Cloudflare Access (email allowlist) in front of the Worker.
 | `/` | Hub (search + categories) |
 | `/tools/hex-rgba` | Client-only hex, rgba, hsl/hsla, hwb, oklch |
 | `/tools/flexbox` | Flexbox playground — direction, wrap, justify, align, gap |
-| `/tools/image-compress` | Client-side compress + scale + crop |
+| `/tools/image-compress` | Client-side compress + optional scale |
+| `/tools/image-crop` | Visual cropper with aspect presets |
 | `/tools/image-format` | Convert PNG ↔ JPEG ↔ WebP (canvas) |
 | `/tools/svg-editor` | Paste/edit SVG, live preview, minify, PNG/SVG export |
 | `/tools/nine-slice` | 9-slice guides, stretch/tile preview, border-image CSS + PNG slices |

@@ -19,6 +19,7 @@ export type ToolLink = {
     | '/tools/box-shadow'
     | '/tools/css-grid'
     | '/tools/image-compress'
+    | '/tools/image-crop'
     | '/tools/image-format'
     | '/tools/favicon'
     | '/tools/svg-editor'
@@ -117,9 +118,26 @@ export const TOOLS: ToolLink[] = [
     to: '/tools/image-compress',
     name: 'Image compress',
     shortName: 'Compress',
-    blurb: 'Crop, scale, quality.',
+    blurb: 'Scale, quality, download.',
     category: 'image',
-    keywords: ['image', 'compress', 'jpg', 'jpeg', 'png', 'webp', 'crop', 'scale'],
+    keywords: ['image', 'compress', 'jpg', 'jpeg', 'png', 'webp', 'quality', 'scale', 'size'],
+  },
+  {
+    to: '/tools/image-crop',
+    name: 'Image crop',
+    shortName: 'Crop',
+    blurb: 'Visual crop + aspect presets.',
+    category: 'image',
+    keywords: [
+      'image',
+      'crop',
+      'slice',
+      'aspect',
+      'trim',
+      'cut',
+      'resize',
+      'frame',
+    ],
   },
   {
     to: '/tools/image-format',

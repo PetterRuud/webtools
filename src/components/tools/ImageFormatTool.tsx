@@ -201,12 +201,19 @@ export function ImageFormatTool() {
         ) : null}
 
         <p className="m-0 text-xs text-muted-foreground">
-          Need crop/scale?{' '}
+          Related:{' '}
+          <Link
+            to="/tools/image-crop"
+            className="text-foreground underline-offset-4 hover:underline"
+          >
+            Crop
+          </Link>
+          {' · '}
           <Link
             to="/tools/image-compress"
             className="text-foreground underline-offset-4 hover:underline"
           >
-            Image compress
+            Compress
           </Link>
         </p>
       </div>

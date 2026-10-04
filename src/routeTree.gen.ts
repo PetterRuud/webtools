@@ -21,6 +21,7 @@ import { Route as ToolsFlexboxRouteImport } from './routes/tools/flexbox'
 import { Route as ToolsHexRgbaRouteImport } from './routes/tools/hex-rgba'
 import { Route as ToolsHttpStatusRouteImport } from './routes/tools/http-status'
 import { Route as ToolsImageCompressRouteImport } from './routes/tools/image-compress'
+import { Route as ToolsImageCropRouteImport } from './routes/tools/image-crop'
 import { Route as ToolsImageFormatRouteImport } from './routes/tools/image-format'
 import { Route as ToolsIpLookupRouteImport } from './routes/tools/ip-lookup'
 import { Route as ToolsJsonFormatterRouteImport } from './routes/tools/json-formatter'
@@ -92,6 +93,11 @@ const ToolsHttpStatusRoute = ToolsHttpStatusRouteImport.update({
 const ToolsImageCompressRoute = ToolsImageCompressRouteImport.update({
   id: '/tools/image-compress',
   path: '/tools/image-compress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsImageCropRoute = ToolsImageCropRouteImport.update({
+  id: '/tools/image-crop',
+  path: '/tools/image-crop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsImageFormatRoute = ToolsImageFormatRouteImport.update({
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
+  '/tools/image-crop': typeof ToolsImageCropRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
+  '/tools/image-crop': typeof ToolsImageCropRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
@@ -221,6 +229,7 @@ export interface FileRoutesById {
   '/tools/hex-rgba': typeof ToolsHexRgbaRoute
   '/tools/http-status': typeof ToolsHttpStatusRoute
   '/tools/image-compress': typeof ToolsImageCompressRoute
+  '/tools/image-crop': typeof ToolsImageCropRoute
   '/tools/image-format': typeof ToolsImageFormatRoute
   '/tools/ip-lookup': typeof ToolsIpLookupRoute
   '/tools/json-formatter': typeof ToolsJsonFormatterRoute
@@ -249,6 +258,7 @@ export interface FileRouteTypes {
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
+    | '/tools/image-crop'
     | '/tools/image-format'
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
@@ -275,6 +285,7 @@ export interface FileRouteTypes {
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
+    | '/tools/image-crop'
     | '/tools/image-format'
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/tools/hex-rgba'
     | '/tools/http-status'
     | '/tools/image-compress'
+    | '/tools/image-crop'
     | '/tools/image-format'
     | '/tools/ip-lookup'
     | '/tools/json-formatter'
@@ -328,6 +340,7 @@ export interface RootRouteChildren {
   ToolsHexRgbaRoute: typeof ToolsHexRgbaRoute
   ToolsHttpStatusRoute: typeof ToolsHttpStatusRoute
   ToolsImageCompressRoute: typeof ToolsImageCompressRoute
+  ToolsImageCropRoute: typeof ToolsImageCropRoute
   ToolsImageFormatRoute: typeof ToolsImageFormatRoute
   ToolsIpLookupRoute: typeof ToolsIpLookupRoute
   ToolsJsonFormatterRoute: typeof ToolsJsonFormatterRoute
@@ -426,6 +439,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/image-compress'
       fullPath: '/tools/image-compress'
       preLoaderRoute: typeof ToolsImageCompressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/image-crop': {
+      id: '/tools/image-crop'
+      path: '/tools/image-crop'
+      fullPath: '/tools/image-crop'
+      preLoaderRoute: typeof ToolsImageCropRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/image-format': {
@@ -528,6 +548,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsHexRgbaRoute: ToolsHexRgbaRoute,
   ToolsHttpStatusRoute: ToolsHttpStatusRoute,
   ToolsImageCompressRoute: ToolsImageCompressRoute,
+  ToolsImageCropRoute: ToolsImageCropRoute,
   ToolsImageFormatRoute: ToolsImageFormatRoute,
   ToolsIpLookupRoute: ToolsIpLookupRoute,
   ToolsJsonFormatterRoute: ToolsJsonFormatterRoute,

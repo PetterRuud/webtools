@@ -1,18 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from '@tanstack/react-router'
 import imageCompression from 'browser-image-compression'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
-import { ImageCropper } from '#/components/tools/ImageCropper'
 import {
-  CROP_ASPECT_OPTIONS,
-  fullFrameRect,
-  initialCropRect,
   prepareImageForCompress,
   readImageDimensions,
-  type CropAspectId,
-  type CropRect,
 } from '#/lib/imageTransform'
 
 function formatBytes(bytes: number): string {
@@ -38,8 +33,6 @@ export function ImageCompressTool() {
   } | null>(null)
   const [quality, setQuality] = useState(0.75)
   const [scalePercent, setScalePercent] = useState(100)
-  const [cropAspect, setCropAspect] = useState<CropAspectId>('none')
-  const [cropRect, setCropRect] = useState<CropRect | null>(null)
   const [output, setOutput] = useState<File | null>(null)
   const [outputDims, setOutputDims] = useState<{
     width: number
@@ -48,11 +41,6 @@ export function ImageCompressTool() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
-
-  const cropEnabled = cropAspect !== 'none'
-  const aspectRatio =
-    CROP_ASPECT_OPTIONS.find((option) => option.id === cropAspect)?.ratio ??
-    null
 
   useEffect(() => {
     if (!file) {
@@ -67,12 +55,10 @@ export function ImageCompressTool() {
       .then((dims) => {
         if (cancelled) return
         setSourceDims(dims)
-        setCropRect(fullFrameRect(dims.width, dims.height))
       })
       .catch((err) => {
         if (cancelled) return
         setSourceDims(null)
-        setCropRect(null)
         setError(
           err instanceof Error ? err.message : 'Could not read that image',
         )
@@ -98,41 +84,17 @@ export function ImageCompressTool() {
     return Math.max(0, Math.round((1 - output.size / file.size) * 100))
   }, [file, output])
 
-  const activeCrop = useMemo(() => {
-    if (!sourceDims) return null
-    if (!cropEnabled || !cropRect) {
-      return fullFrameRect(sourceDims.width, sourceDims.height)
-    }
-    return cropRect
-  }, [sourceDims, cropEnabled, cropRect])
-
   const plannedDims = useMemo(() => {
-    if (!activeCrop) return null
+    if (!sourceDims) return null
     const scale = scalePercent / 100
     return {
-      width: Math.max(1, Math.round(activeCrop.width * scale)),
-      height: Math.max(1, Math.round(activeCrop.height * scale)),
+      width: Math.max(1, Math.round(sourceDims.width * scale)),
+      height: Math.max(1, Math.round(sourceDims.height * scale)),
     }
-  }, [activeCrop, scalePercent])
+  }, [sourceDims, scalePercent])
 
-  function selectCropAspect(next: CropAspectId) {
-    setCropAspect(next)
-    if (!sourceDims) return
-    if (next === 'none') {
-      setCropRect(fullFrameRect(sourceDims.width, sourceDims.height))
-      return
-    }
-    const ratio =
-      CROP_ASPECT_OPTIONS.find((option) => option.id === next)?.ratio ?? null
-    setCropRect(initialCropRect(sourceDims.width, sourceDims.height, ratio))
-  }
-
-  function resetGeometry() {
+  function resetScale() {
     setScalePercent(100)
-    setCropAspect('none')
-    if (sourceDims) {
-      setCropRect(fullFrameRect(sourceDims.width, sourceDims.height))
-    }
   }
 
   async function compress(nextFile = file) {
@@ -145,8 +107,8 @@ export function ImageCompressTool() {
     try {
       const prepared = await prepareImageForCompress(nextFile, {
         scalePercent,
-        cropEnabled,
-        cropRect: activeCrop,
+        cropEnabled: false,
+        cropRect: null,
       })
       const result = await imageCompression(prepared.file, {
         maxSizeMB: 8,
@@ -201,62 +163,51 @@ export function ImageCompressTool() {
               setOutputDims(null)
               setError(null)
               setScalePercent(100)
-              setCropAspect('none')
-              setCropRect(null)
             }}
           />
         </div>
 
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center justify-between gap-3">
-            <Label>Crop</Label>
-            <span className="text-xs text-muted-foreground">
-              {cropAspect === 'none' ? 'Off' : cropAspect}
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {CROP_ASPECT_OPTIONS.map((option) => (
-              <Button
-                key={option.id}
-                type="button"
-                size="sm"
-                variant={cropAspect === option.id ? 'default' : 'outline'}
-                onClick={() => selectCropAspect(option.id)}
-              >
-                {option.label}
-              </Button>
-            ))}
-          </div>
-        </div>
-
-        {sourceUrl && sourceDims && activeCrop ? (
+        {sourceUrl && sourceDims ? (
           <div className="flex flex-col gap-1.5">
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <p className="m-0 text-sm font-medium">
-                {cropEnabled ? 'Crop region' : 'Source'}
-              </p>
+              <p className="m-0 text-sm font-medium">Source</p>
               <p className="m-0 text-xs tabular-nums text-muted-foreground">
                 {sourceDims.width}×{sourceDims.height}
-                {plannedDims
+                {plannedDims && scalePercent !== 100
                   ? ` → ${plannedDims.width}×${plannedDims.height}`
                   : ''}
               </p>
             </div>
-            <ImageCropper
-              src={sourceUrl}
-              imageWidth={sourceDims.width}
-              imageHeight={sourceDims.height}
-              crop={activeCrop}
-              aspectRatio={aspectRatio}
-              enabled={cropEnabled}
-              onChange={setCropRect}
-            />
+            <div className="overflow-hidden rounded-xl border border-border bg-card/50">
+              <img
+                src={sourceUrl}
+                alt="Source preview"
+                className="mx-auto max-h-80 w-auto object-contain"
+              />
+            </div>
           </div>
         ) : !file ? (
           <p className="m-0 rounded-lg border border-dashed border-border bg-card/50 px-3 py-8 text-center text-sm text-muted-foreground">
             Choose a PNG or JPEG
           </p>
         ) : null}
+
+        <p className="m-0 text-xs text-muted-foreground">
+          Need a visual crop?{' '}
+          <Link
+            to="/tools/image-crop"
+            className="text-foreground underline-offset-4 hover:underline"
+          >
+            Image crop
+          </Link>
+          {' · '}
+          <Link
+            to="/tools/image-format"
+            className="text-foreground underline-offset-4 hover:underline"
+          >
+            Format
+          </Link>
+        </p>
       </div>
 
       <div className="flex flex-col gap-3">
@@ -317,9 +268,9 @@ export function ImageCompressTool() {
           >
             Download
           </Button>
-          {file && (scalePercent !== 100 || cropEnabled) ? (
-            <Button type="button" variant="ghost" onClick={resetGeometry}>
-              Reset
+          {file && scalePercent !== 100 ? (
+            <Button type="button" variant="ghost" onClick={resetScale}>
+              Reset scale
             </Button>
           ) : null}
         </div>

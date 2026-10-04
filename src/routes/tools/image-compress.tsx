@@ -9,7 +9,7 @@ export const Route = createFileRoute('/tools/image-compress')({
       {
         name: 'description',
         content:
-          'Crop, scale, and compress images in the browser. Files never leave your device.',
+          'Scale and compress images in the browser. Files never leave your device.',
       },
     ],
   }),
