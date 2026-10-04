@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { ArrowLeftRightIcon, DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
+import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
 import {
@@ -132,7 +133,7 @@ export function ImageFormatTool() {
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="format-file">Image</Label>
-          <input
+          <Input
             id="format-file"
             type="file"
             accept={ACCEPT}
@@ -192,13 +193,13 @@ export function ImageFormatTool() {
         {lossy ? (
           <div className="flex flex-col gap-1.5">
             <div className="flex items-baseline justify-between gap-3">
-              <Label htmlFor="format-quality">Quality</Label>
+              <Label id="format-quality-label">Quality</Label>
               <span className="font-mono text-sm text-muted-foreground">
                 {Math.round(quality * 100)}%
               </span>
             </div>
             <Slider
-              id="format-quality"
+              aria-labelledby="format-quality-label"
               min={0.1}
               max={1}
               step={0.05}

@@ -125,7 +125,7 @@ export function CodeScreenshotTool() {
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-          <label className="flex flex-col gap-1">
+          <Label className="flex flex-col gap-1 font-normal">
             <span className="text-xs text-muted-foreground">Language</span>
             <select
               value={language}
@@ -140,8 +140,8 @@ export function CodeScreenshotTool() {
                 </option>
               ))}
             </select>
-          </label>
-          <label className="flex flex-col gap-1">
+          </Label>
+          <Label className="flex flex-col gap-1 font-normal">
             <span className="text-xs text-muted-foreground">Theme</span>
             <select
               value={theme}
@@ -154,8 +154,8 @@ export function CodeScreenshotTool() {
                 </option>
               ))}
             </select>
-          </label>
-          <label className="flex flex-col gap-1">
+          </Label>
+          <Label className="flex flex-col gap-1 font-normal">
             <span className="text-xs text-muted-foreground">Window</span>
             <select
               value={chrome}
@@ -170,8 +170,8 @@ export function CodeScreenshotTool() {
                 </option>
               ))}
             </select>
-          </label>
-          <label className="flex flex-col gap-1">
+          </Label>
+          <Label className="flex flex-col gap-1 font-normal">
             <span className="text-xs text-muted-foreground">Font</span>
             <select
               value={fontFamily}
@@ -186,10 +186,10 @@ export function CodeScreenshotTool() {
                 </option>
               ))}
             </select>
-          </label>
+          </Label>
         </div>
 
-        <label className="flex flex-col gap-1">
+        <Label className="flex flex-col gap-1 font-normal">
           <span className="text-xs text-muted-foreground">Background</span>
           <select
             value={backgroundId}
@@ -203,11 +203,11 @@ export function CodeScreenshotTool() {
             ))}
             <option value="custom">Custom color</option>
           </select>
-        </label>
+        </Label>
 
         {backgroundId === 'custom' ? (
           <div className="flex items-center gap-2">
-            <input
+            <Input
               type="color"
               value={
                 /^#[0-9a-fA-F]{6}$/.test(customBackground)
@@ -230,13 +230,13 @@ export function CodeScreenshotTool() {
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="code-shot-padding">Padding</Label>
+            <Label id="code-shot-padding-label">Padding</Label>
             <span className="text-sm tabular-nums text-muted-foreground">
               {padding}px
             </span>
           </div>
           <Slider
-            id="code-shot-padding"
+            aria-labelledby="code-shot-padding-label"
             min={0}
             max={16}
             step={1}
@@ -250,13 +250,13 @@ export function CodeScreenshotTool() {
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="code-shot-font-size">Font size</Label>
+            <Label id="code-shot-font-size-label">Font size</Label>
             <span className="text-sm tabular-nums text-muted-foreground">
               {fontSize}px
             </span>
           </div>
           <Slider
-            id="code-shot-font-size"
+            aria-labelledby="code-shot-font-size-label"
             min={11}
             max={22}
             step={1}
@@ -269,7 +269,7 @@ export function CodeScreenshotTool() {
         </div>
 
         <div className="flex flex-wrap gap-x-4 gap-y-2 pt-0.5">
-          <label className="flex cursor-pointer items-center gap-2 text-sm">
+          <Label className="flex cursor-pointer items-center gap-2 text-sm font-normal">
             <Checkbox
               checked={showLineNumbers}
               onCheckedChange={(checked) =>
@@ -278,15 +278,15 @@ export function CodeScreenshotTool() {
               aria-label="Line numbers"
             />
             <span>Line numbers</span>
-          </label>
-          <label className="flex cursor-pointer items-center gap-2 text-sm">
+          </Label>
+          <Label className="flex cursor-pointer items-center gap-2 text-sm font-normal">
             <Checkbox
               checked={showTitle}
               onCheckedChange={(checked) => setShowTitle(checked === true)}
               aria-label="Window title"
             />
             <span>Title bar</span>
-          </label>
+          </Label>
         </div>
 
         {showTitle ? (

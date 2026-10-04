@@ -108,13 +108,13 @@ export function QrCodeTool() {
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="qr-size">Size</Label>
+            <Label id="qr-size-label">Size</Label>
             <span className="text-sm tabular-nums text-muted-foreground">
               {size}px
             </span>
           </div>
           <Slider
-            id="qr-size"
+            aria-labelledby="qr-size-label"
             min={128}
             max={1024}
             step={8}
@@ -128,13 +128,13 @@ export function QrCodeTool() {
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="qr-margin">Margin</Label>
+            <Label id="qr-margin-label">Margin</Label>
             <span className="text-sm tabular-nums text-muted-foreground">
               {margin}
             </span>
           </div>
           <Slider
-            id="qr-margin"
+            aria-labelledby="qr-margin-label"
             min={0}
             max={8}
             step={1}

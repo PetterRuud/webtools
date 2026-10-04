@@ -103,13 +103,13 @@ export function FlexboxTool() {
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="flex-gap">Gap</Label>
+            <Label id="flex-gap-label">Gap</Label>
             <span className="text-sm tabular-nums text-muted-foreground">
               {config.gap}px
             </span>
           </div>
           <Slider
-            id="flex-gap"
+            aria-labelledby="flex-gap-label"
             min={GAP_MIN}
             max={GAP_MAX}
             step={1}
@@ -123,13 +123,13 @@ export function FlexboxTool() {
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="flex-items">Items</Label>
+            <Label id="flex-items-label">Items</Label>
             <span className="text-sm tabular-nums text-muted-foreground">
               {config.itemCount}
             </span>
           </div>
           <Slider
-            id="flex-items"
+            aria-labelledby="flex-items-label"
             min={ITEM_COUNT_MIN}
             max={ITEM_COUNT_MAX}
             step={1}
@@ -188,7 +188,7 @@ export function FlexboxTool() {
 
         <div className="flex flex-col gap-2 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
           <div className="flex items-center justify-between gap-2">
-            <Label htmlFor="flex-css">CSS</Label>
+            <Label>CSS</Label>
             <Button
               type="button"
               size="sm"
@@ -199,10 +199,7 @@ export function FlexboxTool() {
               Copy CSS
             </Button>
           </div>
-          <pre
-            id="flex-css"
-            className="m-0 overflow-x-auto rounded-lg border border-border/60 bg-background/70 p-3 font-mono text-xs leading-5 text-ink sm:text-sm"
-          >
+          <pre className="m-0 overflow-x-auto rounded-lg border border-border/60 bg-background/70 p-3 font-mono text-xs leading-5 text-ink sm:text-sm">
             {css}
           </pre>
         </div>

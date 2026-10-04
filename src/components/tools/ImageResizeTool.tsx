@@ -191,7 +191,7 @@ export function ImageResizeTool() {
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="resize-image">Image</Label>
-          <input
+          <Input
             id="resize-image"
             type="file"
             accept="image/*"
@@ -290,14 +290,14 @@ export function ImageResizeTool() {
           </div>
         </div>
 
-        <label className="flex items-center gap-2 text-sm">
+        <Label className="flex items-center gap-2 text-sm font-normal">
           <Checkbox
             checked={lockAspect}
             disabled={!sourceDims}
             onCheckedChange={(checked) => setLockAspect(checked === true)}
           />
           Lock aspect ratio
-        </label>
+        </Label>
 
         <div className="flex flex-col gap-1.5">
           <Label>Scale</Label>

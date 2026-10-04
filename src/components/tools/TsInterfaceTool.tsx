@@ -101,27 +101,27 @@ export function TsInterfaceTool() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3 text-sm">
-          <label className="flex items-center gap-1.5">
+          <Label className="flex items-center gap-1.5 font-normal">
             <Checkbox
               checked={optional}
               onCheckedChange={(checked) => setOptional(checked === true)}
             />
             <span>Optional</span>
-          </label>
-          <label className="flex items-center gap-1.5">
+          </Label>
+          <Label className="flex items-center gap-1.5 font-normal">
             <Checkbox
               checked={readonly}
               onCheckedChange={(checked) => setReadonly(checked === true)}
             />
             <span>Readonly</span>
-          </label>
-          <label className="flex items-center gap-1.5">
+          </Label>
+          <Label className="flex items-center gap-1.5 font-normal">
             <Checkbox
               checked={exportTypes}
               onCheckedChange={(checked) => setExportTypes(checked === true)}
             />
             <span>Export</span>
-          </label>
+          </Label>
         </div>
       </div>
 

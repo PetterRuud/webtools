@@ -88,16 +88,19 @@ export function WebsiteScreenshotTool() {
       className="grid gap-3 lg:grid-cols-2 lg:items-start lg:gap-4"
     >
       <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
-        <label className="flex flex-col gap-1">
-          <span className="text-xs text-muted-foreground">URL</span>
+        <div className="flex flex-col gap-1">
+          <Label htmlFor="screenshot-url" className="text-xs font-normal text-muted-foreground">
+            URL
+          </Label>
           <Input
+            id="screenshot-url"
             type="url"
             value={url}
             placeholder="https://example.com"
             onValueChange={setUrl}
             required
           />
-        </label>
+        </div>
 
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {(
@@ -121,9 +124,12 @@ export function WebsiteScreenshotTool() {
         </div>
 
         <div className="grid grid-cols-2 gap-2">
-          <label className="flex flex-col gap-1">
-            <span className="text-xs text-muted-foreground">Width</span>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="screenshot-width" className="text-xs font-normal text-muted-foreground">
+              Width
+            </Label>
             <Input
+              id="screenshot-width"
               type="number"
               min={320}
               max={1920}
@@ -133,10 +139,13 @@ export function WebsiteScreenshotTool() {
                 setWidth(v)
               }}
             />
-          </label>
-          <label className="flex flex-col gap-1">
-            <span className="text-xs text-muted-foreground">Height</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <Label htmlFor="screenshot-height" className="text-xs font-normal text-muted-foreground">
+              Height
+            </Label>
             <Input
+              id="screenshot-height"
               type="number"
               min={320}
               max={4000}
@@ -146,7 +155,7 @@ export function WebsiteScreenshotTool() {
                 setHeight(v)
               }}
             />
-          </label>
+          </div>
         </div>
 
         <Label className="gap-2 font-normal">

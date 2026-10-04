@@ -1085,10 +1085,9 @@ function Toggle(props: {
   disabled?: boolean
 }) {
   return (
-    <label
-      htmlFor={props.id}
+    <Label
       className={cn(
-        'flex cursor-pointer items-center gap-2 text-sm',
+        'flex cursor-pointer items-center gap-2 text-sm font-normal',
         props.disabled && 'cursor-not-allowed opacity-50',
       )}
     >
@@ -1099,7 +1098,7 @@ function Toggle(props: {
         onCheckedChange={(checked) => props.onCheckedChange(checked === true)}
       />
       <span>{props.label}</span>
-    </label>
+    </Label>
   )
 }
 

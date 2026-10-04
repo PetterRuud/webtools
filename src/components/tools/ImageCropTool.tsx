@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { CropIcon, DownloadIcon, Loader2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
+import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { ImageCropper } from '#/components/tools/ImageCropper'
 import {
@@ -157,7 +158,7 @@ export function ImageCropTool() {
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="crop-image">Image</Label>
-          <input
+          <Input
             id="crop-image"
             type="file"
             accept="image/*"

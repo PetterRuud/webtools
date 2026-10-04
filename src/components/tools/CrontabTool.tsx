@@ -160,13 +160,13 @@ export function CrontabTool() {
             >
               Expression
             </Label>
-            <label className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Label className="flex items-center gap-1.5 text-xs font-normal text-muted-foreground">
               <Checkbox
                 checked={state.withSeconds}
                 onCheckedChange={(checked) => toggleSeconds(checked === true)}
               />
               Seconds
-            </label>
+            </Label>
           </div>
           <div className="bg-muted/50 flex gap-1.5 rounded-lg border border-border/80 p-1.5">
             <Input
@@ -349,7 +349,7 @@ function FieldEditor({
       ) : null}
 
       {state.mode === 'step' ? (
-        <label className="flex items-center gap-2 text-xs text-muted-foreground">
+        <Label className="flex items-center gap-2 text-xs font-normal text-muted-foreground">
           Every
           <Input
             type="number"
@@ -363,7 +363,7 @@ function FieldEditor({
             className="h-7 w-16 font-mono text-xs"
           />
           units
-        </label>
+        </Label>
       ) : null}
 
       {state.mode === 'specific' ? (

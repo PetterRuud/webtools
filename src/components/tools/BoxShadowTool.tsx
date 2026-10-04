@@ -84,13 +84,13 @@ export function BoxShadowTool() {
         {SLIDERS.map(({ key, label, min, max, step, format }) => (
           <div key={key} className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between gap-3">
-              <Label htmlFor={`shadow-${key}`}>{label}</Label>
+              <Label id={`shadow-${key}-label`}>{label}</Label>
               <span className="text-sm tabular-nums text-muted-foreground">
                 {format(params[key])}
               </span>
             </div>
             <Slider
-              id={`shadow-${key}`}
+              aria-labelledby={`shadow-${key}-label`}
               min={min}
               max={max}
               step={step}
@@ -106,7 +106,7 @@ export function BoxShadowTool() {
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="shadow-color">Color</Label>
           <div className="flex items-center gap-2">
-            <input
+            <Input
               id="shadow-color"
               type="color"
               value={params.color}
@@ -126,14 +126,14 @@ export function BoxShadowTool() {
           </div>
         </div>
 
-        <label className="bg-muted/50 flex cursor-pointer items-center gap-2 rounded-lg border border-border/70 px-2.5 py-1.5 text-sm">
+        <Label className="flex cursor-pointer items-center gap-2 rounded-lg border border-border/70 px-2.5 py-1.5 text-sm font-normal">
           <Checkbox
             checked={params.inset}
             onCheckedChange={(checked) => update('inset', checked === true)}
             aria-label="Inset shadow"
           />
           <span>Inset</span>
-        </label>
+        </Label>
 
         <div className="flex flex-wrap gap-1.5 pt-1">
           <Button type="button" onClick={() => void copyText(cssRule, 'CSS')}>

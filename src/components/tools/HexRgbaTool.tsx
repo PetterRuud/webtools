@@ -138,13 +138,13 @@ export function HexRgbaTool() {
         ).map(([key, label, max]) => (
           <div key={key} className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between gap-3">
-              <Label htmlFor={`channel-${key}`}>{label}</Label>
+              <Label id={`channel-${key}-label`}>{label}</Label>
               <span className="text-sm tabular-nums text-muted-foreground">
                 {key === 'a' ? channels.a.toFixed(2) : Math.round(channels[key])}
               </span>
             </div>
             <Slider
-              id={`channel-${key}`}
+              aria-labelledby={`channel-${key}-label`}
               min={0}
               max={max}
               step={key === 'a' ? 0.01 : 1}

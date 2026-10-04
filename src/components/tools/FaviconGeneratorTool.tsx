@@ -109,7 +109,7 @@ export function FaviconGeneratorTool() {
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="favicon-file">Image</Label>
-          <input
+          <Input
             id="favicon-file"
             type="file"
             accept="image/*"
@@ -183,13 +183,13 @@ export function FaviconGeneratorTool() {
 
           <div className="flex flex-col gap-1.5">
             <div className="flex items-baseline justify-between gap-3">
-              <Label htmlFor="favicon-radius">Radius</Label>
+              <Label id="favicon-radius-label">Radius</Label>
               <span className="font-mono text-sm text-muted-foreground">
                 {Math.round(radiusPercent)}%
               </span>
             </div>
             <Slider
-              id="favicon-radius"
+              aria-labelledby="favicon-radius-label"
               min={0}
               max={50}
               step={1}
@@ -206,13 +206,13 @@ export function FaviconGeneratorTool() {
 
           <div className="flex flex-col gap-1.5 sm:col-span-2">
             <div className="flex items-baseline justify-between gap-3">
-              <Label htmlFor="favicon-padding">Padding</Label>
+              <Label id="favicon-padding-label">Padding</Label>
               <span className="font-mono text-sm text-muted-foreground">
                 {Math.round(paddingPercent)}%
               </span>
             </div>
             <Slider
-              id="favicon-padding"
+              aria-labelledby="favicon-padding-label"
               min={0}
               max={40}
               step={1}
@@ -346,7 +346,7 @@ export function FaviconGeneratorTool() {
 
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between gap-2">
-                <Label htmlFor="favicon-html">HTML</Label>
+                <Label>HTML</Label>
                 <Button
                   type="button"
                   size="sm"
@@ -358,10 +358,7 @@ export function FaviconGeneratorTool() {
                   Copy
                 </Button>
               </div>
-              <pre
-                id="favicon-html"
-                className="m-0 max-h-48 overflow-auto rounded-lg border border-border bg-card/50 p-3 text-xs leading-5 text-foreground"
-              >
+              <pre className="m-0 max-h-48 overflow-auto rounded-lg border border-border bg-card/50 p-3 text-xs leading-5 text-foreground">
                 {html}
               </pre>
             </div>

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { CopyIcon } from 'lucide-react'
 import { DualTextareas } from '#/components/tools/DualTextareas'
 import { Button } from '#/components/ui/button'
+import { Checkbox } from '#/components/ui/checkbox'
 import { Label } from '#/components/ui/label'
 import { Textarea } from '#/components/ui/textarea'
 import { copyText } from '#/lib/clipboard'
@@ -67,15 +68,13 @@ export function CsvJsonTool() {
         >
           Sample
         </Button>
-        <label className="ml-auto inline-flex items-center gap-2 text-sm text-muted-foreground">
-          <input
-            type="checkbox"
+        <Label className="ml-auto inline-flex items-center gap-2 text-sm font-normal text-muted-foreground">
+          <Checkbox
             checked={headerRow}
-            onChange={(event) => setHeaderRow(event.target.checked)}
-            className="size-3.5 accent-primary"
+            onCheckedChange={(checked) => setHeaderRow(checked === true)}
           />
           Header row
-        </label>
+        </Label>
       </div>
 
       <DualTextareas

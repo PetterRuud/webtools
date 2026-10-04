@@ -53,13 +53,13 @@ export function TipCalculatorTool() {
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
-            <Label htmlFor="tip-percent">Tip %</Label>
+            <Label id="tip-percent-label">Tip %</Label>
             <span className="rounded-md border border-border/70 bg-muted/40 px-1.5 py-0.5 font-mono text-sm tabular-nums text-muted-foreground">
               {tipPercent}%
             </span>
           </div>
           <Slider
-            id="tip-percent"
+            aria-labelledby="tip-percent-label"
             min={0}
             max={50}
             step={1}

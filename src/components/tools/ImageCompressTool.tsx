@@ -4,6 +4,7 @@ import imageCompression from 'browser-image-compression'
 import { DownloadIcon, Loader2Icon, Minimize2Icon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
+import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { Slider } from '#/components/ui/slider'
 import {
@@ -152,7 +153,7 @@ export function ImageCompressTool() {
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="image">Image</Label>
-          <input
+          <Input
             id="image"
             type="file"
             accept="image/*"
@@ -224,13 +225,13 @@ export function ImageCompressTool() {
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor="scale">Scale</Label>
+              <Label id="scale-label">Scale</Label>
               <span className="text-sm tabular-nums text-muted-foreground">
                 {scalePercent}%
               </span>
             </div>
             <Slider
-              id="scale"
+              aria-labelledby="scale-label"
               min={10}
               max={100}
               step={1}
@@ -243,13 +244,13 @@ export function ImageCompressTool() {
           </div>
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between">
-              <Label htmlFor="quality">Quality</Label>
+              <Label id="quality-label">Quality</Label>
               <span className="text-sm tabular-nums text-muted-foreground">
                 {Math.round(quality * 100)}%
               </span>
             </div>
             <Slider
-              id="quality"
+              aria-labelledby="quality-label"
               min={0.2}
               max={1}
               step={0.01}

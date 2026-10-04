@@ -261,7 +261,7 @@ export function NineSliceTool() {
         <div className="flex flex-wrap items-end gap-2">
           <div className="flex min-w-[12rem] flex-1 flex-col gap-1.5">
             <Label htmlFor="nine-slice-file">Image</Label>
-            <input
+            <Input
               ref={fileInputRef}
               id="nine-slice-file"
               type="file"

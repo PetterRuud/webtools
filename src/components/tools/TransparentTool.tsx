@@ -106,24 +106,26 @@ export function TransparentTool() {
     >
       <div className="flex flex-col gap-3">
         <div className="grid gap-3 sm:grid-cols-2">
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">On white</span>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="transparent-white">On white</Label>
             <Input
+              id="transparent-white"
               type="file"
               accept="image/*"
               className="h-auto py-1.5 file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium"
               onChange={(e) => setWhite(e.target.files?.[0] ?? null)}
             />
-          </label>
-          <label className="flex flex-col gap-1.5">
-            <span className="text-sm font-medium">On black</span>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="transparent-black">On black</Label>
             <Input
+              id="transparent-black"
               type="file"
               accept="image/*"
               className="h-auto py-1.5 file:mr-3 file:rounded-md file:border-0 file:bg-secondary file:px-3 file:py-1.5 file:text-sm file:font-medium"
               onChange={(e) => setBlack(e.target.files?.[0] ?? null)}
             />
-          </label>
+          </div>
         </div>
 
         <fieldset className="m-0 flex flex-col gap-2.5 rounded-lg border border-border/80 bg-card/40 p-3">
@@ -161,9 +163,12 @@ export function TransparentTool() {
               value={resizeHeight}
               onChange={setResizeHeight}
             />
-            <label className="col-span-2 flex flex-col gap-1">
-              <span className="text-xs text-muted-foreground">Fit mode</span>
+            <div className="col-span-2 flex flex-col gap-1">
+              <Label htmlFor="transparent-fit" className="text-xs font-normal text-muted-foreground">
+                Fit mode
+              </Label>
               <select
+                id="transparent-fit"
                 value={resizeFit}
                 onChange={(e) => setResizeFit(e.target.value as FitMode)}
                 className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm dark:bg-input/30"
@@ -174,7 +179,7 @@ export function TransparentTool() {
                 <option value="contain">Contain</option>
                 <option value="fill">Fill</option>
               </select>
-            </label>
+            </div>
           </div>
 
           <CheckRow
@@ -268,7 +273,7 @@ function NumField({
   placeholder?: string
 }) {
   return (
-    <label className="flex flex-col gap-1">
+    <Label className="flex flex-col gap-1 font-normal">
       <span className="text-xs text-muted-foreground">{label}</span>
       <Input
         type="number"
@@ -277,7 +282,7 @@ function NumField({
         placeholder={placeholder}
         onValueChange={onChange}
       />
-    </label>
+    </Label>
   )
 }
 

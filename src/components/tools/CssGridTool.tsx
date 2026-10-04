@@ -84,13 +84,13 @@ function CountControl({
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between gap-2">
-        <Label htmlFor={id}>{label}</Label>
+        <Label id={`${id}-label`}>{label}</Label>
         <span className="text-xs tabular-nums text-muted-foreground">
           {value}
         </span>
       </div>
       <Slider
-        id={id}
+        aria-labelledby={`${id}-label`}
         min={MIN_TRACKS}
         max={MAX_TRACKS}
         step={1}
