@@ -14,6 +14,7 @@ import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsBoxShadowRouteImport } from './routes/tools/box-shadow'
 import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
 import { Route as ToolsCodeScreenshotRouteImport } from './routes/tools/code-screenshot'
+import { Route as ToolsCrontabRouteImport } from './routes/tools/crontab'
 import { Route as ToolsCssGridRouteImport } from './routes/tools/css-grid'
 import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
 import { Route as ToolsDnsLookupRouteImport } from './routes/tools/dns-lookup'
@@ -66,6 +67,11 @@ const ToolsBrowserInfoRoute = ToolsBrowserInfoRouteImport.update({
 const ToolsCodeScreenshotRoute = ToolsCodeScreenshotRouteImport.update({
   id: '/tools/code-screenshot',
   path: '/tools/code-screenshot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsCrontabRoute = ToolsCrontabRouteImport.update({
+  id: '/tools/crontab',
+  path: '/tools/crontab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsCssGridRoute = ToolsCssGridRouteImport.update({
@@ -215,6 +221,7 @@ export interface FileRoutesByFullPath {
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
+  '/tools/crontab': typeof ToolsCrontabRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
@@ -250,6 +257,7 @@ export interface FileRoutesByTo {
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
+  '/tools/crontab': typeof ToolsCrontabRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
@@ -286,6 +294,7 @@ export interface FileRoutesById {
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
+  '/tools/crontab': typeof ToolsCrontabRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
   '/tools/dns-lookup': typeof ToolsDnsLookupRoute
@@ -323,6 +332,7 @@ export interface FileRouteTypes {
     | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
+    | '/tools/crontab'
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
@@ -358,6 +368,7 @@ export interface FileRouteTypes {
     | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
+    | '/tools/crontab'
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
@@ -393,6 +404,7 @@ export interface FileRouteTypes {
     | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
+    | '/tools/crontab'
     | '/tools/css-grid'
     | '/tools/csv-json'
     | '/tools/dns-lookup'
@@ -429,6 +441,7 @@ export interface RootRouteChildren {
   ToolsBoxShadowRoute: typeof ToolsBoxShadowRoute
   ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
   ToolsCodeScreenshotRoute: typeof ToolsCodeScreenshotRoute
+  ToolsCrontabRoute: typeof ToolsCrontabRoute
   ToolsCssGridRoute: typeof ToolsCssGridRoute
   ToolsCsvJsonRoute: typeof ToolsCsvJsonRoute
   ToolsDnsLookupRoute: typeof ToolsDnsLookupRoute
@@ -494,6 +507,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/code-screenshot'
       fullPath: '/tools/code-screenshot'
       preLoaderRoute: typeof ToolsCodeScreenshotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/crontab': {
+      id: '/tools/crontab'
+      path: '/tools/crontab'
+      fullPath: '/tools/crontab'
+      preLoaderRoute: typeof ToolsCrontabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/css-grid': {
@@ -701,6 +721,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsBoxShadowRoute: ToolsBoxShadowRoute,
   ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
   ToolsCodeScreenshotRoute: ToolsCodeScreenshotRoute,
+  ToolsCrontabRoute: ToolsCrontabRoute,
   ToolsCssGridRoute: ToolsCssGridRoute,
   ToolsCsvJsonRoute: ToolsCsvJsonRoute,
   ToolsDnsLookupRoute: ToolsDnsLookupRoute,

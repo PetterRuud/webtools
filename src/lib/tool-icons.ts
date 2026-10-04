@@ -28,6 +28,7 @@ import {
   StretchHorizontalIcon,
   TableIcon,
   TextSelectIcon,
+  TimerIcon,
   VectorSquareIcon,
   WindIcon,
 } from 'lucide-react'
@@ -70,5 +71,6 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/browser-info': MonitorSmartphoneIcon,
   '/tools/http-status': HashIcon,
   '/tools/mime': FileTypeIcon,
+  '/tools/crontab': TimerIcon,
   '/tools/tailwind-cheat-sheet': WindIcon,
 }

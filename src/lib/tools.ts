@@ -40,6 +40,7 @@ export type ToolLink = {
     | '/tools/http-status'
     | '/tools/mime'
     | '/tools/jwt'
+    | '/tools/crontab'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/git-commands'
     | '/tools/xml-json'
@@ -529,6 +530,24 @@ export const TOOLS: ToolLink[] = [
       'web',
       'browser',
       'network',
+    ],
+  },
+  {
+    to: '/tools/crontab',
+    name: 'Crontab builder',
+    shortName: 'Cron',
+    blurb: 'Build, decode, next runs.',
+    category: 'web',
+    keywords: [
+      'cron',
+      'crontab',
+      'schedule',
+      'scheduler',
+      'expression',
+      'job',
+      'timer',
+      'interval',
+      'web',
     ],
   },
 ]
