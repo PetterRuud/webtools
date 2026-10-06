@@ -57,7 +57,7 @@ Not wired yet. Access is only planned for future **private R2 file hosting** —
 | `/tools/text-diff` | Side-by-side or unified line diff |
 | `/tools/jwt` | Decode / encode (HS256 or none); secrets stay local |
 | `/tools/ip-lookup` | Your IP or any address (Worker → ipwho.is) |
-| `/tools/dns-lookup` | DNS over HTTPS via cloudflare-dns.com |
+| `/tools/dns-lookup` | DoH records + email setup (MX/SPF/DKIM/DMARC) |
 | `/tools/browser-info` | UA, viewport, languages, storage flags |
 | `/tools/http-status` | Searchable HTTP status reference |
 | `/tools/tailwind-cheat-sheet` | Searchable Tailwind utility cheat sheet |
