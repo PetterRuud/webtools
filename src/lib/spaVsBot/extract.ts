@@ -1,5 +1,9 @@
-const HTML_PREVIEW_LIMIT = 4_000
+import type { HeadingItem, LinkItem, ViewSnapshot } from './types.ts'
+
+const HTML_PREVIEW_LIMIT = 8_000
 const TEXT_SNAPSHOT_LIMIT = 8_000
+const MAX_HEADINGS = 80
+const MAX_LINKS = 40
 
 /** Decode common HTML entities used in titles/text. */
 function decodeEntities(input: string): string {
@@ -26,6 +30,20 @@ function stripBlocks(html: string, tag: string): string {
   return html.replace(re, ' ')
 }
 
+function cleanText(raw: string): string {
+  return decodeEntities(raw.replace(/\s+/g, ' ').trim())
+}
+
+function attr(tag: string, name: string): string | null {
+  const re = new RegExp(
+    `\\b${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`,
+    'i',
+  )
+  const m = tag.match(re)
+  if (!m) return null
+  return m[1] ?? m[2] ?? m[3] ?? null
+}
+
 /** Visible-ish text a naive crawler would index from raw HTML. */
 export function extractTextFromHtml(html: string): string {
   let s = html
@@ -48,7 +66,165 @@ export function extractTextFromHtml(html: string): string {
 export function extractTitle(html: string): string {
   const match = html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i)
   if (!match) return ''
-  return decodeEntities(match[1].replace(/\s+/g, ' ').trim())
+  return cleanText(match[1])
+}
+
+export function extractMetaDescription(html: string): string {
+  const re =
+    /<meta\b[^>]*\bname\s*=\s*(["'])description\1[^>]*>|<meta\b[^>]*\bcontent\s*=\s*(["'])[^"']*\2[^>]*\bname\s*=\s*(["'])description\3[^>]*>/gi
+  let match: RegExpExecArray | null
+  while ((match = re.exec(html)) !== null) {
+    const content = attr(match[0], 'content')
+    if (content) return cleanText(content)
+  }
+  return ''
+}
+
+export function extractCanonical(html: string): string {
+  const re = /<link\b[^>]*>/gi
+  let match: RegExpExecArray | null
+  while ((match = re.exec(html)) !== null) {
+    const tag = match[0]
+    const rel = attr(tag, 'rel')
+    if (!rel) continue
+    if (
+      rel
+        .toLowerCase()
+        .split(/\s+/)
+        .includes('canonical')
+    ) {
+      const href = attr(tag, 'href')
+      if (href) return cleanText(href)
+    }
+  }
+  return ''
+}
+
+export function extractRobots(html: string): string {
+  const re = /<meta\b[^>]*>/gi
+  let match: RegExpExecArray | null
+  while ((match = re.exec(html)) !== null) {
+    const tag = match[0]
+    const name = attr(tag, 'name')?.toLowerCase()
+    if (name === 'robots' || name === 'googlebot') {
+      const content = attr(tag, 'content')
+      if (content) return cleanText(content)
+    }
+  }
+  return ''
+}
+
+export function extractOgTags(html: string): Record<string, string> {
+  const out: Record<string, string> = {}
+  const re = /<meta\b[^>]*>/gi
+  let match: RegExpExecArray | null
+  while ((match = re.exec(html)) !== null) {
+    const tag = match[0]
+    const property = attr(tag, 'property') ?? attr(tag, 'name')
+    const content = attr(tag, 'content')
+    if (!property || content == null) continue
+    const key = property.trim().toLowerCase()
+    if (
+      key.startsWith('og:') ||
+      key.startsWith('twitter:') ||
+      key === 'twitter:card' ||
+      key === 'twitter:title' ||
+      key === 'twitter:description' ||
+      key === 'twitter:image'
+    ) {
+      if (!(key in out)) out[key] = cleanText(content)
+    }
+  }
+  return out
+}
+
+export function extractHeadings(html: string): HeadingItem[] {
+  let body = stripBlocks(html, 'script')
+  body = stripBlocks(body, 'style')
+  body = stripBlocks(body, 'noscript')
+  body = stripBlocks(body, 'svg')
+  const re = /<(h([1-6]))\b[^>]*>([\s\S]*?)<\/\1>/gi
+  const items: HeadingItem[] = []
+  let match: RegExpExecArray | null
+  while ((match = re.exec(body)) !== null) {
+    const level = Number(match[2])
+    const text = cleanText(match[3].replace(/<[^>]+>/g, ' '))
+    if (!text) continue
+    items.push({ level, text })
+    if (items.length >= MAX_HEADINGS) break
+  }
+  return items
+}
+
+export function countWords(text: string): number {
+  const trimmed = text.trim()
+  if (!trimmed) return 0
+  return trimmed.split(/\s+/).filter(Boolean).length
+}
+
+function resolveHref(
+  href: string,
+  baseUrl: string,
+): { href: string; external: boolean } | null {
+  const raw = href.trim()
+  if (
+    !raw ||
+    raw.startsWith('#') ||
+    raw.startsWith('javascript:') ||
+    raw.startsWith('mailto:') ||
+    raw.startsWith('tel:') ||
+    raw.startsWith('data:')
+  ) {
+    return null
+  }
+  try {
+    const resolved = new URL(raw, baseUrl)
+    if (resolved.protocol !== 'http:' && resolved.protocol !== 'https:') {
+      return null
+    }
+    const base = new URL(baseUrl)
+    const external = resolved.hostname !== base.hostname
+    return { href: resolved.toString(), external }
+  } catch {
+    return null
+  }
+}
+
+export function extractLinks(
+  html: string,
+  baseUrl: string,
+): {
+  linkCount: number
+  internalLinks: number
+  externalLinks: number
+  links: LinkItem[]
+} {
+  let body = stripBlocks(html, 'script')
+  body = stripBlocks(body, 'style')
+  const re = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi
+  let internalLinks = 0
+  let externalLinks = 0
+  let linkCount = 0
+  const links: LinkItem[] = []
+  let match: RegExpExecArray | null
+  while ((match = re.exec(body)) !== null) {
+    const href = attr(`<a ${match[1]}>`, 'href')
+    if (!href) continue
+    const resolved = resolveHref(href, baseUrl)
+    if (!resolved) continue
+    linkCount += 1
+    if (resolved.external) externalLinks += 1
+    else internalLinks += 1
+    if (links.length < MAX_LINKS) {
+      const text = cleanText(match[2].replace(/<[^>]+>/g, ' '))
+      links.push({
+        href: resolved.href,
+        text: text || resolved.href,
+        external: resolved.external,
+      })
+    }
+  }
+  return { linkCount, internalLinks, externalLinks, links }
 }
 
 export function countLinks(html: string): number {
@@ -64,13 +240,27 @@ export function htmlPreview(html: string): string {
 export function buildSnapshot(
   html: string,
   meta: { finalUrl: string; status: number | null },
-): import('./types.ts').ViewSnapshot {
+): ViewSnapshot {
+  const text = extractTextFromHtml(html)
+  const headings = extractHeadings(html)
+  const linkStats = extractLinks(html, meta.finalUrl || 'https://example.com')
+
   return {
     finalUrl: meta.finalUrl,
     status: meta.status,
     title: extractTitle(html),
-    text: extractTextFromHtml(html),
-    linkCount: countLinks(html),
+    metaDescription: extractMetaDescription(html),
+    canonical: extractCanonical(html),
+    robots: extractRobots(html),
+    og: extractOgTags(html),
+    headings,
+    h1s: headings.filter((h) => h.level === 1).map((h) => h.text),
+    wordCount: countWords(text.replace(/…$/, '')),
+    linkCount: linkStats.linkCount,
+    internalLinks: linkStats.internalLinks,
+    externalLinks: linkStats.externalLinks,
+    links: linkStats.links,
+    text,
     htmlBytes: new TextEncoder().encode(html).byteLength,
     htmlPreview: htmlPreview(html),
   }

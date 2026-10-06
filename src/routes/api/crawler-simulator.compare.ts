@@ -12,9 +12,9 @@ import {
  * middleware first (vite-plugins/spaVsBotApi.ts).
  *
  * JS view: Cloudflare Browser Rendering `quickAction('content')`.
- * No-JS: raw HTTP fetch + HTML text extraction.
+ * No-JS: raw HTTP fetch + HTML SEO extraction.
  */
-export const Route = createFileRoute('/api/spa-vs-bot/compare')({
+export const Route = createFileRoute('/api/crawler-simulator/compare')({
   server: {
     handlers: {
       POST: async ({ request }) => {
@@ -29,7 +29,7 @@ export const Route = createFileRoute('/api/spa-vs-bot/compare')({
           })
         } catch (e) {
           const message =
-            e instanceof Error ? e.message : 'Compare failed'
+            e instanceof Error ? e.message : 'Crawl failed'
           return Response.json({ error: message }, { status: 400 })
         }
       },

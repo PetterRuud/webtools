@@ -1,25 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { ToolShell } from '#/components/ToolShell'
-import { SpaVsBotTool } from '#/components/tools/SpaVsBotTool'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
+/** Legacy slug → Crawler simulator */
 export const Route = createFileRoute('/tools/spa-vs-bot')({
-  head: () => ({
-    meta: [
-      { title: 'SPA vs bot · WebTools' },
-      {
-        name: 'description',
-        content:
-          'Compare no-JS raw HTML (bot/crawler view) with JS-rendered page content.',
-      },
-    ],
-  }),
-  component: SpaVsBotPage,
+  beforeLoad: () => {
+    throw redirect({ to: '/tools/crawler-simulator' })
+  },
 })
-
-function SpaVsBotPage() {
-  return (
-    <ToolShell>
-      <SpaVsBotTool />
-    </ToolShell>
-  )
-}

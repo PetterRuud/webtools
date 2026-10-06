@@ -14,6 +14,7 @@ import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsBoxShadowRouteImport } from './routes/tools/box-shadow'
 import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
 import { Route as ToolsCodeScreenshotRouteImport } from './routes/tools/code-screenshot'
+import { Route as ToolsCrawlerSimulatorRouteImport } from './routes/tools/crawler-simulator'
 import { Route as ToolsCrontabRouteImport } from './routes/tools/crontab'
 import { Route as ToolsCssGridRouteImport } from './routes/tools/css-grid'
 import { Route as ToolsCsvJsonRouteImport } from './routes/tools/csv-json'
@@ -34,9 +35,12 @@ import { Route as ToolsJwtRouteImport } from './routes/tools/jwt'
 import { Route as ToolsMarkdownRouteImport } from './routes/tools/markdown'
 import { Route as ToolsMimeRouteImport } from './routes/tools/mime'
 import { Route as ToolsNineSliceRouteImport } from './routes/tools/nine-slice'
+import { Route as ToolsOgPreviewRouteImport } from './routes/tools/og-preview'
 import { Route as ToolsQrcodeRouteImport } from './routes/tools/qrcode'
 import { Route as ToolsRandomRouteImport } from './routes/tools/random'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
+import { Route as ToolsRobotsTxtRouteImport } from './routes/tools/robots-txt'
+import { Route as ToolsSerpPreviewRouteImport } from './routes/tools/serp-preview'
 import { Route as ToolsSitemapRouteImport } from './routes/tools/sitemap'
 import { Route as ToolsSpaVsBotRouteImport } from './routes/tools/spa-vs-bot'
 import { Route as ToolsSvgEditorRouteImport } from './routes/tools/svg-editor'
@@ -46,9 +50,10 @@ import { Route as ToolsTextDiffRouteImport } from './routes/tools/text-diff'
 import { Route as ToolsTipCalculatorRouteImport } from './routes/tools/tip-calculator'
 import { Route as ToolsTransparentRouteImport } from './routes/tools/transparent'
 import { Route as ToolsTsInterfaceRouteImport } from './routes/tools/ts-interface'
+import { Route as ToolsUtmBuilderRouteImport } from './routes/tools/utm-builder'
 import { Route as ToolsWebsiteScreenshotRouteImport } from './routes/tools/website-screenshot'
 import { Route as ToolsXmlJsonRouteImport } from './routes/tools/xml-json'
-import { Route as ApiSpaVsBotCompareRouteImport } from './routes/api/spa-vs-bot.compare'
+import { Route as ApiCrawlerSimulatorCompareRouteImport } from './routes/api/crawler-simulator.compare'
 import { Route as ApiTransparentExtractRouteImport } from './routes/api/transparent.extract'
 import { Route as ApiWebsiteScreenshotCaptureRouteImport } from './routes/api/website-screenshot.capture'
 
@@ -75,6 +80,11 @@ const ToolsBrowserInfoRoute = ToolsBrowserInfoRouteImport.update({
 const ToolsCodeScreenshotRoute = ToolsCodeScreenshotRouteImport.update({
   id: '/tools/code-screenshot',
   path: '/tools/code-screenshot',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsCrawlerSimulatorRoute = ToolsCrawlerSimulatorRouteImport.update({
+  id: '/tools/crawler-simulator',
+  path: '/tools/crawler-simulator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsCrontabRoute = ToolsCrontabRouteImport.update({
@@ -177,6 +187,11 @@ const ToolsNineSliceRoute = ToolsNineSliceRouteImport.update({
   path: '/tools/nine-slice',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsOgPreviewRoute = ToolsOgPreviewRouteImport.update({
+  id: '/tools/og-preview',
+  path: '/tools/og-preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsQrcodeRoute = ToolsQrcodeRouteImport.update({
   id: '/tools/qrcode',
   path: '/tools/qrcode',
@@ -190,6 +205,16 @@ const ToolsRandomRoute = ToolsRandomRouteImport.update({
 const ToolsRegexRoute = ToolsRegexRouteImport.update({
   id: '/tools/regex',
   path: '/tools/regex',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsRobotsTxtRoute = ToolsRobotsTxtRouteImport.update({
+  id: '/tools/robots-txt',
+  path: '/tools/robots-txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsSerpPreviewRoute = ToolsSerpPreviewRouteImport.update({
+  id: '/tools/serp-preview',
+  path: '/tools/serp-preview',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsSitemapRoute = ToolsSitemapRouteImport.update({
@@ -237,6 +262,11 @@ const ToolsTsInterfaceRoute = ToolsTsInterfaceRouteImport.update({
   path: '/tools/ts-interface',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsUtmBuilderRoute = ToolsUtmBuilderRouteImport.update({
+  id: '/tools/utm-builder',
+  path: '/tools/utm-builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsWebsiteScreenshotRoute = ToolsWebsiteScreenshotRouteImport.update({
   id: '/tools/website-screenshot',
   path: '/tools/website-screenshot',
@@ -247,11 +277,12 @@ const ToolsXmlJsonRoute = ToolsXmlJsonRouteImport.update({
   path: '/tools/xml-json',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiSpaVsBotCompareRoute = ApiSpaVsBotCompareRouteImport.update({
-  id: '/api/spa-vs-bot/compare',
-  path: '/api/spa-vs-bot/compare',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const ApiCrawlerSimulatorCompareRoute =
+  ApiCrawlerSimulatorCompareRouteImport.update({
+    id: '/api/crawler-simulator/compare',
+    path: '/api/crawler-simulator/compare',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiTransparentExtractRoute = ApiTransparentExtractRouteImport.update({
   id: '/api/transparent/extract',
   path: '/api/transparent/extract',
@@ -270,6 +301,7 @@ export interface FileRoutesByFullPath {
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
+  '/tools/crawler-simulator': typeof ToolsCrawlerSimulatorRoute
   '/tools/crontab': typeof ToolsCrontabRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
@@ -290,9 +322,12 @@ export interface FileRoutesByFullPath {
   '/tools/markdown': typeof ToolsMarkdownRoute
   '/tools/mime': typeof ToolsMimeRoute
   '/tools/nine-slice': typeof ToolsNineSliceRoute
+  '/tools/og-preview': typeof ToolsOgPreviewRoute
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/robots-txt': typeof ToolsRobotsTxtRoute
+  '/tools/serp-preview': typeof ToolsSerpPreviewRoute
   '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/spa-vs-bot': typeof ToolsSpaVsBotRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
@@ -302,9 +337,10 @@ export interface FileRoutesByFullPath {
   '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
   '/tools/ts-interface': typeof ToolsTsInterfaceRoute
+  '/tools/utm-builder': typeof ToolsUtmBuilderRoute
   '/tools/website-screenshot': typeof ToolsWebsiteScreenshotRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
-  '/api/spa-vs-bot/compare': typeof ApiSpaVsBotCompareRoute
+  '/api/crawler-simulator/compare': typeof ApiCrawlerSimulatorCompareRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
   '/api/website-screenshot/capture': typeof ApiWebsiteScreenshotCaptureRoute
 }
@@ -314,6 +350,7 @@ export interface FileRoutesByTo {
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
+  '/tools/crawler-simulator': typeof ToolsCrawlerSimulatorRoute
   '/tools/crontab': typeof ToolsCrontabRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
@@ -334,9 +371,12 @@ export interface FileRoutesByTo {
   '/tools/markdown': typeof ToolsMarkdownRoute
   '/tools/mime': typeof ToolsMimeRoute
   '/tools/nine-slice': typeof ToolsNineSliceRoute
+  '/tools/og-preview': typeof ToolsOgPreviewRoute
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/robots-txt': typeof ToolsRobotsTxtRoute
+  '/tools/serp-preview': typeof ToolsSerpPreviewRoute
   '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/spa-vs-bot': typeof ToolsSpaVsBotRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
@@ -346,9 +386,10 @@ export interface FileRoutesByTo {
   '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
   '/tools/ts-interface': typeof ToolsTsInterfaceRoute
+  '/tools/utm-builder': typeof ToolsUtmBuilderRoute
   '/tools/website-screenshot': typeof ToolsWebsiteScreenshotRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
-  '/api/spa-vs-bot/compare': typeof ApiSpaVsBotCompareRoute
+  '/api/crawler-simulator/compare': typeof ApiCrawlerSimulatorCompareRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
   '/api/website-screenshot/capture': typeof ApiWebsiteScreenshotCaptureRoute
 }
@@ -359,6 +400,7 @@ export interface FileRoutesById {
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
+  '/tools/crawler-simulator': typeof ToolsCrawlerSimulatorRoute
   '/tools/crontab': typeof ToolsCrontabRoute
   '/tools/css-grid': typeof ToolsCssGridRoute
   '/tools/csv-json': typeof ToolsCsvJsonRoute
@@ -379,9 +421,12 @@ export interface FileRoutesById {
   '/tools/markdown': typeof ToolsMarkdownRoute
   '/tools/mime': typeof ToolsMimeRoute
   '/tools/nine-slice': typeof ToolsNineSliceRoute
+  '/tools/og-preview': typeof ToolsOgPreviewRoute
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
+  '/tools/robots-txt': typeof ToolsRobotsTxtRoute
+  '/tools/serp-preview': typeof ToolsSerpPreviewRoute
   '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/spa-vs-bot': typeof ToolsSpaVsBotRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
@@ -391,9 +436,10 @@ export interface FileRoutesById {
   '/tools/tip-calculator': typeof ToolsTipCalculatorRoute
   '/tools/transparent': typeof ToolsTransparentRoute
   '/tools/ts-interface': typeof ToolsTsInterfaceRoute
+  '/tools/utm-builder': typeof ToolsUtmBuilderRoute
   '/tools/website-screenshot': typeof ToolsWebsiteScreenshotRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
-  '/api/spa-vs-bot/compare': typeof ApiSpaVsBotCompareRoute
+  '/api/crawler-simulator/compare': typeof ApiCrawlerSimulatorCompareRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
   '/api/website-screenshot/capture': typeof ApiWebsiteScreenshotCaptureRoute
 }
@@ -405,6 +451,7 @@ export interface FileRouteTypes {
     | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
+    | '/tools/crawler-simulator'
     | '/tools/crontab'
     | '/tools/css-grid'
     | '/tools/csv-json'
@@ -425,9 +472,12 @@ export interface FileRouteTypes {
     | '/tools/markdown'
     | '/tools/mime'
     | '/tools/nine-slice'
+    | '/tools/og-preview'
     | '/tools/qrcode'
     | '/tools/random'
     | '/tools/regex'
+    | '/tools/robots-txt'
+    | '/tools/serp-preview'
     | '/tools/sitemap'
     | '/tools/spa-vs-bot'
     | '/tools/svg-editor'
@@ -437,9 +487,10 @@ export interface FileRouteTypes {
     | '/tools/tip-calculator'
     | '/tools/transparent'
     | '/tools/ts-interface'
+    | '/tools/utm-builder'
     | '/tools/website-screenshot'
     | '/tools/xml-json'
-    | '/api/spa-vs-bot/compare'
+    | '/api/crawler-simulator/compare'
     | '/api/transparent/extract'
     | '/api/website-screenshot/capture'
   fileRoutesByTo: FileRoutesByTo
@@ -449,6 +500,7 @@ export interface FileRouteTypes {
     | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
+    | '/tools/crawler-simulator'
     | '/tools/crontab'
     | '/tools/css-grid'
     | '/tools/csv-json'
@@ -469,9 +521,12 @@ export interface FileRouteTypes {
     | '/tools/markdown'
     | '/tools/mime'
     | '/tools/nine-slice'
+    | '/tools/og-preview'
     | '/tools/qrcode'
     | '/tools/random'
     | '/tools/regex'
+    | '/tools/robots-txt'
+    | '/tools/serp-preview'
     | '/tools/sitemap'
     | '/tools/spa-vs-bot'
     | '/tools/svg-editor'
@@ -481,9 +536,10 @@ export interface FileRouteTypes {
     | '/tools/tip-calculator'
     | '/tools/transparent'
     | '/tools/ts-interface'
+    | '/tools/utm-builder'
     | '/tools/website-screenshot'
     | '/tools/xml-json'
-    | '/api/spa-vs-bot/compare'
+    | '/api/crawler-simulator/compare'
     | '/api/transparent/extract'
     | '/api/website-screenshot/capture'
   id:
@@ -493,6 +549,7 @@ export interface FileRouteTypes {
     | '/tools/box-shadow'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
+    | '/tools/crawler-simulator'
     | '/tools/crontab'
     | '/tools/css-grid'
     | '/tools/csv-json'
@@ -513,9 +570,12 @@ export interface FileRouteTypes {
     | '/tools/markdown'
     | '/tools/mime'
     | '/tools/nine-slice'
+    | '/tools/og-preview'
     | '/tools/qrcode'
     | '/tools/random'
     | '/tools/regex'
+    | '/tools/robots-txt'
+    | '/tools/serp-preview'
     | '/tools/sitemap'
     | '/tools/spa-vs-bot'
     | '/tools/svg-editor'
@@ -525,9 +585,10 @@ export interface FileRouteTypes {
     | '/tools/tip-calculator'
     | '/tools/transparent'
     | '/tools/ts-interface'
+    | '/tools/utm-builder'
     | '/tools/website-screenshot'
     | '/tools/xml-json'
-    | '/api/spa-vs-bot/compare'
+    | '/api/crawler-simulator/compare'
     | '/api/transparent/extract'
     | '/api/website-screenshot/capture'
   fileRoutesById: FileRoutesById
@@ -538,6 +599,7 @@ export interface RootRouteChildren {
   ToolsBoxShadowRoute: typeof ToolsBoxShadowRoute
   ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
   ToolsCodeScreenshotRoute: typeof ToolsCodeScreenshotRoute
+  ToolsCrawlerSimulatorRoute: typeof ToolsCrawlerSimulatorRoute
   ToolsCrontabRoute: typeof ToolsCrontabRoute
   ToolsCssGridRoute: typeof ToolsCssGridRoute
   ToolsCsvJsonRoute: typeof ToolsCsvJsonRoute
@@ -558,9 +620,12 @@ export interface RootRouteChildren {
   ToolsMarkdownRoute: typeof ToolsMarkdownRoute
   ToolsMimeRoute: typeof ToolsMimeRoute
   ToolsNineSliceRoute: typeof ToolsNineSliceRoute
+  ToolsOgPreviewRoute: typeof ToolsOgPreviewRoute
   ToolsQrcodeRoute: typeof ToolsQrcodeRoute
   ToolsRandomRoute: typeof ToolsRandomRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
+  ToolsRobotsTxtRoute: typeof ToolsRobotsTxtRoute
+  ToolsSerpPreviewRoute: typeof ToolsSerpPreviewRoute
   ToolsSitemapRoute: typeof ToolsSitemapRoute
   ToolsSpaVsBotRoute: typeof ToolsSpaVsBotRoute
   ToolsSvgEditorRoute: typeof ToolsSvgEditorRoute
@@ -570,9 +635,10 @@ export interface RootRouteChildren {
   ToolsTipCalculatorRoute: typeof ToolsTipCalculatorRoute
   ToolsTransparentRoute: typeof ToolsTransparentRoute
   ToolsTsInterfaceRoute: typeof ToolsTsInterfaceRoute
+  ToolsUtmBuilderRoute: typeof ToolsUtmBuilderRoute
   ToolsWebsiteScreenshotRoute: typeof ToolsWebsiteScreenshotRoute
   ToolsXmlJsonRoute: typeof ToolsXmlJsonRoute
-  ApiSpaVsBotCompareRoute: typeof ApiSpaVsBotCompareRoute
+  ApiCrawlerSimulatorCompareRoute: typeof ApiCrawlerSimulatorCompareRoute
   ApiTransparentExtractRoute: typeof ApiTransparentExtractRoute
   ApiWebsiteScreenshotCaptureRoute: typeof ApiWebsiteScreenshotCaptureRoute
 }
@@ -612,6 +678,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/code-screenshot'
       fullPath: '/tools/code-screenshot'
       preLoaderRoute: typeof ToolsCodeScreenshotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/crawler-simulator': {
+      id: '/tools/crawler-simulator'
+      path: '/tools/crawler-simulator'
+      fullPath: '/tools/crawler-simulator'
+      preLoaderRoute: typeof ToolsCrawlerSimulatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/crontab': {
@@ -754,6 +827,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsNineSliceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/og-preview': {
+      id: '/tools/og-preview'
+      path: '/tools/og-preview'
+      fullPath: '/tools/og-preview'
+      preLoaderRoute: typeof ToolsOgPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/qrcode': {
       id: '/tools/qrcode'
       path: '/tools/qrcode'
@@ -773,6 +853,20 @@ declare module '@tanstack/react-router' {
       path: '/tools/regex'
       fullPath: '/tools/regex'
       preLoaderRoute: typeof ToolsRegexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/robots-txt': {
+      id: '/tools/robots-txt'
+      path: '/tools/robots-txt'
+      fullPath: '/tools/robots-txt'
+      preLoaderRoute: typeof ToolsRobotsTxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/serp-preview': {
+      id: '/tools/serp-preview'
+      path: '/tools/serp-preview'
+      fullPath: '/tools/serp-preview'
+      preLoaderRoute: typeof ToolsSerpPreviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/sitemap': {
@@ -838,6 +932,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsTsInterfaceRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/utm-builder': {
+      id: '/tools/utm-builder'
+      path: '/tools/utm-builder'
+      fullPath: '/tools/utm-builder'
+      preLoaderRoute: typeof ToolsUtmBuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/website-screenshot': {
       id: '/tools/website-screenshot'
       path: '/tools/website-screenshot'
@@ -852,11 +953,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsXmlJsonRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/spa-vs-bot/compare': {
-      id: '/api/spa-vs-bot/compare'
-      path: '/api/spa-vs-bot/compare'
-      fullPath: '/api/spa-vs-bot/compare'
-      preLoaderRoute: typeof ApiSpaVsBotCompareRouteImport
+    '/api/crawler-simulator/compare': {
+      id: '/api/crawler-simulator/compare'
+      path: '/api/crawler-simulator/compare'
+      fullPath: '/api/crawler-simulator/compare'
+      preLoaderRoute: typeof ApiCrawlerSimulatorCompareRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/transparent/extract': {
@@ -882,6 +983,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsBoxShadowRoute: ToolsBoxShadowRoute,
   ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
   ToolsCodeScreenshotRoute: ToolsCodeScreenshotRoute,
+  ToolsCrawlerSimulatorRoute: ToolsCrawlerSimulatorRoute,
   ToolsCrontabRoute: ToolsCrontabRoute,
   ToolsCssGridRoute: ToolsCssGridRoute,
   ToolsCsvJsonRoute: ToolsCsvJsonRoute,
@@ -902,9 +1004,12 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsMarkdownRoute: ToolsMarkdownRoute,
   ToolsMimeRoute: ToolsMimeRoute,
   ToolsNineSliceRoute: ToolsNineSliceRoute,
+  ToolsOgPreviewRoute: ToolsOgPreviewRoute,
   ToolsQrcodeRoute: ToolsQrcodeRoute,
   ToolsRandomRoute: ToolsRandomRoute,
   ToolsRegexRoute: ToolsRegexRoute,
+  ToolsRobotsTxtRoute: ToolsRobotsTxtRoute,
+  ToolsSerpPreviewRoute: ToolsSerpPreviewRoute,
   ToolsSitemapRoute: ToolsSitemapRoute,
   ToolsSpaVsBotRoute: ToolsSpaVsBotRoute,
   ToolsSvgEditorRoute: ToolsSvgEditorRoute,
@@ -914,9 +1019,10 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsTipCalculatorRoute: ToolsTipCalculatorRoute,
   ToolsTransparentRoute: ToolsTransparentRoute,
   ToolsTsInterfaceRoute: ToolsTsInterfaceRoute,
+  ToolsUtmBuilderRoute: ToolsUtmBuilderRoute,
   ToolsWebsiteScreenshotRoute: ToolsWebsiteScreenshotRoute,
   ToolsXmlJsonRoute: ToolsXmlJsonRoute,
-  ApiSpaVsBotCompareRoute: ApiSpaVsBotCompareRoute,
+  ApiCrawlerSimulatorCompareRoute: ApiCrawlerSimulatorCompareRoute,
   ApiTransparentExtractRoute: ApiTransparentExtractRoute,
   ApiWebsiteScreenshotCaptureRoute: ApiWebsiteScreenshotCaptureRoute,
 }

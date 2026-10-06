@@ -8,7 +8,8 @@ import {
   runCompare,
 } from '../src/lib/spaVsBot/index.ts'
 
-const API_PATH = '/api/spa-vs-bot/compare'
+const API_PATH = '/api/crawler-simulator/compare'
+const LEGACY_API_PATH = '/api/spa-vs-bot/compare'
 
 function nodeToWebRequest(req: IncomingMessage, host: string): Request {
   const headers = new Headers()
@@ -64,22 +65,25 @@ function attach(middlewares: {
     fn: (req: IncomingMessage, res: ServerResponse, next: () => void) => void,
   ) => void
 }) {
-  middlewares.use(API_PATH, (req, res, next) => {
+  const handler = (req: IncomingMessage, res: ServerResponse, next: () => void) => {
     if (req.method !== 'POST') {
       next()
       return
     }
     void handleCompare(req, res)
-  })
+  }
+  middlewares.use(API_PATH, handler)
+  middlewares.use(LEGACY_API_PATH, handler)
 }
 
 /**
- * Serves POST /api/spa-vs-bot/compare from the Vite Node process.
+ * Serves POST /api/crawler-simulator/compare from the Vite Node process.
+ * Legacy alias: /api/spa-vs-bot/compare.
  * No-JS: raw fetch. JS: system Chrome --dump-dom → Playwright → unavailable.
  */
 export function spaVsBotApiPlugin(): Plugin {
   return {
-    name: 'webtools-spa-vs-bot-api',
+    name: 'webtools-crawler-simulator-api',
     configureServer(server) {
       attach(server.middlewares)
     },

@@ -49,7 +49,11 @@ export type ToolLink = {
     | '/tools/sitemap'
     | '/tools/ts-interface'
     | '/tools/website-screenshot'
-    | '/tools/spa-vs-bot'
+    | '/tools/crawler-simulator'
+    | '/tools/serp-preview'
+    | '/tools/og-preview'
+    | '/tools/robots-txt'
+    | '/tools/utm-builder'
   name: string
   shortName: string
   blurb: string
@@ -657,15 +661,16 @@ export const TOOLS: ToolLink[] = [
     ],
   },
   {
-    to: '/tools/spa-vs-bot',
-    name: 'SPA vs bot',
-    shortName: 'SPA/bot',
-    blurb: 'No-JS HTML vs JS-rendered content.',
+    to: '/tools/crawler-simulator',
+    name: 'Crawler simulator',
+    shortName: 'Crawler',
+    blurb: 'No-JS vs JS: title, meta, headings, OG, links.',
     category: 'web',
     keywords: [
-      'spa',
-      'bot',
       'crawler',
+      'simulator',
+      'bot',
+      'spa',
       'seo',
       'no-js',
       'javascript',
@@ -674,6 +679,87 @@ export const TOOLS: ToolLink[] = [
       'render',
       'compare',
       'html',
+      'meta',
+      'canonical',
+      'robots',
+      'og',
+      'headings',
+      'web',
+    ],
+  },
+  {
+    to: '/tools/serp-preview',
+    name: 'SERP preview',
+    shortName: 'SERP',
+    blurb: 'Google snippet: title, description, pixel width.',
+    category: 'web',
+    keywords: [
+      'serp',
+      'google',
+      'snippet',
+      'preview',
+      'title',
+      'meta',
+      'description',
+      'seo',
+      'pixel',
+      'web',
+    ],
+  },
+  {
+    to: '/tools/og-preview',
+    name: 'Open Graph preview',
+    shortName: 'OG',
+    blurb: 'Facebook / X / LinkedIn share cards from URL.',
+    category: 'web',
+    keywords: [
+      'open graph',
+      'og',
+      'twitter',
+      'facebook',
+      'linkedin',
+      'social',
+      'share',
+      'preview',
+      'meta',
+      'seo',
+      'web',
+    ],
+  },
+  {
+    to: '/tools/robots-txt',
+    name: 'robots.txt tester',
+    shortName: 'robots.txt',
+    blurb: 'Fetch or paste; test allow/disallow paths.',
+    category: 'web',
+    keywords: [
+      'robots',
+      'robots.txt',
+      'crawl',
+      'allow',
+      'disallow',
+      'sitemap',
+      'seo',
+      'bot',
+      'web',
+    ],
+  },
+  {
+    to: '/tools/utm-builder',
+    name: 'UTM builder',
+    shortName: 'UTM',
+    blurb: 'Campaign URLs with source, medium, campaign…',
+    category: 'web',
+    keywords: [
+      'utm',
+      'campaign',
+      'source',
+      'medium',
+      'tracking',
+      'analytics',
+      'marketing',
+      'url',
+      'seo',
       'web',
     ],
   },
