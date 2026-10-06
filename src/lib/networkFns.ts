@@ -1,5 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { getRequestHeader, getRequestIP } from '@tanstack/react-start/server'
+import {
+  COMMON_DKIM_SELECTORS,
+  evaluateEmailDns,
+  normalizeEmailDomain,
+  unwrapTxt,
+} from '#/lib/emailDns'
 
 type IpWhoResponse = {
   success?: boolean
@@ -139,6 +145,31 @@ export const lookupIpFn = createServerFn({ method: 'GET' })
     }
   })
 
+async function dohQuery(name: string, type: string): Promise<DohResponse> {
+  const doh = new URL('https://cloudflare-dns.com/dns-query')
+  doh.searchParams.set('name', name)
+  doh.searchParams.set('type', type)
+
+  const res = await fetch(doh, {
+    headers: { Accept: 'application/dns-json' },
+  })
+
+  if (!res.ok) {
+    throw new Error(`DoH request failed (${res.status})`)
+  }
+
+  return (await res.json()) as DohResponse
+}
+
+function answerData(body: DohResponse, typeNum?: number): string[] {
+  const answers = body.Answer ?? []
+  if (typeNum == null) return answers.map((a) => a.data)
+  return answers.filter((a) => a.type === typeNum).map((a) => a.data)
+}
+
+/** DNS type numbers used by DoH JSON. */
+const DOH_TYPE = { CNAME: 5, MX: 15, TXT: 16 } as const
+
 export const lookupDnsFn = createServerFn({ method: 'GET' })
   .validator((data: { name?: string; type?: string }) => {
     const name = data.name?.trim() ?? ''
@@ -149,19 +180,7 @@ export const lookupDnsFn = createServerFn({ method: 'GET' })
     return { name, type }
   })
   .handler(async ({ data }) => {
-    const doh = new URL('https://cloudflare-dns.com/dns-query')
-    doh.searchParams.set('name', data.name)
-    doh.searchParams.set('type', data.type)
-
-    const res = await fetch(doh, {
-      headers: { Accept: 'application/dns-json' },
-    })
-
-    if (!res.ok) {
-      throw new Error(`DoH request failed (${res.status})`)
-    }
-
-    const body = (await res.json()) as DohResponse
+    const body = await dohQuery(data.name, data.type)
 
     return {
       name: data.name,
@@ -181,5 +200,79 @@ export const lookupDnsFn = createServerFn({ method: 'GET' })
       additional: body.Additional ?? [],
       comment: body.Comment,
       resolver: 'cloudflare-dns.com',
+    }
+  })
+
+export const checkEmailDnsFn = createServerFn({ method: 'GET' })
+  .validator((data: { domain?: string }) => {
+    const domain = normalizeEmailDomain(data.domain ?? '')
+    if (!domain) throw new Error('Missing domain.')
+    if (domain.length > 253 || /\s/.test(domain) || !domain.includes('.')) {
+      throw new Error('Invalid domain.')
+    }
+    return { domain }
+  })
+  .handler(async ({ data }) => {
+    const { domain } = data
+
+    const [mxBody, txtBody, dmarcBody, mtaStsBody, tlsRptBody, bimiBody, ...dkimBodies] =
+      await Promise.all([
+        dohQuery(domain, 'MX'),
+        dohQuery(domain, 'TXT'),
+        dohQuery(`_dmarc.${domain}`, 'TXT'),
+        dohQuery(`_mta-sts.${domain}`, 'TXT'),
+        dohQuery(`_smtp._tls.${domain}`, 'TXT'),
+        dohQuery(`default._bimi.${domain}`, 'TXT'),
+        ...COMMON_DKIM_SELECTORS.map((selector) =>
+          dohQuery(`${selector}._domainkey.${domain}`, 'TXT'),
+        ),
+      ])
+
+    const dkim = COMMON_DKIM_SELECTORS.map((selector, index) => {
+      const body = dkimBodies[index]!
+      // Follow CNAME chain answers: keep TXT payloads (and any CNAME target for display)
+      const txt = answerData(body, DOH_TYPE.TXT).map(unwrapTxt)
+      const cnames = answerData(body, DOH_TYPE.CNAME)
+      const records = txt.length
+        ? txt
+        : cnames.map((c) => `CNAME ${c}`)
+      return { selector, records, status: body.Status }
+    }).filter((d) => d.records.length > 0)
+
+    const mx = answerData(mxBody, DOH_TYPE.MX)
+    // Some resolvers omit type filter edge cases — fall back to all answers for MX
+    const mxRecords = mx.length ? mx : answerData(mxBody)
+    const txt = answerData(txtBody, DOH_TYPE.TXT)
+    const txtRecords = txt.length ? txt : answerData(txtBody)
+
+    const checks = evaluateEmailDns({
+      domain,
+      mx: mxRecords,
+      txt: txtRecords,
+      dmarcTxt: answerData(dmarcBody, DOH_TYPE.TXT).length
+        ? answerData(dmarcBody, DOH_TYPE.TXT)
+        : answerData(dmarcBody),
+      dkim: dkim.map(({ selector, records }) => ({ selector, records })),
+      mtaStsTxt: answerData(mtaStsBody, DOH_TYPE.TXT).length
+        ? answerData(mtaStsBody, DOH_TYPE.TXT)
+        : answerData(mtaStsBody),
+      tlsRptTxt: answerData(tlsRptBody, DOH_TYPE.TXT).length
+        ? answerData(tlsRptBody, DOH_TYPE.TXT)
+        : answerData(tlsRptBody),
+      bimiTxt: answerData(bimiBody, DOH_TYPE.TXT).length
+        ? answerData(bimiBody, DOH_TYPE.TXT)
+        : answerData(bimiBody),
+    })
+
+    return {
+      domain,
+      resolver: 'cloudflare-dns.com',
+      checks,
+      summary: {
+        pass: checks.filter((c) => c.status === 'pass').length,
+        warn: checks.filter((c) => c.status === 'warn').length,
+        fail: checks.filter((c) => c.status === 'fail').length,
+        info: checks.filter((c) => c.status === 'info').length,
+      },
     }
   })

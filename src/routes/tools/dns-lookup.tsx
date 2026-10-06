@@ -6,7 +6,10 @@ export const Route = createFileRoute('/tools/dns-lookup')({
   head: () => ({
     meta: [
       { title: 'DNS lookup · WebTools' },
-      { name: 'description', content: 'DNS over HTTPS lookup via Cloudflare.' },
+      {
+        name: 'description',
+        content: 'DNS over HTTPS lookup and email setup checks (MX, SPF, DKIM, DMARC).',
+      },
     ],
   }),
   component: DnsLookupPage,
