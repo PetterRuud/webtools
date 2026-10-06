@@ -15,6 +15,8 @@ export type AuditIssue = {
   value?: string
 }
 
+export type SeoAuditGrade = 'excellent' | 'good' | 'fair' | 'poor'
+
 export type SeoAuditResult = {
   url: string
   finalUrl: string
@@ -27,9 +29,30 @@ export type SeoAuditResult = {
   h1Count: number
   imageCount: number
   imagesMissingAlt: number
+  /** 0–100 from pass/warn/fail (info ignored). */
+  score: number
+  grade: SeoAuditGrade
   summary: Record<AuditSeverity, number>
   issues: AuditIssue[]
   snapshot: ViewSnapshot
+}
+
+/** pass=1, warn=0.5, fail=0; info excluded. */
+export function scoreFromSummary(
+  summary: Pick<Record<AuditSeverity, number>, 'pass' | 'warn' | 'fail'>,
+): { score: number; grade: SeoAuditGrade } {
+  const scored = summary.pass + summary.warn + summary.fail
+  const score =
+    scored === 0
+      ? 100
+      : Math.round(
+          ((summary.pass * 1 + summary.warn * 0.5 + summary.fail * 0) /
+            scored) *
+            100,
+        )
+  const grade: SeoAuditGrade =
+    score >= 90 ? 'excellent' : score >= 75 ? 'good' : score >= 50 ? 'fair' : 'poor'
+  return { score, grade }
 }
 
 const TITLE_MIN = 30
@@ -469,6 +492,8 @@ export function runSeoAudit(
     summary[issue.severity] += 1
   }
 
+  const { score, grade } = scoreFromSummary(summary)
+
   return {
     url: meta.url,
     finalUrl: meta.finalUrl,
@@ -481,6 +506,8 @@ export function runSeoAudit(
     h1Count,
     imageCount: images.length,
     imagesMissingAlt: missingAlt.length,
+    score,
+    grade,
     summary,
     issues,
     snapshot,

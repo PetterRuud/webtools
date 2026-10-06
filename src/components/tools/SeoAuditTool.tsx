@@ -5,7 +5,7 @@ import { toast } from 'sonner'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
-import type { AuditSeverity } from '#/lib/seoAudit'
+import type { AuditSeverity, SeoAuditGrade } from '#/lib/seoAudit'
 import { auditSeoFn } from '#/lib/seoFns'
 import { cn } from 'cn'
 
@@ -25,6 +25,32 @@ const SEVERITY_BADGE: Record<AuditSeverity, string> = {
   info: 'bg-muted text-muted-foreground',
 }
 
+const GRADE_STYLE: Record<
+  SeoAuditGrade,
+  { ring: string; score: string; label: string }
+> = {
+  excellent: {
+    ring: 'border-emerald-500/40 bg-emerald-500/10',
+    score: 'text-emerald-800 dark:text-emerald-200',
+    label: 'Excellent',
+  },
+  good: {
+    ring: 'border-sky-500/40 bg-sky-500/10',
+    score: 'text-sky-800 dark:text-sky-200',
+    label: 'Good',
+  },
+  fair: {
+    ring: 'border-amber-500/40 bg-amber-500/10',
+    score: 'text-amber-900 dark:text-amber-100',
+    label: 'Fair',
+  },
+  poor: {
+    ring: 'border-destructive/40 bg-destructive/10',
+    score: 'text-destructive',
+    label: 'Poor',
+  },
+}
+
 export function SeoAuditTool() {
   const auditSeo = useServerFn(auditSeoFn)
   const [url, setUrl] = useState('https://example.com')
@@ -42,7 +68,7 @@ export function SeoAuditTool() {
       setResult(data)
       setFilter(data.summary.fail > 0 ? 'fail' : data.summary.warn > 0 ? 'warn' : 'all')
       toast.success(
-        `${data.summary.fail} fail · ${data.summary.warn} warn · ${data.summary.pass} pass`,
+        `Score ${data.score} · ${data.summary.fail} fail · ${data.summary.warn} warn · ${data.summary.pass} pass`,
       )
     } catch (err) {
       setResult(null)
@@ -130,15 +156,45 @@ export function SeoAuditTool() {
 
           {result ? (
             <>
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                <span className="break-all font-mono text-ink">
-                  {result.finalUrl}
-                </span>
-                <span>
-                  {result.summary.fail} fail · {result.summary.warn} warn ·{' '}
-                  {result.summary.pass} pass
-                  {result.summary.info ? ` · ${result.summary.info} info` : ''}
-                </span>
+              <div className="flex flex-wrap items-center gap-3">
+                <div
+                  className={cn(
+                    'flex size-16 shrink-0 flex-col items-center justify-center rounded-xl border',
+                    GRADE_STYLE[result.grade].ring,
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'font-mono text-2xl font-semibold tabular-nums leading-none',
+                      GRADE_STYLE[result.grade].score,
+                    )}
+                  >
+                    {result.score}
+                  </span>
+                  <span className="mt-0.5 text-[0.6rem] font-medium tracking-wide text-muted-foreground uppercase">
+                    /100
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1 space-y-0.5">
+                  <p
+                    className={cn(
+                      'm-0 text-sm font-semibold',
+                      GRADE_STYLE[result.grade].score,
+                    )}
+                  >
+                    {GRADE_STYLE[result.grade].label}
+                  </p>
+                  <p className="m-0 break-all font-mono text-[0.75rem] text-ink">
+                    {result.finalUrl}
+                  </p>
+                  <p className="m-0 text-xs text-muted-foreground">
+                    {result.summary.fail} fail · {result.summary.warn} warn ·{' '}
+                    {result.summary.pass} pass
+                    {result.summary.info
+                      ? ` · ${result.summary.info} info`
+                      : ''}
+                  </p>
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-1.5">
