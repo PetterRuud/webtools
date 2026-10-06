@@ -38,6 +38,7 @@ import { Route as ToolsQrcodeRouteImport } from './routes/tools/qrcode'
 import { Route as ToolsRandomRouteImport } from './routes/tools/random'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
 import { Route as ToolsSitemapRouteImport } from './routes/tools/sitemap'
+import { Route as ToolsSpaVsBotRouteImport } from './routes/tools/spa-vs-bot'
 import { Route as ToolsSvgEditorRouteImport } from './routes/tools/svg-editor'
 import { Route as ToolsTailwindCheatSheetRouteImport } from './routes/tools/tailwind-cheat-sheet'
 import { Route as ToolsTextCleanerRouteImport } from './routes/tools/text-cleaner'
@@ -47,6 +48,7 @@ import { Route as ToolsTransparentRouteImport } from './routes/tools/transparent
 import { Route as ToolsTsInterfaceRouteImport } from './routes/tools/ts-interface'
 import { Route as ToolsWebsiteScreenshotRouteImport } from './routes/tools/website-screenshot'
 import { Route as ToolsXmlJsonRouteImport } from './routes/tools/xml-json'
+import { Route as ApiSpaVsBotCompareRouteImport } from './routes/api/spa-vs-bot.compare'
 import { Route as ApiTransparentExtractRouteImport } from './routes/api/transparent.extract'
 import { Route as ApiWebsiteScreenshotCaptureRouteImport } from './routes/api/website-screenshot.capture'
 
@@ -195,6 +197,11 @@ const ToolsSitemapRoute = ToolsSitemapRouteImport.update({
   path: '/tools/sitemap',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsSpaVsBotRoute = ToolsSpaVsBotRouteImport.update({
+  id: '/tools/spa-vs-bot',
+  path: '/tools/spa-vs-bot',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsSvgEditorRoute = ToolsSvgEditorRouteImport.update({
   id: '/tools/svg-editor',
   path: '/tools/svg-editor',
@@ -240,6 +247,11 @@ const ToolsXmlJsonRoute = ToolsXmlJsonRouteImport.update({
   path: '/tools/xml-json',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiSpaVsBotCompareRoute = ApiSpaVsBotCompareRouteImport.update({
+  id: '/api/spa-vs-bot/compare',
+  path: '/api/spa-vs-bot/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiTransparentExtractRoute = ApiTransparentExtractRouteImport.update({
   id: '/api/transparent/extract',
   path: '/api/transparent/extract',
@@ -282,6 +294,7 @@ export interface FileRoutesByFullPath {
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/sitemap': typeof ToolsSitemapRoute
+  '/tools/spa-vs-bot': typeof ToolsSpaVsBotRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
@@ -291,6 +304,7 @@ export interface FileRoutesByFullPath {
   '/tools/ts-interface': typeof ToolsTsInterfaceRoute
   '/tools/website-screenshot': typeof ToolsWebsiteScreenshotRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
+  '/api/spa-vs-bot/compare': typeof ApiSpaVsBotCompareRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
   '/api/website-screenshot/capture': typeof ApiWebsiteScreenshotCaptureRoute
 }
@@ -324,6 +338,7 @@ export interface FileRoutesByTo {
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/sitemap': typeof ToolsSitemapRoute
+  '/tools/spa-vs-bot': typeof ToolsSpaVsBotRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
@@ -333,6 +348,7 @@ export interface FileRoutesByTo {
   '/tools/ts-interface': typeof ToolsTsInterfaceRoute
   '/tools/website-screenshot': typeof ToolsWebsiteScreenshotRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
+  '/api/spa-vs-bot/compare': typeof ApiSpaVsBotCompareRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
   '/api/website-screenshot/capture': typeof ApiWebsiteScreenshotCaptureRoute
 }
@@ -367,6 +383,7 @@ export interface FileRoutesById {
   '/tools/random': typeof ToolsRandomRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/sitemap': typeof ToolsSitemapRoute
+  '/tools/spa-vs-bot': typeof ToolsSpaVsBotRoute
   '/tools/svg-editor': typeof ToolsSvgEditorRoute
   '/tools/tailwind-cheat-sheet': typeof ToolsTailwindCheatSheetRoute
   '/tools/text-cleaner': typeof ToolsTextCleanerRoute
@@ -376,6 +393,7 @@ export interface FileRoutesById {
   '/tools/ts-interface': typeof ToolsTsInterfaceRoute
   '/tools/website-screenshot': typeof ToolsWebsiteScreenshotRoute
   '/tools/xml-json': typeof ToolsXmlJsonRoute
+  '/api/spa-vs-bot/compare': typeof ApiSpaVsBotCompareRoute
   '/api/transparent/extract': typeof ApiTransparentExtractRoute
   '/api/website-screenshot/capture': typeof ApiWebsiteScreenshotCaptureRoute
 }
@@ -411,6 +429,7 @@ export interface FileRouteTypes {
     | '/tools/random'
     | '/tools/regex'
     | '/tools/sitemap'
+    | '/tools/spa-vs-bot'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
@@ -420,6 +439,7 @@ export interface FileRouteTypes {
     | '/tools/ts-interface'
     | '/tools/website-screenshot'
     | '/tools/xml-json'
+    | '/api/spa-vs-bot/compare'
     | '/api/transparent/extract'
     | '/api/website-screenshot/capture'
   fileRoutesByTo: FileRoutesByTo
@@ -453,6 +473,7 @@ export interface FileRouteTypes {
     | '/tools/random'
     | '/tools/regex'
     | '/tools/sitemap'
+    | '/tools/spa-vs-bot'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
@@ -462,6 +483,7 @@ export interface FileRouteTypes {
     | '/tools/ts-interface'
     | '/tools/website-screenshot'
     | '/tools/xml-json'
+    | '/api/spa-vs-bot/compare'
     | '/api/transparent/extract'
     | '/api/website-screenshot/capture'
   id:
@@ -495,6 +517,7 @@ export interface FileRouteTypes {
     | '/tools/random'
     | '/tools/regex'
     | '/tools/sitemap'
+    | '/tools/spa-vs-bot'
     | '/tools/svg-editor'
     | '/tools/tailwind-cheat-sheet'
     | '/tools/text-cleaner'
@@ -504,6 +527,7 @@ export interface FileRouteTypes {
     | '/tools/ts-interface'
     | '/tools/website-screenshot'
     | '/tools/xml-json'
+    | '/api/spa-vs-bot/compare'
     | '/api/transparent/extract'
     | '/api/website-screenshot/capture'
   fileRoutesById: FileRoutesById
@@ -538,6 +562,7 @@ export interface RootRouteChildren {
   ToolsRandomRoute: typeof ToolsRandomRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
   ToolsSitemapRoute: typeof ToolsSitemapRoute
+  ToolsSpaVsBotRoute: typeof ToolsSpaVsBotRoute
   ToolsSvgEditorRoute: typeof ToolsSvgEditorRoute
   ToolsTailwindCheatSheetRoute: typeof ToolsTailwindCheatSheetRoute
   ToolsTextCleanerRoute: typeof ToolsTextCleanerRoute
@@ -547,6 +572,7 @@ export interface RootRouteChildren {
   ToolsTsInterfaceRoute: typeof ToolsTsInterfaceRoute
   ToolsWebsiteScreenshotRoute: typeof ToolsWebsiteScreenshotRoute
   ToolsXmlJsonRoute: typeof ToolsXmlJsonRoute
+  ApiSpaVsBotCompareRoute: typeof ApiSpaVsBotCompareRoute
   ApiTransparentExtractRoute: typeof ApiTransparentExtractRoute
   ApiWebsiteScreenshotCaptureRoute: typeof ApiWebsiteScreenshotCaptureRoute
 }
@@ -756,6 +782,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsSitemapRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/spa-vs-bot': {
+      id: '/tools/spa-vs-bot'
+      path: '/tools/spa-vs-bot'
+      fullPath: '/tools/spa-vs-bot'
+      preLoaderRoute: typeof ToolsSpaVsBotRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/svg-editor': {
       id: '/tools/svg-editor'
       path: '/tools/svg-editor'
@@ -819,6 +852,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsXmlJsonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/spa-vs-bot/compare': {
+      id: '/api/spa-vs-bot/compare'
+      path: '/api/spa-vs-bot/compare'
+      fullPath: '/api/spa-vs-bot/compare'
+      preLoaderRoute: typeof ApiSpaVsBotCompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/transparent/extract': {
       id: '/api/transparent/extract'
       path: '/api/transparent/extract'
@@ -866,6 +906,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsRandomRoute: ToolsRandomRoute,
   ToolsRegexRoute: ToolsRegexRoute,
   ToolsSitemapRoute: ToolsSitemapRoute,
+  ToolsSpaVsBotRoute: ToolsSpaVsBotRoute,
   ToolsSvgEditorRoute: ToolsSvgEditorRoute,
   ToolsTailwindCheatSheetRoute: ToolsTailwindCheatSheetRoute,
   ToolsTextCleanerRoute: ToolsTextCleanerRoute,
@@ -875,6 +916,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsTsInterfaceRoute: ToolsTsInterfaceRoute,
   ToolsWebsiteScreenshotRoute: ToolsWebsiteScreenshotRoute,
   ToolsXmlJsonRoute: ToolsXmlJsonRoute,
+  ApiSpaVsBotCompareRoute: ApiSpaVsBotCompareRoute,
   ApiTransparentExtractRoute: ApiTransparentExtractRoute,
   ApiWebsiteScreenshotCaptureRoute: ApiWebsiteScreenshotCaptureRoute,
 }

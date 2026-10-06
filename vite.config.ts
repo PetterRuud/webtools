@@ -6,6 +6,7 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { cloudflare } from "@cloudflare/vite-plugin";
+import { spaVsBotApiPlugin } from "./vite-plugins/spaVsBotApi.ts";
 import { transparentApiPlugin } from "./vite-plugins/transparentApi.ts";
 import { websiteScreenshotApiPlugin } from "./vite-plugins/websiteScreenshotApi.ts";
 
@@ -21,6 +22,7 @@ const config = defineConfig({
     // Node middleware for sharp — must stay out of the Workers graph.
     transparentApiPlugin(),
     websiteScreenshotApiPlugin(),
+    spaVsBotApiPlugin(),
     devtools(),
     cloudflare({ viteEnvironment: { name: "ssr" } }),
     tailwindcss(),

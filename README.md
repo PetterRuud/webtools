@@ -62,7 +62,17 @@ Not wired yet. Access is only planned for future **private R2 file hosting** —
 | `/tools/http-status` | Searchable HTTP status reference |
 | `/tools/tailwind-cheat-sheet` | Searchable Tailwind utility cheat sheet |
 | `/tools/website-screenshot` | URL → PNG (local Chrome / mock; Workers Browser Rendering) |
+| `/tools/spa-vs-bot` | No-JS raw HTML vs JS-rendered content (bot / SPA check) |
 
+
+## SPA vs bot
+
+UI at **`/tools/spa-vs-bot`**.
+
+| View | How |
+| --- | --- |
+| No-JS | Raw `fetch` of HTML + DIY title/text/link extraction (bot-like UA) |
+| With JS | Local: Chrome `--dump-dom` → Playwright `page.content()`; Workers: `env.BROWSER.quickAction("content")`. Graceful `unavailable` if none work. |
 
 ## Website screenshot
 

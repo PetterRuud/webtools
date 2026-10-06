@@ -13,6 +13,7 @@ import {
   FileTextIcon,
   FileTypeIcon,
   FolderGit2Icon,
+  GitCompareArrowsIcon,
   GlobeIcon,
   Grid3x3Icon,
   HashIcon,
@@ -83,4 +84,5 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/sitemap': MapIcon,
   '/tools/tailwind-cheat-sheet': WindIcon,
   '/tools/website-screenshot': PanelTopIcon,
+  '/tools/spa-vs-bot': GitCompareArrowsIcon,
 }

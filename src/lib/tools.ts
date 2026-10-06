@@ -49,6 +49,7 @@ export type ToolLink = {
     | '/tools/sitemap'
     | '/tools/ts-interface'
     | '/tools/website-screenshot'
+    | '/tools/spa-vs-bot'
   name: string
   shortName: string
   blurb: string
@@ -652,6 +653,27 @@ export const TOOLS: ToolLink[] = [
       'full page',
       'browser',
       'render',
+      'web',
+    ],
+  },
+  {
+    to: '/tools/spa-vs-bot',
+    name: 'SPA vs bot',
+    shortName: 'SPA/bot',
+    blurb: 'No-JS HTML vs JS-rendered content.',
+    category: 'web',
+    keywords: [
+      'spa',
+      'bot',
+      'crawler',
+      'seo',
+      'no-js',
+      'javascript',
+      'ssr',
+      'csr',
+      'render',
+      'compare',
+      'html',
       'web',
     ],
   },
