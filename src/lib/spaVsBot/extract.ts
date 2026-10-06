@@ -193,12 +193,14 @@ function resolveHref(
 export function extractLinks(
   html: string,
   baseUrl: string,
+  options?: { maxLinks?: number },
 ): {
   linkCount: number
   internalLinks: number
   externalLinks: number
   links: LinkItem[]
 } {
+  const maxLinks = options?.maxLinks ?? MAX_LINKS
   let body = stripBlocks(html, 'script')
   body = stripBlocks(body, 'style')
   const re = /<a\b([^>]*)>([\s\S]*?)<\/a>/gi
@@ -215,7 +217,7 @@ export function extractLinks(
     linkCount += 1
     if (resolved.external) externalLinks += 1
     else internalLinks += 1
-    if (links.length < MAX_LINKS) {
+    if (links.length < maxLinks) {
       const text = cleanText(match[2].replace(/<[^>]+>/g, ' '))
       links.push({
         href: resolved.href,
@@ -225,6 +227,47 @@ export function extractLinks(
     }
   }
   return { linkCount, internalLinks, externalLinks, links }
+}
+
+export type ImageItem = {
+  src: string
+  alt: string | null
+  missingAlt: boolean
+}
+
+const MAX_IMAGES = 80
+
+/** Collect <img> tags; missingAlt when alt attribute is absent (empty alt is ok). */
+export function extractImages(
+  html: string,
+  baseUrl: string,
+): ImageItem[] {
+  let body = stripBlocks(html, 'script')
+  body = stripBlocks(body, 'style')
+  body = stripBlocks(body, 'noscript')
+  const re = /<img\b([^>]*)>/gi
+  const items: ImageItem[] = []
+  let match: RegExpExecArray | null
+  while ((match = re.exec(body)) !== null) {
+    const tag = `<img ${match[1]}>`
+    const rawSrc = attr(tag, 'src') ?? attr(tag, 'data-src')
+    if (!rawSrc?.trim()) continue
+    let src = rawSrc.trim()
+    try {
+      src = new URL(src, baseUrl).toString()
+    } catch {
+      /* keep raw */
+    }
+    const hasAlt = /\balt\s*=/i.test(tag)
+    const altRaw = attr(tag, 'alt')
+    items.push({
+      src,
+      alt: hasAlt ? cleanText(altRaw ?? '') : null,
+      missingAlt: !hasAlt,
+    })
+    if (items.length >= MAX_IMAGES) break
+  }
+  return items
 }
 
 export function countLinks(html: string): number {

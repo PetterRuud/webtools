@@ -67,6 +67,9 @@ Not wired yet. Access is only planned for future **private R2 file hosting** —
 | `/tools/og-preview` | Open Graph / social share card preview from URL |
 | `/tools/robots-txt` | Fetch or paste robots.txt; test allow/disallow paths |
 | `/tools/utm-builder` | Build campaign URLs with UTM parameters |
+| `/tools/redirect-checker` | Follow redirect hops: status, timing, final destination |
+| `/tools/broken-link-checker` | Fetch page links; check status (cap ~50); internal/external |
+| `/tools/seo-audit` | On-page / technical SEO pass·warn·fail checklist |
 
 
 ## Crawler simulator

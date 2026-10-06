@@ -3,7 +3,8 @@ export type ToolCategoryId =
   | 'image'
   | 'color'
   | 'encode'
-  | 'web'
+  | 'network'
+  | 'seo'
 
 export type ToolCategory = {
   id: ToolCategoryId
@@ -54,6 +55,9 @@ export type ToolLink = {
     | '/tools/og-preview'
     | '/tools/robots-txt'
     | '/tools/utm-builder'
+    | '/tools/redirect-checker'
+    | '/tools/broken-link-checker'
+    | '/tools/seo-audit'
   name: string
   shortName: string
   blurb: string
@@ -66,7 +70,8 @@ export const TOOL_CATEGORIES: ToolCategory[] = [
   { id: 'image', label: 'Images' },
   { id: 'color', label: 'Color / CSS / Layout' },
   { id: 'encode', label: 'Encode' },
-  { id: 'web', label: 'Web' },
+  { id: 'network', label: 'Network' },
+  { id: 'seo', label: 'SEO' },
 ]
 
 export const TOOLS: ToolLink[] = [
@@ -523,7 +528,7 @@ export const TOOLS: ToolLink[] = [
     name: 'IP lookup',
     shortName: 'IP',
     blurb: 'Your IP or any address.',
-    category: 'web',
+    category: 'network',
     keywords: [
       'ip',
       'lookup',
@@ -541,7 +546,7 @@ export const TOOLS: ToolLink[] = [
     name: 'DNS lookup',
     shortName: 'DNS',
     blurb: 'Records + email MX/SPF/DKIM/DMARC.',
-    category: 'web',
+    category: 'network',
     keywords: [
       'dns',
       'lookup',
@@ -570,7 +575,7 @@ export const TOOLS: ToolLink[] = [
     name: 'Browser info',
     shortName: 'Browser',
     blurb: 'UA, viewport, storage flags.',
-    category: 'web',
+    category: 'network',
     keywords: [
       'browser',
       'user agent',
@@ -589,7 +594,7 @@ export const TOOLS: ToolLink[] = [
     name: 'HTTP status',
     shortName: 'Status',
     blurb: 'Searchable status codes.',
-    category: 'web',
+    category: 'network',
     keywords: [
       'http',
       'status',
@@ -603,30 +608,11 @@ export const TOOLS: ToolLink[] = [
     ],
   },
   {
-    to: '/tools/sitemap',
-    name: 'Sitemap generator',
-    shortName: 'Sitemap',
-    blurb: 'URL list → sitemap.xml.',
-    category: 'web',
-    keywords: [
-      'sitemap',
-      'xml',
-      'seo',
-      'urls',
-      'urlset',
-      'lastmod',
-      'changefreq',
-      'priority',
-      'robots',
-      'web',
-    ],
-  },
-  {
     to: '/tools/mime',
     name: 'MIME types',
     shortName: 'MIME',
     blurb: 'Extension ↔ Content-Type.',
-    category: 'web',
+    category: 'network',
     keywords: [
       'mime',
       'content-type',
@@ -646,7 +632,7 @@ export const TOOLS: ToolLink[] = [
     name: 'Website screenshot',
     shortName: 'Web shot',
     blurb: 'URL → PNG. Viewport or full page.',
-    category: 'web',
+    category: 'network',
     keywords: [
       'screenshot',
       'website',
@@ -658,6 +644,45 @@ export const TOOLS: ToolLink[] = [
       'browser',
       'render',
       'web',
+      'network',
+    ],
+  },
+  {
+    to: '/tools/crontab',
+    name: 'Crontab builder',
+    shortName: 'Cron',
+    blurb: 'Build, decode, next runs.',
+    category: 'network',
+    keywords: [
+      'cron',
+      'crontab',
+      'schedule',
+      'scheduler',
+      'expression',
+      'job',
+      'timer',
+      'interval',
+      'web',
+      'network',
+    ],
+  },
+  {
+    to: '/tools/sitemap',
+    name: 'Sitemap generator',
+    shortName: 'Sitemap',
+    blurb: 'URL list → sitemap.xml.',
+    category: 'seo',
+    keywords: [
+      'sitemap',
+      'xml',
+      'seo',
+      'urls',
+      'urlset',
+      'lastmod',
+      'changefreq',
+      'priority',
+      'robots',
+      'web',
     ],
   },
   {
@@ -665,7 +690,7 @@ export const TOOLS: ToolLink[] = [
     name: 'Crawler simulator',
     shortName: 'Crawler',
     blurb: 'No-JS vs JS: title, meta, headings, OG, links.',
-    category: 'web',
+    category: 'seo',
     keywords: [
       'crawler',
       'simulator',
@@ -692,7 +717,7 @@ export const TOOLS: ToolLink[] = [
     name: 'SERP preview',
     shortName: 'SERP',
     blurb: 'Google snippet: title, description, pixel width.',
-    category: 'web',
+    category: 'seo',
     keywords: [
       'serp',
       'google',
@@ -711,7 +736,7 @@ export const TOOLS: ToolLink[] = [
     name: 'Open Graph preview',
     shortName: 'OG',
     blurb: 'Facebook / X / LinkedIn share cards from URL.',
-    category: 'web',
+    category: 'seo',
     keywords: [
       'open graph',
       'og',
@@ -731,7 +756,7 @@ export const TOOLS: ToolLink[] = [
     name: 'robots.txt tester',
     shortName: 'robots.txt',
     blurb: 'Fetch or paste; test allow/disallow paths.',
-    category: 'web',
+    category: 'seo',
     keywords: [
       'robots',
       'robots.txt',
@@ -749,7 +774,7 @@ export const TOOLS: ToolLink[] = [
     name: 'UTM builder',
     shortName: 'UTM',
     blurb: 'Campaign URLs with source, medium, campaign…',
-    category: 'web',
+    category: 'seo',
     keywords: [
       'utm',
       'campaign',
@@ -764,20 +789,63 @@ export const TOOLS: ToolLink[] = [
     ],
   },
   {
-    to: '/tools/crontab',
-    name: 'Crontab builder',
-    shortName: 'Cron',
-    blurb: 'Build, decode, next runs.',
-    category: 'web',
+    to: '/tools/redirect-checker',
+    name: 'Redirect checker',
+    shortName: 'Redirects',
+    blurb: 'Follow hops: status, timing, final URL.',
+    category: 'seo',
     keywords: [
-      'cron',
-      'crontab',
-      'schedule',
-      'scheduler',
-      'expression',
-      'job',
-      'timer',
-      'interval',
+      'redirect',
+      'redirects',
+      '301',
+      '302',
+      '308',
+      'location',
+      'chain',
+      'hops',
+      'seo',
+      'http',
+      'web',
+    ],
+  },
+  {
+    to: '/tools/broken-link-checker',
+    name: 'Broken link checker',
+    shortName: 'Broken links',
+    blurb: 'Scan page links; status + internal/external.',
+    category: 'seo',
+    keywords: [
+      'broken',
+      'links',
+      '404',
+      'crawl',
+      'internal',
+      'external',
+      'dead',
+      'status',
+      'seo',
+      'web',
+    ],
+  },
+  {
+    to: '/tools/seo-audit',
+    name: 'SEO audit',
+    shortName: 'SEO audit',
+    blurb: 'Title, meta, headings, canonical, OG, alts…',
+    category: 'seo',
+    keywords: [
+      'seo',
+      'audit',
+      'title',
+      'meta',
+      'description',
+      'canonical',
+      'robots',
+      'og',
+      'headings',
+      'alt',
+      'on-page',
+      'technical',
       'web',
     ],
   },

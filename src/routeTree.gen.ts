@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsBoxShadowRouteImport } from './routes/tools/box-shadow'
+import { Route as ToolsBrokenLinkCheckerRouteImport } from './routes/tools/broken-link-checker'
 import { Route as ToolsBrowserInfoRouteImport } from './routes/tools/browser-info'
 import { Route as ToolsCodeScreenshotRouteImport } from './routes/tools/code-screenshot'
 import { Route as ToolsCrawlerSimulatorRouteImport } from './routes/tools/crawler-simulator'
@@ -38,8 +39,10 @@ import { Route as ToolsNineSliceRouteImport } from './routes/tools/nine-slice'
 import { Route as ToolsOgPreviewRouteImport } from './routes/tools/og-preview'
 import { Route as ToolsQrcodeRouteImport } from './routes/tools/qrcode'
 import { Route as ToolsRandomRouteImport } from './routes/tools/random'
+import { Route as ToolsRedirectCheckerRouteImport } from './routes/tools/redirect-checker'
 import { Route as ToolsRegexRouteImport } from './routes/tools/regex'
 import { Route as ToolsRobotsTxtRouteImport } from './routes/tools/robots-txt'
+import { Route as ToolsSeoAuditRouteImport } from './routes/tools/seo-audit'
 import { Route as ToolsSerpPreviewRouteImport } from './routes/tools/serp-preview'
 import { Route as ToolsSitemapRouteImport } from './routes/tools/sitemap'
 import { Route as ToolsSpaVsBotRouteImport } from './routes/tools/spa-vs-bot'
@@ -70,6 +73,11 @@ const ToolsBase64Route = ToolsBase64RouteImport.update({
 const ToolsBoxShadowRoute = ToolsBoxShadowRouteImport.update({
   id: '/tools/box-shadow',
   path: '/tools/box-shadow',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsBrokenLinkCheckerRoute = ToolsBrokenLinkCheckerRouteImport.update({
+  id: '/tools/broken-link-checker',
+  path: '/tools/broken-link-checker',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsBrowserInfoRoute = ToolsBrowserInfoRouteImport.update({
@@ -202,6 +210,11 @@ const ToolsRandomRoute = ToolsRandomRouteImport.update({
   path: '/tools/random',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ToolsRedirectCheckerRoute = ToolsRedirectCheckerRouteImport.update({
+  id: '/tools/redirect-checker',
+  path: '/tools/redirect-checker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsRegexRoute = ToolsRegexRouteImport.update({
   id: '/tools/regex',
   path: '/tools/regex',
@@ -210,6 +223,11 @@ const ToolsRegexRoute = ToolsRegexRouteImport.update({
 const ToolsRobotsTxtRoute = ToolsRobotsTxtRouteImport.update({
   id: '/tools/robots-txt',
   path: '/tools/robots-txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsSeoAuditRoute = ToolsSeoAuditRouteImport.update({
+  id: '/tools/seo-audit',
+  path: '/tools/seo-audit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsSerpPreviewRoute = ToolsSerpPreviewRouteImport.update({
@@ -299,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
+  '/tools/broken-link-checker': typeof ToolsBrokenLinkCheckerRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
   '/tools/crawler-simulator': typeof ToolsCrawlerSimulatorRoute
@@ -325,8 +344,10 @@ export interface FileRoutesByFullPath {
   '/tools/og-preview': typeof ToolsOgPreviewRoute
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
+  '/tools/redirect-checker': typeof ToolsRedirectCheckerRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/robots-txt': typeof ToolsRobotsTxtRoute
+  '/tools/seo-audit': typeof ToolsSeoAuditRoute
   '/tools/serp-preview': typeof ToolsSerpPreviewRoute
   '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/spa-vs-bot': typeof ToolsSpaVsBotRoute
@@ -348,6 +369,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
+  '/tools/broken-link-checker': typeof ToolsBrokenLinkCheckerRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
   '/tools/crawler-simulator': typeof ToolsCrawlerSimulatorRoute
@@ -374,8 +396,10 @@ export interface FileRoutesByTo {
   '/tools/og-preview': typeof ToolsOgPreviewRoute
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
+  '/tools/redirect-checker': typeof ToolsRedirectCheckerRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/robots-txt': typeof ToolsRobotsTxtRoute
+  '/tools/seo-audit': typeof ToolsSeoAuditRoute
   '/tools/serp-preview': typeof ToolsSerpPreviewRoute
   '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/spa-vs-bot': typeof ToolsSpaVsBotRoute
@@ -398,6 +422,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
+  '/tools/broken-link-checker': typeof ToolsBrokenLinkCheckerRoute
   '/tools/browser-info': typeof ToolsBrowserInfoRoute
   '/tools/code-screenshot': typeof ToolsCodeScreenshotRoute
   '/tools/crawler-simulator': typeof ToolsCrawlerSimulatorRoute
@@ -424,8 +449,10 @@ export interface FileRoutesById {
   '/tools/og-preview': typeof ToolsOgPreviewRoute
   '/tools/qrcode': typeof ToolsQrcodeRoute
   '/tools/random': typeof ToolsRandomRoute
+  '/tools/redirect-checker': typeof ToolsRedirectCheckerRoute
   '/tools/regex': typeof ToolsRegexRoute
   '/tools/robots-txt': typeof ToolsRobotsTxtRoute
+  '/tools/seo-audit': typeof ToolsSeoAuditRoute
   '/tools/serp-preview': typeof ToolsSerpPreviewRoute
   '/tools/sitemap': typeof ToolsSitemapRoute
   '/tools/spa-vs-bot': typeof ToolsSpaVsBotRoute
@@ -449,6 +476,7 @@ export interface FileRouteTypes {
     | '/'
     | '/tools/base64'
     | '/tools/box-shadow'
+    | '/tools/broken-link-checker'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
     | '/tools/crawler-simulator'
@@ -475,8 +503,10 @@ export interface FileRouteTypes {
     | '/tools/og-preview'
     | '/tools/qrcode'
     | '/tools/random'
+    | '/tools/redirect-checker'
     | '/tools/regex'
     | '/tools/robots-txt'
+    | '/tools/seo-audit'
     | '/tools/serp-preview'
     | '/tools/sitemap'
     | '/tools/spa-vs-bot'
@@ -498,6 +528,7 @@ export interface FileRouteTypes {
     | '/'
     | '/tools/base64'
     | '/tools/box-shadow'
+    | '/tools/broken-link-checker'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
     | '/tools/crawler-simulator'
@@ -524,8 +555,10 @@ export interface FileRouteTypes {
     | '/tools/og-preview'
     | '/tools/qrcode'
     | '/tools/random'
+    | '/tools/redirect-checker'
     | '/tools/regex'
     | '/tools/robots-txt'
+    | '/tools/seo-audit'
     | '/tools/serp-preview'
     | '/tools/sitemap'
     | '/tools/spa-vs-bot'
@@ -547,6 +580,7 @@ export interface FileRouteTypes {
     | '/'
     | '/tools/base64'
     | '/tools/box-shadow'
+    | '/tools/broken-link-checker'
     | '/tools/browser-info'
     | '/tools/code-screenshot'
     | '/tools/crawler-simulator'
@@ -573,8 +607,10 @@ export interface FileRouteTypes {
     | '/tools/og-preview'
     | '/tools/qrcode'
     | '/tools/random'
+    | '/tools/redirect-checker'
     | '/tools/regex'
     | '/tools/robots-txt'
+    | '/tools/seo-audit'
     | '/tools/serp-preview'
     | '/tools/sitemap'
     | '/tools/spa-vs-bot'
@@ -597,6 +633,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ToolsBase64Route: typeof ToolsBase64Route
   ToolsBoxShadowRoute: typeof ToolsBoxShadowRoute
+  ToolsBrokenLinkCheckerRoute: typeof ToolsBrokenLinkCheckerRoute
   ToolsBrowserInfoRoute: typeof ToolsBrowserInfoRoute
   ToolsCodeScreenshotRoute: typeof ToolsCodeScreenshotRoute
   ToolsCrawlerSimulatorRoute: typeof ToolsCrawlerSimulatorRoute
@@ -623,8 +660,10 @@ export interface RootRouteChildren {
   ToolsOgPreviewRoute: typeof ToolsOgPreviewRoute
   ToolsQrcodeRoute: typeof ToolsQrcodeRoute
   ToolsRandomRoute: typeof ToolsRandomRoute
+  ToolsRedirectCheckerRoute: typeof ToolsRedirectCheckerRoute
   ToolsRegexRoute: typeof ToolsRegexRoute
   ToolsRobotsTxtRoute: typeof ToolsRobotsTxtRoute
+  ToolsSeoAuditRoute: typeof ToolsSeoAuditRoute
   ToolsSerpPreviewRoute: typeof ToolsSerpPreviewRoute
   ToolsSitemapRoute: typeof ToolsSitemapRoute
   ToolsSpaVsBotRoute: typeof ToolsSpaVsBotRoute
@@ -664,6 +703,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/box-shadow'
       fullPath: '/tools/box-shadow'
       preLoaderRoute: typeof ToolsBoxShadowRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/broken-link-checker': {
+      id: '/tools/broken-link-checker'
+      path: '/tools/broken-link-checker'
+      fullPath: '/tools/broken-link-checker'
+      preLoaderRoute: typeof ToolsBrokenLinkCheckerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/browser-info': {
@@ -848,6 +894,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ToolsRandomRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/tools/redirect-checker': {
+      id: '/tools/redirect-checker'
+      path: '/tools/redirect-checker'
+      fullPath: '/tools/redirect-checker'
+      preLoaderRoute: typeof ToolsRedirectCheckerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/regex': {
       id: '/tools/regex'
       path: '/tools/regex'
@@ -860,6 +913,13 @@ declare module '@tanstack/react-router' {
       path: '/tools/robots-txt'
       fullPath: '/tools/robots-txt'
       preLoaderRoute: typeof ToolsRobotsTxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/seo-audit': {
+      id: '/tools/seo-audit'
+      path: '/tools/seo-audit'
+      fullPath: '/tools/seo-audit'
+      preLoaderRoute: typeof ToolsSeoAuditRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/serp-preview': {
@@ -981,6 +1041,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ToolsBase64Route: ToolsBase64Route,
   ToolsBoxShadowRoute: ToolsBoxShadowRoute,
+  ToolsBrokenLinkCheckerRoute: ToolsBrokenLinkCheckerRoute,
   ToolsBrowserInfoRoute: ToolsBrowserInfoRoute,
   ToolsCodeScreenshotRoute: ToolsCodeScreenshotRoute,
   ToolsCrawlerSimulatorRoute: ToolsCrawlerSimulatorRoute,
@@ -1007,8 +1068,10 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsOgPreviewRoute: ToolsOgPreviewRoute,
   ToolsQrcodeRoute: ToolsQrcodeRoute,
   ToolsRandomRoute: ToolsRandomRoute,
+  ToolsRedirectCheckerRoute: ToolsRedirectCheckerRoute,
   ToolsRegexRoute: ToolsRegexRoute,
   ToolsRobotsTxtRoute: ToolsRobotsTxtRoute,
+  ToolsSeoAuditRoute: ToolsSeoAuditRoute,
   ToolsSerpPreviewRoute: ToolsSerpPreviewRoute,
   ToolsSitemapRoute: ToolsSitemapRoute,
   ToolsSpaVsBotRoute: ToolsSpaVsBotRoute,
