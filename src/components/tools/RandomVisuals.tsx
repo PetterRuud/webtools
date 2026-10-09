@@ -404,8 +404,10 @@ export function RouletteVisual(props: {
                 key={`${row.index}-${row.text}-${row.center ? 'c' : 's'}`}
                 className={cn(
                   'relative z-0 flex h-9 items-center justify-center truncate px-3 font-mono text-sm transition-colors',
-                  row.center ? 'text-foreground' : 'text-muted-foreground/45',
-                  won && 'font-semibold text-primary',
+                  row.center
+                    ? 'z-30 text-foreground'
+                    : 'text-muted-foreground/45',
+                  won && 'font-semibold text-primary dark:text-violet-300',
                 )}
               >
                 {row.text}
@@ -419,7 +421,9 @@ export function RouletteVisual(props: {
         />
       </div>
       {props.winner && !props.spinning ? (
-        <p className="m-0 text-lg font-semibold tracking-tight">{props.winner}</p>
+        <p className="m-0 text-lg font-semibold tracking-tight text-foreground dark:text-violet-300">
+          {props.winner}
+        </p>
       ) : (
         <p className="m-0 text-xs text-muted-foreground">
           {props.spinning ? 'Spinning…' : 'Spin to pick one'}
