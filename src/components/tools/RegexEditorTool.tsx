@@ -2,8 +2,18 @@ import { useMemo, useState, type ReactNode } from 'react'
 import { Button } from '#/components/ui/button'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
-import { Textarea } from '#/components/ui/textarea'
+import {
+  RegexGroupLegend,
+  RegexHighlightField,
+} from '#/components/tools/RegexHighlightField'
 import { breakdownRegex, matchCoverage } from '#/lib/regexBreakdown'
+import {
+  REGEX_GROUP_ACTIVE_RING,
+  buildHighlightSegments,
+  collectRegexMatches,
+  groupBgClass,
+  type RegexMatchInfo,
+} from '#/lib/regexHighlight'
 import {
   COMMON_REGEX_PATTERNS,
   type CommonRegexPattern,
@@ -18,12 +28,6 @@ const FLAG_OPTIONS = [
   { id: 's', label: 's', hint: 'DotAll' },
   { id: 'u', label: 'u', hint: 'Unicode' },
 ] as const satisfies ReadonlyArray<{ id: RegexFlagId; label: string; hint: string }>
-
-type MatchInfo = {
-  index: number
-  text: string
-  groups: Array<string | undefined>
-}
 
 const KIND_STYLES: Record<string, string> = {
   group: 'border-primary/30 bg-primary/10 text-primary',
@@ -59,30 +63,9 @@ function buildRegex(pattern: string, flags: string): RegExp | null {
   }
 }
 
-function collectMatches(regex: RegExp, text: string): MatchInfo[] {
-  const flags = regex.flags.includes('g') ? regex.flags : `${regex.flags}g`
-  const global = new RegExp(regex.source, flags)
-  const matches: MatchInfo[] = []
-  let match: RegExpExecArray | null
-  let guard = 0
-  while ((match = global.exec(text)) !== null) {
-    matches.push({
-      index: match.index,
-      text: match[0],
-      groups: match.slice(1),
-    })
-    if (match[0].length === 0) {
-      global.lastIndex += 1
-    }
-    guard += 1
-    if (guard > 5000) break
-  }
-  return matches
-}
-
 function renderHighlighted(
   text: string,
-  matches: MatchInfo[],
+  matches: RegexMatchInfo[],
   activeIndex: number | null,
 ): ReactNode {
   if (!text) {
@@ -92,27 +75,27 @@ function renderHighlighted(
     return <span>{text}</span>
   }
 
+  const segments = buildHighlightSegments(matches)
   const nodes: ReactNode[] = []
   let cursor = 0
-  matches.forEach((match, i) => {
-    if (match.index > cursor) {
-      nodes.push(<span key={`t-${i}`}>{text.slice(cursor, match.index)}</span>)
+  segments.forEach((segment, i) => {
+    if (segment.start > cursor) {
+      nodes.push(<span key={`t-${i}`}>{text.slice(cursor, segment.start)}</span>)
     }
-    const active = activeIndex === i
+    const active = activeIndex === segment.matchIndex
     nodes.push(
       <mark
-        key={`m-${i}`}
+        key={`m-${i}-${segment.start}`}
         className={cn(
           'rounded-sm px-0.5 text-ink dark:text-foreground',
-          active
-            ? 'bg-spark ring-2 ring-spark/60'
-            : 'bg-spark/45 dark:bg-spark/35',
+          groupBgClass(segment.group),
+          active && REGEX_GROUP_ACTIVE_RING,
         )}
       >
-        {match.text || '∅'}
+        {text.slice(segment.start, segment.end) || '∅'}
       </mark>,
     )
-    cursor = match.index + match.text.length
+    cursor = segment.end
   })
   if (cursor < text.length) {
     nodes.push(<span key="tail">{text.slice(cursor)}</span>)
@@ -120,18 +103,36 @@ function renderHighlighted(
   return nodes
 }
 
-function formatGroups(groups: Array<string | undefined>): string | null {
+function formatGroups(groups: Array<string | undefined>): ReactNode {
   const parts = groups
     .map((value, index) => {
       if (value === undefined) return null
-      return `$${index + 1}: ${JSON.stringify(value)}`
+      return (
+        <span key={index} className="inline-flex items-center gap-1">
+          <span
+            className={cn(
+              'inline-block size-1.5 rounded-sm',
+              groupBgClass(index + 1),
+            )}
+            aria-hidden
+          />
+          <span>
+            ${index + 1}: {JSON.stringify(value)}
+          </span>
+        </span>
+      )
     })
     .filter(Boolean)
-  return parts.length > 0 ? parts.join(', ') : null
+  if (parts.length === 0) return null
+  return (
+    <span className="mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5 font-mono text-[0.7rem] text-muted-foreground">
+      {parts}
+    </span>
+  )
 }
 
 export function RegexEditorTool() {
-  const [pattern, setPattern] = useState('\\b[A-Z][a-z]+\\b')
+  const [pattern, setPattern] = useState('\\b([A-Z][a-z]+)\\b')
   const [testString, setTestString] = useState(
     'WebTools ships JSON, Regex, Base64, and Diff helpers.',
   )
@@ -159,7 +160,7 @@ export function RegexEditorTool() {
   )
 
   const matches = useMemo(
-    () => (regex && testString ? collectMatches(regex, testString) : []),
+    () => (regex && testString ? collectRegexMatches(regex, testString) : []),
     [regex, testString],
   )
 
@@ -254,18 +255,22 @@ export function RegexEditorTool() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Label htmlFor="regex-test">Test string</Label>
-            <Textarea
+            <div className="flex flex-wrap items-end justify-between gap-2">
+              <Label htmlFor="regex-test">Test string</Label>
+              <RegexGroupLegend matches={matches} />
+            </div>
+            <RegexHighlightField
               id="regex-test"
               value={testString}
-              onChange={(event) => {
+              matches={matches}
+              activeMatch={activeMatch}
+              onValueChange={(value) => {
                 setActivePresetId(null)
                 setActiveMatch(null)
-                setTestString(event.target.value)
+                setTestString(value)
               }}
-              spellCheck={false}
               placeholder="Text to match…"
-              className="min-h-40 font-mono text-[0.9rem] leading-6 lg:min-h-56"
+              aria-invalid={Boolean(regexError)}
             />
           </div>
         </div>
@@ -355,16 +360,19 @@ export function RegexEditorTool() {
                         </span>
                         <span className="min-w-0 flex-1">
                           <span className="font-mono text-sm text-ink">
-                            {match.text || '(empty)'}
+                            <mark
+                              className={cn(
+                                'rounded-sm px-0.5',
+                                groupBgClass(0),
+                              )}
+                            >
+                              {match.text || '(empty)'}
+                            </mark>
                             <span className="ml-2 text-muted-foreground">
                               @{match.index}
                             </span>
                           </span>
-                          {groups ? (
-                            <span className="mt-0.5 block font-mono text-[0.7rem] text-muted-foreground">
-                              [{groups}]
-                            </span>
-                          ) : null}
+                          {groups}
                         </span>
                       </button>
                     </li>
