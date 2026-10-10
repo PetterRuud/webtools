@@ -1,17 +1,57 @@
+export type RegexTokenKind =
+  | 'group'
+  | 'class'
+  | 'escape'
+  | 'quantifier'
+  | 'anchor'
+  | 'literal'
+  | 'meta'
+  | 'flag'
+  | 'unknown'
+
 export type RegexToken = {
   text: string
   label: string
   meaning: string
-  kind:
-    | 'group'
-    | 'class'
-    | 'escape'
-    | 'quantifier'
-    | 'anchor'
-    | 'literal'
-    | 'meta'
-    | 'flag'
-    | 'unknown'
+  kind: RegexTokenKind
+}
+
+/** Chip styles for the Breakdown list (border + bg + text). */
+export const REGEX_TOKEN_KIND_STYLES: Record<RegexTokenKind, string> = {
+  group: 'border-primary/30 bg-primary/10 text-primary',
+  class: 'border-spark/40 bg-spark/20 text-ink dark:text-foreground',
+  escape: 'border-sky-500/30 bg-sky-500/10 text-sky-800 dark:text-sky-200',
+  quantifier:
+    'border-violet-500/30 bg-violet-500/10 text-violet-800 dark:text-violet-200',
+  anchor: 'border-amber-500/35 bg-amber-500/15 text-amber-900 dark:text-amber-100',
+  literal: 'border-border bg-muted/50 text-foreground',
+  meta: 'border-rose-500/30 bg-rose-500/10 text-rose-800 dark:text-rose-200',
+  flag: 'border-border bg-muted/50 text-foreground',
+  unknown: 'border-destructive/40 bg-destructive/10 text-destructive',
+}
+
+/**
+ * Inline styles for the pattern input overlay — same palette as chips, but no
+ * border/padding so character metrics stay aligned with the transparent input.
+ */
+export const REGEX_TOKEN_KIND_INLINE: Record<RegexTokenKind, string> = {
+  group: 'bg-primary/10 text-primary',
+  class: 'bg-spark/20 text-ink dark:text-foreground',
+  escape: 'bg-sky-500/10 text-sky-800 dark:text-sky-200',
+  quantifier: 'bg-violet-500/10 text-violet-800 dark:text-violet-200',
+  anchor: 'bg-amber-500/15 text-amber-900 dark:text-amber-100',
+  literal: 'text-foreground',
+  meta: 'bg-rose-500/10 text-rose-800 dark:text-rose-200',
+  flag: 'text-foreground',
+  unknown: 'bg-destructive/10 text-destructive',
+}
+
+export function tokenKindStyle(kind: RegexTokenKind): string {
+  return REGEX_TOKEN_KIND_STYLES[kind] ?? REGEX_TOKEN_KIND_STYLES.literal
+}
+
+export function tokenKindInlineStyle(kind: RegexTokenKind): string {
+  return REGEX_TOKEN_KIND_INLINE[kind] ?? REGEX_TOKEN_KIND_INLINE.literal
 }
 
 const ESCAPE_MEANINGS: Record<string, { label: string; meaning: string }> = {

@@ -1,12 +1,16 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import {
   RegexGroupLegend,
   RegexHighlightField,
 } from '#/components/tools/RegexHighlightField'
-import { breakdownRegex, matchCoverage } from '#/lib/regexBreakdown'
+import { RegexPatternField } from '#/components/tools/RegexPatternField'
+import {
+  breakdownRegex,
+  matchCoverage,
+  tokenKindStyle,
+} from '#/lib/regexBreakdown'
 import {
   REGEX_GROUP_ACTIVE_RING,
   buildHighlightSegments,
@@ -28,18 +32,6 @@ const FLAG_OPTIONS = [
   { id: 's', label: 's', hint: 'DotAll' },
   { id: 'u', label: 'u', hint: 'Unicode' },
 ] as const satisfies ReadonlyArray<{ id: RegexFlagId; label: string; hint: string }>
-
-const KIND_STYLES: Record<string, string> = {
-  group: 'border-primary/30 bg-primary/10 text-primary',
-  class: 'border-spark/40 bg-spark/20 text-ink dark:text-foreground',
-  escape: 'border-sky-500/30 bg-sky-500/10 text-sky-800 dark:text-sky-200',
-  quantifier: 'border-violet-500/30 bg-violet-500/10 text-violet-800 dark:text-violet-200',
-  anchor: 'border-amber-500/35 bg-amber-500/15 text-amber-900 dark:text-amber-100',
-  literal: 'border-border bg-muted/50 text-foreground',
-  meta: 'border-rose-500/30 bg-rose-500/10 text-rose-800 dark:text-rose-200',
-  flag: 'border-border bg-muted/50 text-foreground',
-  unknown: 'border-destructive/40 bg-destructive/10 text-destructive',
-}
 
 function emptyFlags(): Record<RegexFlagId, boolean> {
   return { g: true, i: false, m: false, s: false, u: false }
@@ -222,16 +214,14 @@ export function RegexEditorTool() {
                 /{pattern || '…'}/{flagString}
               </p>
             </div>
-            <Input
+            <RegexPatternField
               id="regex-pattern"
               value={pattern}
               onValueChange={(value) => {
                 setActivePresetId(null)
                 setPattern(value)
               }}
-              spellCheck={false}
               placeholder="Regular expression"
-              className="font-mono text-[0.92rem]"
               aria-invalid={Boolean(regexError)}
             />
             <div className="flex flex-wrap gap-1.5">
@@ -301,7 +291,7 @@ export function RegexEditorTool() {
                     <code
                       className={cn(
                         'shrink-0 rounded border px-1 py-0.5 font-mono text-[0.75rem]',
-                        KIND_STYLES[token.kind] ?? KIND_STYLES.literal,
+                        tokenKindStyle(token.kind),
                       )}
                     >
                       {token.text}
