@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ToolsAppIconRouteImport } from './routes/tools/app-icon'
 import { Route as ToolsBase64RouteImport } from './routes/tools/base64'
 import { Route as ToolsBoxShadowRouteImport } from './routes/tools/box-shadow'
 import { Route as ToolsBrokenLinkCheckerRouteImport } from './routes/tools/broken-link-checker'
@@ -63,6 +64,11 @@ import { Route as ApiWebsiteScreenshotCaptureRouteImport } from './routes/api/we
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsAppIconRoute = ToolsAppIconRouteImport.update({
+  id: '/tools/app-icon',
+  path: '/tools/app-icon',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ToolsBase64Route = ToolsBase64RouteImport.update({
@@ -315,6 +321,7 @@ const ApiWebsiteScreenshotCaptureRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/tools/app-icon': typeof ToolsAppIconRoute
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/broken-link-checker': typeof ToolsBrokenLinkCheckerRoute
@@ -367,6 +374,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/tools/app-icon': typeof ToolsAppIconRoute
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/broken-link-checker': typeof ToolsBrokenLinkCheckerRoute
@@ -420,6 +428,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/tools/app-icon': typeof ToolsAppIconRoute
   '/tools/base64': typeof ToolsBase64Route
   '/tools/box-shadow': typeof ToolsBoxShadowRoute
   '/tools/broken-link-checker': typeof ToolsBrokenLinkCheckerRoute
@@ -474,6 +483,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/tools/app-icon'
     | '/tools/base64'
     | '/tools/box-shadow'
     | '/tools/broken-link-checker'
@@ -526,6 +536,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/tools/app-icon'
     | '/tools/base64'
     | '/tools/box-shadow'
     | '/tools/broken-link-checker'
@@ -578,6 +589,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/tools/app-icon'
     | '/tools/base64'
     | '/tools/box-shadow'
     | '/tools/broken-link-checker'
@@ -631,6 +643,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ToolsAppIconRoute: typeof ToolsAppIconRoute
   ToolsBase64Route: typeof ToolsBase64Route
   ToolsBoxShadowRoute: typeof ToolsBoxShadowRoute
   ToolsBrokenLinkCheckerRoute: typeof ToolsBrokenLinkCheckerRoute
@@ -689,6 +702,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/app-icon': {
+      id: '/tools/app-icon'
+      path: '/tools/app-icon'
+      fullPath: '/tools/app-icon'
+      preLoaderRoute: typeof ToolsAppIconRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/tools/base64': {
@@ -1039,6 +1059,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ToolsAppIconRoute: ToolsAppIconRoute,
   ToolsBase64Route: ToolsBase64Route,
   ToolsBoxShadowRoute: ToolsBoxShadowRoute,
   ToolsBrokenLinkCheckerRoute: ToolsBrokenLinkCheckerRoute,

@@ -22,7 +22,7 @@ export type ToolLink = {
     | '/tools/image-resize'
     | '/tools/image-format'
     | '/tools/image-square'
-    | '/tools/favicon'
+    | '/tools/app-icon'
     | '/tools/svg-editor'
     | '/tools/nine-slice'
     | '/tools/transparent'
@@ -342,12 +342,25 @@ export const TOOLS: ToolLink[] = [
     ],
   },
   {
-    to: '/tools/favicon',
-    name: 'Favicon generator',
-    shortName: 'Favicon',
-    blurb: 'PNG / ICO pack + HTML.',
+    to: '/tools/app-icon',
+    name: 'App icon & manifest',
+    shortName: 'App icon',
+    blurb: 'Favicon, PWA icons, site.webmanifest.',
     category: 'image',
-    keywords: ['favicon', 'icon', 'ico', 'apple-touch', 'png', 'image'],
+    keywords: [
+      'favicon',
+      'icon',
+      'ico',
+      'apple-touch',
+      'pwa',
+      'manifest',
+      'lucide',
+      'svg',
+      'gradient',
+      'png',
+      'image',
+      'app',
+    ],
   },
   {
     to: '/tools/svg-editor',

@@ -1,5 +1,4 @@
 import { defineConfig, lazyPlugins } from "vite-plus";
-import { devtools } from "@tanstack/devtools-vite";
 
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 
@@ -23,7 +22,6 @@ const config = defineConfig({
     transparentApiPlugin(),
     websiteScreenshotApiPlugin(),
     spaVsBotApiPlugin(),
-    devtools(),
     cloudflare({ viteEnvironment: { name: "ssr" } }),
     tailwindcss(),
     tanstackStart(),

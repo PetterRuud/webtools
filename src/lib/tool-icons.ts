@@ -69,7 +69,7 @@ export const TOOL_ICONS: Record<ToolLink['to'], ToolIcon> = {
   '/tools/image-resize': ScalingIcon,
   '/tools/image-format': ImagesIcon,
   '/tools/image-square': SquareRoundCornerIcon,
-  '/tools/favicon': AppWindowMacIcon,
+  '/tools/app-icon': AppWindowMacIcon,
   '/tools/svg-editor': VectorSquareIcon,
   '/tools/nine-slice': LayoutGridIcon,
   '/tools/transparent': BlendIcon,

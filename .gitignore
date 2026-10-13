@@ -4,18 +4,16 @@ dist
 dist-ssr
 *.local
 .env
+.env.*
+.dev.vars
+.dev.vars.*
 .nitro
 .tanstack
 .wrangler
+.vite-hooks
 .output
 .vinxi
 __unconfig*
 todos.json
+.pnpm-store/
 
-.dev.vars*
-!.dev.vars.example
-!.env.example
-
-# Vendor local tool
-tools/transparent/node_modules/
-tools/transparent/.pnpm-store/

@@ -47,6 +47,7 @@ Not wired yet. Access is only planned for future **private R2 file hosting** —
 | `/tools/image-compress` | Client-side compress + optional scale |
 | `/tools/image-crop` | Visual cropper with aspect presets |
 | `/tools/image-format` | Convert PNG ↔ JPEG ↔ WebP (canvas) |
+| `/tools/app-icon` | Favicon + PWA icons + `site.webmanifest` (image / SVG / Lucide; solid or gradient bg) |
 | `/tools/svg-editor` | Paste/edit SVG, live preview, minify, PNG/SVG export |
 | `/tools/nine-slice` | 9-slice guides + sample panel, multi-size preview, border-image CSS + PNG slices |
 | `/tools/transparent` | White+black pair → PNG alpha (**Node + sharp**; see below) |
@@ -99,7 +100,6 @@ UI lives at **`/tools/transparent`** in the hub shell.
 | Runtime | Processing |
 | --- | --- |
 | `vp run dev` / `vp run preview` | **Works** — Vite Node middleware handles `POST /api/transparent/extract` with sharp |
-| `vp run transparent` | **Works** — optional Express sidecar on port **3847** (`POST /api/extract`) |
 | Cloudflare Workers Isolates | **UI loads; extract returns 501** — native sharp cannot load in Isolates |
 
 Shared code: `src/lib/transparent/`. Containers only if a Node path is not enough later.

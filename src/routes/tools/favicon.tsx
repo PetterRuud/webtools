@@ -1,25 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { ToolShell } from '#/components/ToolShell'
-import { FaviconGeneratorTool } from '#/components/tools/FaviconGeneratorTool'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
+/** Legacy slug → App icon & manifest */
 export const Route = createFileRoute('/tools/favicon')({
-  head: () => ({
-    meta: [
-      { title: 'Favicon generator · WebTools' },
-      {
-        name: 'description',
-        content:
-          'Generate favicon PNG and ICO packs from an image in your browser.',
-      },
-    ],
-  }),
-  component: FaviconPage,
+  beforeLoad: () => {
+    throw redirect({ to: '/tools/app-icon' })
+  },
 })
-
-function FaviconPage() {
-  return (
-    <ToolShell>
-      <FaviconGeneratorTool />
-    </ToolShell>
-  )
-}
