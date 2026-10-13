@@ -10,6 +10,9 @@ import { transparentApiPlugin } from "./vite-plugins/transparentApi.ts";
 import { websiteScreenshotApiPlugin } from "./vite-plugins/websiteScreenshotApi.ts";
 
 const config = defineConfig({
+  staged: {
+    "*": "vp check --fix",
+  },
   fmt: {},
   lint: {
     jsPlugins: [{ name: "vite-plus", specifier: "vite-plus/oxlint-plugin" }],
