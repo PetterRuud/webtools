@@ -1,194 +1,185 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Link } from '@tanstack/react-router'
-import { DownloadIcon, Loader2Icon, ScalingIcon } from 'lucide-react'
-import { toast } from 'sonner'
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { DownloadIcon, Loader2Icon, ScalingIcon } from "lucide-react";
+import { toast } from "sonner";
 import {
   ImageFileField,
   ImagePreviewFrame,
   imagePreviewClassName,
-} from '#/components/tools/ImageFileField'
-import { Button } from '#/components/ui/button'
-import { Checkbox } from '#/components/ui/checkbox'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import {
-  clampResizeDimension,
-  readImageDimensions,
-  resizeImage,
-} from '#/lib/imageTransform'
+} from "#/components/tools/ImageFileField";
+import { Button } from "#/components/ui/button";
+import { Checkbox } from "#/components/ui/checkbox";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { clampResizeDimension, readImageDimensions, resizeImage } from "#/lib/imageTransform";
 
-const SCALE_PRESETS = [25, 50, 75, 100, 150, 200] as const
+const SCALE_PRESETS = [25, 50, 75, 100, 150, 200] as const;
 
 function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
 
 function extensionForMime(mime: string, fallbackName: string): string {
-  if (mime.includes('png')) return 'png'
-  if (mime.includes('webp')) return 'webp'
-  if (mime.includes('jpeg') || mime.includes('jpg')) return 'jpg'
-  const fromName = fallbackName.match(/\.([^.]+)$/)?.[1]
-  return fromName || 'png'
+  if (mime.includes("png")) return "png";
+  if (mime.includes("webp")) return "webp";
+  if (mime.includes("jpeg") || mime.includes("jpg")) return "jpg";
+  const fromName = fallbackName.match(/\.([^.]+)$/)?.[1];
+  return fromName || "png";
 }
 
 export function ImageResizeTool() {
-  const [file, setFile] = useState<File | null>(null)
-  const [sourceUrl, setSourceUrl] = useState<string | null>(null)
+  const [file, setFile] = useState<File | null>(null);
+  const [sourceUrl, setSourceUrl] = useState<string | null>(null);
   const [sourceDims, setSourceDims] = useState<{
-    width: number
-    height: number
-  } | null>(null)
-  const [width, setWidth] = useState('')
-  const [height, setHeight] = useState('')
-  const [lockAspect, setLockAspect] = useState(true)
-  const [output, setOutput] = useState<File | null>(null)
+    width: number;
+    height: number;
+  } | null>(null);
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [lockAspect, setLockAspect] = useState(true);
+  const [output, setOutput] = useState<File | null>(null);
   const [outputDims, setOutputDims] = useState<{
-    width: number
-    height: number
-  } | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+    width: number;
+    height: number;
+  } | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const aspectRatio = useMemo(() => {
-    if (!sourceDims || sourceDims.height === 0) return null
-    return sourceDims.width / sourceDims.height
-  }, [sourceDims])
+    if (!sourceDims || sourceDims.height === 0) return null;
+    return sourceDims.width / sourceDims.height;
+  }, [sourceDims]);
 
   useEffect(() => {
     if (!file) {
-      setSourceUrl(null)
-      setSourceDims(null)
-      return
+      setSourceUrl(null);
+      setSourceDims(null);
+      return;
     }
-    const url = URL.createObjectURL(file)
-    setSourceUrl(url)
-    let cancelled = false
+    const url = URL.createObjectURL(file);
+    setSourceUrl(url);
+    let cancelled = false;
     void readImageDimensions(file)
       .then((dims) => {
-        if (cancelled) return
-        setSourceDims(dims)
-        setWidth(String(dims.width))
-        setHeight(String(dims.height))
+        if (cancelled) return;
+        setSourceDims(dims);
+        setWidth(String(dims.width));
+        setHeight(String(dims.height));
       })
       .catch((err) => {
-        if (cancelled) return
-        setSourceDims(null)
-        setError(
-          err instanceof Error ? err.message : 'Could not read that image',
-        )
-      })
+        if (cancelled) return;
+        setSourceDims(null);
+        setError(err instanceof Error ? err.message : "Could not read that image");
+      });
     return () => {
-      cancelled = true
-      URL.revokeObjectURL(url)
-    }
-  }, [file])
+      cancelled = true;
+      URL.revokeObjectURL(url);
+    };
+  }, [file]);
 
   useEffect(() => {
     if (!output) {
-      setPreviewUrl(null)
-      return
+      setPreviewUrl(null);
+      return;
     }
-    const url = URL.createObjectURL(output)
-    setPreviewUrl(url)
-    return () => URL.revokeObjectURL(url)
-  }, [output])
+    const url = URL.createObjectURL(output);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [output]);
 
-  const parsedWidth = Number.parseInt(width, 10)
-  const parsedHeight = Number.parseInt(height, 10)
+  const parsedWidth = Number.parseInt(width, 10);
+  const parsedHeight = Number.parseInt(height, 10);
   const targetValid =
     Number.isFinite(parsedWidth) &&
     Number.isFinite(parsedHeight) &&
     parsedWidth >= 1 &&
-    parsedHeight >= 1
+    parsedHeight >= 1;
 
   const changed =
     !!sourceDims &&
     targetValid &&
     (clampResizeDimension(parsedWidth) !== sourceDims.width ||
-      clampResizeDimension(parsedHeight) !== sourceDims.height)
+      clampResizeDimension(parsedHeight) !== sourceDims.height);
 
   function clearOutput() {
-    setOutput(null)
-    setOutputDims(null)
+    setOutput(null);
+    setOutputDims(null);
   }
 
   function setWidthLocked(nextWidth: string) {
-    setWidth(nextWidth)
-    clearOutput()
-    if (!lockAspect || !aspectRatio) return
-    const n = Number.parseInt(nextWidth, 10)
-    if (!Number.isFinite(n) || n < 1) return
-    setHeight(String(clampResizeDimension(n / aspectRatio)))
+    setWidth(nextWidth);
+    clearOutput();
+    if (!lockAspect || !aspectRatio) return;
+    const n = Number.parseInt(nextWidth, 10);
+    if (!Number.isFinite(n) || n < 1) return;
+    setHeight(String(clampResizeDimension(n / aspectRatio)));
   }
 
   function setHeightLocked(nextHeight: string) {
-    setHeight(nextHeight)
-    clearOutput()
-    if (!lockAspect || !aspectRatio) return
-    const n = Number.parseInt(nextHeight, 10)
-    if (!Number.isFinite(n) || n < 1) return
-    setWidth(String(clampResizeDimension(n * aspectRatio)))
+    setHeight(nextHeight);
+    clearOutput();
+    if (!lockAspect || !aspectRatio) return;
+    const n = Number.parseInt(nextHeight, 10);
+    if (!Number.isFinite(n) || n < 1) return;
+    setWidth(String(clampResizeDimension(n * aspectRatio)));
   }
 
   function applyScalePercent(percent: number) {
-    if (!sourceDims) return
-    const scale = percent / 100
-    const nextW = clampResizeDimension(sourceDims.width * scale)
-    const nextH = clampResizeDimension(sourceDims.height * scale)
-    setWidth(String(nextW))
-    setHeight(String(nextH))
-    clearOutput()
+    if (!sourceDims) return;
+    const scale = percent / 100;
+    const nextW = clampResizeDimension(sourceDims.width * scale);
+    const nextH = clampResizeDimension(sourceDims.height * scale);
+    setWidth(String(nextW));
+    setHeight(String(nextH));
+    clearOutput();
   }
 
   function resetDims() {
-    if (!sourceDims) return
-    setWidth(String(sourceDims.width))
-    setHeight(String(sourceDims.height))
-    clearOutput()
+    if (!sourceDims) return;
+    setWidth(String(sourceDims.width));
+    setHeight(String(sourceDims.height));
+    clearOutput();
   }
 
   async function runResize() {
     if (!file) {
-      setError('Choose an image first.')
-      return
+      setError("Choose an image first.");
+      return;
     }
     if (!targetValid) {
-      setError('Enter width and height (≥ 1).')
-      return
+      setError("Enter width and height (≥ 1).");
+      return;
     }
-    setBusy(true)
-    setError(null)
+    setBusy(true);
+    setError(null);
     try {
-      const prepared = await resizeImage(file, parsedWidth, parsedHeight)
-      setOutput(prepared.file)
-      setOutputDims({ width: prepared.width, height: prepared.height })
-      toast.success(prepared.transformed ? 'Resized' : 'Unchanged')
+      const prepared = await resizeImage(file, parsedWidth, parsedHeight);
+      setOutput(prepared.file);
+      setOutputDims({ width: prepared.width, height: prepared.height });
+      toast.success(prepared.transformed ? "Resized" : "Unchanged");
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Could not resize that image'
-      setError(message)
-      toast.error(message)
+      const message = err instanceof Error ? err.message : "Could not resize that image";
+      setError(message);
+      toast.error(message);
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
   }
 
   function download() {
-    if (!output) return
-    const url = URL.createObjectURL(output)
-    const anchor = document.createElement('a')
-    const base = (file?.name || 'image').replace(/\.[^.]+$/, '')
-    const ext = extensionForMime(output.type, file?.name || 'image.png')
-    const suffix = outputDims
-      ? `${outputDims.width}x${outputDims.height}`
-      : 'resized'
-    anchor.href = url
-    anchor.download = `${base}-${suffix}.${ext}`
-    anchor.click()
-    URL.revokeObjectURL(url)
+    if (!output) return;
+    const url = URL.createObjectURL(output);
+    const anchor = document.createElement("a");
+    const base = (file?.name || "image").replace(/\.[^.]+$/, "");
+    const ext = extensionForMime(output.type, file?.name || "image.png");
+    const suffix = outputDims ? `${outputDims.width}x${outputDims.height}` : "resized";
+    anchor.href = url;
+    anchor.download = `${base}-${suffix}.${ext}`;
+    anchor.click();
+    URL.revokeObjectURL(url);
   }
 
   return (
@@ -199,12 +190,12 @@ export function ImageResizeTool() {
           file={file}
           hint="PNG, JPEG, or WebP"
           onFile={(next) => {
-            setFile(next)
-            setOutput(null)
-            setOutputDims(null)
-            setError(null)
-            setWidth('')
-            setHeight('')
+            setFile(next);
+            setOutput(null);
+            setOutputDims(null);
+            setError(null);
+            setWidth("");
+            setHeight("");
           }}
         />
 
@@ -216,35 +207,31 @@ export function ImageResizeTool() {
                 {sourceDims.width}×{sourceDims.height}
                 {targetValid
                   ? ` → ${clampResizeDimension(parsedWidth)}×${clampResizeDimension(parsedHeight)}`
-                  : ''}
+                  : ""}
               </p>
             </div>
             <ImagePreviewFrame>
-              <img
-                src={sourceUrl}
-                alt="Source preview"
-                className={imagePreviewClassName}
-              />
+              <img src={sourceUrl} alt="Source preview" className={imagePreviewClassName} />
             </ImagePreviewFrame>
           </div>
         ) : null}
 
         <p className="m-0 text-xs text-muted-foreground">
-          Related:{' '}
+          Related:{" "}
           <Link
             to="/tools/image-compress"
             className="text-foreground underline-offset-4 hover:underline"
           >
             Compress
           </Link>
-          {' · '}
+          {" · "}
           <Link
             to="/tools/image-crop"
             className="text-foreground underline-offset-4 hover:underline"
           >
             Crop
           </Link>
-          {' · '}
+          {" · "}
           <Link
             to="/tools/image-format"
             className="text-foreground underline-offset-4 hover:underline"
@@ -322,14 +309,9 @@ export function ImageResizeTool() {
             ) : (
               <ScalingIcon data-icon="inline-start" />
             )}
-            {busy ? 'Resizing…' : 'Resize'}
+            {busy ? "Resizing…" : "Resize"}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            disabled={!output}
-            onClick={download}
-          >
+          <Button type="button" variant="outline" disabled={!output} onClick={download}>
             <DownloadIcon data-icon="inline-start" />
             Download
           </Button>
@@ -355,17 +337,14 @@ export function ImageResizeTool() {
             </div>
             <div className="rounded-lg border border-border bg-card/60 px-3 py-2">
               <dt className="text-xs text-muted-foreground">Output</dt>
-              <dd className="m-0 mt-0.5 font-medium">
-                {output ? formatBytes(output.size) : '—'}
-              </dd>
+              <dd className="m-0 mt-0.5 font-medium">{output ? formatBytes(output.size) : "—"}</dd>
               {outputDims ? (
                 <dd className="m-0 mt-0.5 text-xs tabular-nums text-muted-foreground">
                   {outputDims.width}×{outputDims.height}
                 </dd>
               ) : targetValid ? (
                 <dd className="m-0 mt-0.5 text-xs tabular-nums text-muted-foreground">
-                  {clampResizeDimension(parsedWidth)}×
-                  {clampResizeDimension(parsedHeight)}
+                  {clampResizeDimension(parsedWidth)}×{clampResizeDimension(parsedHeight)}
                 </dd>
               ) : null}
             </div>
@@ -381,11 +360,7 @@ export function ImageResizeTool() {
               </p>
             </div>
             <ImagePreviewFrame>
-              <img
-                src={previewUrl}
-                alt="Resized preview"
-                className={imagePreviewClassName}
-              />
+              <img src={previewUrl} alt="Resized preview" className={imagePreviewClassName} />
             </ImagePreviewFrame>
           </div>
         ) : (
@@ -395,5 +370,5 @@ export function ImageResizeTool() {
         )}
       </div>
     </div>
-  )
+  );
 }

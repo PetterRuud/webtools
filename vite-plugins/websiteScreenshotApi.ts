@@ -1,60 +1,54 @@
-import type { IncomingMessage, ServerResponse } from 'node:http'
-import { Readable } from 'node:stream'
-import type { Plugin } from 'vite'
-import {
-  parseCaptureRequest,
-  readJsonBody,
-} from '../src/lib/websiteScreenshot/options.ts'
-import { captureWebsiteScreenshotNode } from '../src/lib/websiteScreenshot/nodeCapture.ts'
+import type { IncomingMessage, ServerResponse } from "node:http";
+import { Readable } from "node:stream";
+import type { Plugin } from "vite";
+import { parseCaptureRequest, readJsonBody } from "../src/lib/websiteScreenshot/options.ts";
+import { captureWebsiteScreenshotNode } from "../src/lib/websiteScreenshot/nodeCapture.ts";
 
-const API_PATH = '/api/website-screenshot/capture'
+const API_PATH = "/api/website-screenshot/capture";
 
 function nodeToWebRequest(req: IncomingMessage, host: string): Request {
-  const headers = new Headers()
+  const headers = new Headers();
   for (const [key, value] of Object.entries(req.headers)) {
-    if (value === undefined) continue
+    if (value === undefined) continue;
     if (Array.isArray(value)) {
-      for (const item of value) headers.append(key, item)
+      for (const item of value) headers.append(key, item);
     } else {
-      headers.set(key, value)
+      headers.set(key, value);
     }
   }
 
-  const url = `http://${host}${req.url ?? API_PATH}`
-  const method = req.method ?? 'GET'
-  if (method === 'GET' || method === 'HEAD') {
-    return new Request(url, { method, headers })
+  const url = `http://${host}${req.url ?? API_PATH}`;
+  const method = req.method ?? "GET";
+  if (method === "GET" || method === "HEAD") {
+    return new Request(url, { method, headers });
   }
 
   return new Request(url, {
     method,
     headers,
-    duplex: 'half',
+    duplex: "half",
     body: Readable.toWeb(req) as ReadableStream,
-  } as RequestInit)
+  } as RequestInit);
 }
 
-async function handleCapture(
-  req: IncomingMessage,
-  res: ServerResponse,
-): Promise<void> {
+async function handleCapture(req: IncomingMessage, res: ServerResponse): Promise<void> {
   try {
-    const host = req.headers.host || '127.0.0.1'
-    const request = nodeToWebRequest(req, host)
-    const body = await readJsonBody(request)
-    const captureReq = parseCaptureRequest(body)
-    const result = await captureWebsiteScreenshotNode(captureReq)
+    const host = req.headers.host || "127.0.0.1";
+    const request = nodeToWebRequest(req, host);
+    const body = await readJsonBody(request);
+    const captureReq = parseCaptureRequest(body);
+    const result = await captureWebsiteScreenshotNode(captureReq);
 
-    res.statusCode = 200
-    res.setHeader('Content-Type', 'image/png')
-    res.setHeader('Cache-Control', 'no-store')
-    res.setHeader('X-Capture-Mode', result.mode)
-    res.end(Buffer.from(result.png))
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "image/png");
+    res.setHeader("Cache-Control", "no-store");
+    res.setHeader("X-Capture-Mode", result.mode);
+    res.end(Buffer.from(result.png));
   } catch (e) {
-    const message = e instanceof Error ? e.message : 'Screenshot capture failed'
-    res.statusCode = 400
-    res.setHeader('Content-Type', 'application/json')
-    res.end(JSON.stringify({ error: message }))
+    const message = e instanceof Error ? e.message : "Screenshot capture failed";
+    res.statusCode = 400;
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ error: message }));
   }
 }
 
@@ -62,15 +56,15 @@ function attach(middlewares: {
   use: (
     path: string,
     fn: (req: IncomingMessage, res: ServerResponse, next: () => void) => void,
-  ) => void
+  ) => void;
 }) {
   middlewares.use(API_PATH, (req, res, next) => {
-    if (req.method !== 'POST') {
-      next()
-      return
+    if (req.method !== "POST") {
+      next();
+      return;
     }
-    void handleCapture(req, res)
-  })
+    void handleCapture(req, res);
+  });
 }
 
 /**
@@ -80,12 +74,12 @@ function attach(middlewares: {
  */
 export function websiteScreenshotApiPlugin(): Plugin {
   return {
-    name: 'webtools-website-screenshot-api',
+    name: "webtools-website-screenshot-api",
     configureServer(server) {
-      attach(server.middlewares)
+      attach(server.middlewares);
     },
     configurePreviewServer(server) {
-      attach(server.middlewares)
+      attach(server.middlewares);
     },
-  }
+  };
 }

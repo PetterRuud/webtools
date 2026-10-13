@@ -1,16 +1,16 @@
-import { useEffect, useState } from 'react'
-import { useServerFn } from '@tanstack/react-start'
-import { CopyIcon, Loader2Icon, SearchIcon } from 'lucide-react'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { copyText } from '#/lib/clipboard'
-import { lookupIpFn } from '#/lib/networkFns'
+import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { CopyIcon, Loader2Icon, SearchIcon } from "lucide-react";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { copyText } from "#/lib/clipboard";
+import { lookupIpFn } from "#/lib/networkFns";
 
-type IpResult = Awaited<ReturnType<typeof lookupIpFn>>
+type IpResult = Awaited<ReturnType<typeof lookupIpFn>>;
 
 function Field({ label, value }: { label: string; value?: string | number | null }) {
-  if (value === undefined || value === null || value === '') return null
+  if (value === undefined || value === null || value === "") return null;
   return (
     <div className="flex flex-col gap-0.5 rounded-lg border border-border/70 bg-card/40 px-3 py-2">
       <span className="text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
@@ -18,36 +18,36 @@ function Field({ label, value }: { label: string; value?: string | number | null
       </span>
       <span className="break-all font-mono text-sm text-foreground">{value}</span>
     </div>
-  )
+  );
 }
 
 export function IpLookupTool() {
-  const lookupIp = useServerFn(lookupIpFn)
-  const [query, setQuery] = useState('')
-  const [result, setResult] = useState<IpResult | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const lookupIp = useServerFn(lookupIpFn);
+  const [query, setQuery] = useState("");
+  const [result, setResult] = useState<IpResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function lookup(ip?: string) {
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
     try {
       const data = await lookupIp({
         data: ip?.trim() ? { ip: ip.trim() } : {},
-      })
-      setResult(data)
+      });
+      setResult(data);
     } catch (err) {
-      setResult(null)
-      setError(err instanceof Error ? err.message : 'Lookup failed')
+      setResult(null);
+      setError(err instanceof Error ? err.message : "Lookup failed");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    void lookup()
+    void lookup();
     // eslint-disable-next-line react-hooks/exhaustive-deps -- initial yours-IP lookup once
-  }, [])
+  }, []);
 
   return (
     <div className="flex flex-col gap-4">
@@ -63,7 +63,7 @@ export function IpLookupTool() {
             autoComplete="off"
             className="font-mono"
             onKeyDown={(event) => {
-              if (event.key === 'Enter') void lookup(query)
+              if (event.key === "Enter") void lookup(query);
             }}
           />
         </div>
@@ -80,8 +80,8 @@ export function IpLookupTool() {
           variant="outline"
           disabled={loading}
           onClick={() => {
-            setQuery('')
-            void lookup()
+            setQuery("");
+            void lookup();
           }}
         >
           Mine
@@ -109,15 +109,13 @@ export function IpLookupTool() {
               type="button"
               size="sm"
               variant="outline"
-              onClick={() => void copyText(result.ip, 'IP')}
+              onClick={() => void copyText(result.ip, "IP")}
             >
               <CopyIcon data-icon="inline-start" />
               Copy
             </Button>
           </div>
-          {result.note ? (
-            <p className="m-0 text-sm text-muted-foreground">{result.note}</p>
-          ) : null}
+          {result.note ? <p className="m-0 text-sm text-muted-foreground">{result.note}</p> : null}
           <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             <Field label="Type" value={result.type} />
             <Field label="Country" value={result.country ?? result.countryCode} />
@@ -146,5 +144,5 @@ export function IpLookupTool() {
         <p className="m-0 text-sm text-muted-foreground">Looking up…</p>
       ) : null}
     </div>
-  )
+  );
 }

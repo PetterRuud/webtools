@@ -1,81 +1,78 @@
-import { useMemo, useState } from 'react'
-import { CopyIcon } from 'lucide-react'
-import { Button } from '#/components/ui/button'
-import { Checkbox } from '#/components/ui/checkbox'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { Slider } from '#/components/ui/slider'
-import { copyText } from '#/lib/clipboard'
+import { useMemo, useState } from "react";
+import { CopyIcon } from "lucide-react";
+import { Button } from "#/components/ui/button";
+import { Checkbox } from "#/components/ui/checkbox";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { Slider } from "#/components/ui/slider";
+import { copyText } from "#/lib/clipboard";
 import {
   DEFAULT_BOX_SHADOW,
   formatBoxShadowCss,
   formatBoxShadowValue,
   type BoxShadowParams,
-} from '#/lib/boxShadow'
+} from "#/lib/boxShadow";
 
-type NumericKey = 'offsetX' | 'offsetY' | 'blur' | 'spread' | 'opacity'
+type NumericKey = "offsetX" | "offsetY" | "blur" | "spread" | "opacity";
 
 const SLIDERS: Array<{
-  key: NumericKey
-  label: string
-  min: number
-  max: number
-  step: number
-  format: (value: number) => string
+  key: NumericKey;
+  label: string;
+  min: number;
+  max: number;
+  step: number;
+  format: (value: number) => string;
 }> = [
   {
-    key: 'offsetX',
-    label: 'Offset X',
+    key: "offsetX",
+    label: "Offset X",
     min: -50,
     max: 50,
     step: 1,
     format: (v) => `${v}px`,
   },
   {
-    key: 'offsetY',
-    label: 'Offset Y',
+    key: "offsetY",
+    label: "Offset Y",
     min: -50,
     max: 50,
     step: 1,
     format: (v) => `${v}px`,
   },
   {
-    key: 'blur',
-    label: 'Blur',
+    key: "blur",
+    label: "Blur",
     min: 0,
     max: 100,
     step: 1,
     format: (v) => `${v}px`,
   },
   {
-    key: 'spread',
-    label: 'Spread',
+    key: "spread",
+    label: "Spread",
     min: -50,
     max: 50,
     step: 1,
     format: (v) => `${v}px`,
   },
   {
-    key: 'opacity',
-    label: 'Opacity',
+    key: "opacity",
+    label: "Opacity",
     min: 0,
     max: 1,
     step: 0.01,
     format: (v) => v.toFixed(2),
   },
-]
+];
 
 export function BoxShadowTool() {
-  const [params, setParams] = useState<BoxShadowParams>(DEFAULT_BOX_SHADOW)
+  const [params, setParams] = useState<BoxShadowParams>(DEFAULT_BOX_SHADOW);
 
-  const cssValue = useMemo(() => formatBoxShadowValue(params), [params])
-  const cssRule = useMemo(() => formatBoxShadowCss(params), [params])
+  const cssValue = useMemo(() => formatBoxShadowValue(params), [params]);
+  const cssRule = useMemo(() => formatBoxShadowCss(params), [params]);
 
-  function update<K extends keyof BoxShadowParams>(
-    key: K,
-    value: BoxShadowParams[K],
-  ) {
-    setParams((prev) => ({ ...prev, [key]: value }))
+  function update<K extends keyof BoxShadowParams>(key: K, value: BoxShadowParams[K]) {
+    setParams((prev) => ({ ...prev, [key]: value }));
   }
 
   return (
@@ -96,8 +93,8 @@ export function BoxShadowTool() {
               step={step}
               value={[params[key]]}
               onValueChange={(value) => {
-                const next = Array.isArray(value) ? value[0] : value
-                if (typeof next === 'number') update(key, next)
+                const next = Array.isArray(value) ? value[0] : value;
+                if (typeof next === "number") update(key, next);
               }}
             />
           </div>
@@ -110,14 +107,14 @@ export function BoxShadowTool() {
               id="shadow-color"
               type="color"
               value={params.color}
-              onChange={(event) => update('color', event.target.value)}
+              onChange={(event) => update("color", event.target.value)}
               className="h-8 w-10 cursor-pointer rounded-md border border-input bg-transparent p-0.5"
               aria-label="Shadow color"
             />
             <Input
               value={params.color}
               onValueChange={(value) => {
-                if (/^#[0-9a-fA-F]{0,6}$/.test(value)) update('color', value)
+                if (/^#[0-9a-fA-F]{0,6}$/.test(value)) update("color", value);
               }}
               spellCheck={false}
               className="font-mono text-[0.92rem] uppercase"
@@ -129,30 +126,22 @@ export function BoxShadowTool() {
         <Label className="flex cursor-pointer items-center gap-2 rounded-lg border border-border/70 px-2.5 py-1.5 text-sm font-normal">
           <Checkbox
             checked={params.inset}
-            onCheckedChange={(checked) => update('inset', checked === true)}
+            onCheckedChange={(checked) => update("inset", checked === true)}
             aria-label="Inset shadow"
           />
           <span>Inset</span>
         </Label>
 
         <div className="flex flex-wrap gap-1.5 pt-1">
-          <Button type="button" onClick={() => void copyText(cssRule, 'CSS')}>
+          <Button type="button" onClick={() => void copyText(cssRule, "CSS")}>
             <CopyIcon data-icon="inline-start" />
             Copy CSS
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => void copyText(cssValue, 'value')}
-          >
+          <Button type="button" variant="outline" onClick={() => void copyText(cssValue, "value")}>
             <CopyIcon data-icon="inline-start" />
             Copy value
           </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            onClick={() => setParams(DEFAULT_BOX_SHADOW)}
-          >
+          <Button type="button" variant="ghost" onClick={() => setParams(DEFAULT_BOX_SHADOW)}>
             Reset
           </Button>
         </div>
@@ -185,11 +174,7 @@ export function BoxShadowTool() {
               spellCheck={false}
               className="font-mono text-[0.85rem]"
             />
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => void copyText(cssRule, 'CSS')}
-            >
+            <Button type="button" variant="outline" onClick={() => void copyText(cssRule, "CSS")}>
               <CopyIcon data-icon="inline-start" />
               Copy
             </Button>
@@ -197,5 +182,5 @@ export function BoxShadowTool() {
         </div>
       </div>
     </div>
-  )
+  );
 }

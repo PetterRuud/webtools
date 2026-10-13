@@ -1,15 +1,15 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { DownloadIcon, Loader2Icon } from 'lucide-react'
-import { toast } from 'sonner'
-import samplePanelUrl from '#/assets/samples/nine-slice-panel.png?url'
-import { ImageFileField } from '#/components/tools/ImageFileField'
-import { NineSliceGuides } from '#/components/tools/NineSliceGuides'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { Slider } from '#/components/ui/slider'
-import { Textarea } from '#/components/ui/textarea'
-import { copyText } from '#/lib/clipboard'
+import { useEffect, useMemo, useRef, useState } from "react";
+import { DownloadIcon, Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
+import samplePanelUrl from "#/assets/samples/nine-slice-panel.png?url";
+import { ImageFileField } from "#/components/tools/ImageFileField";
+import { NineSliceGuides } from "#/components/tools/NineSliceGuides";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { Slider } from "#/components/ui/slider";
+import { Textarea } from "#/components/ui/textarea";
+import { copyText } from "#/lib/clipboard";
 import {
   SAMPLE_PANEL_FILE_NAME,
   SAMPLE_SLICE_MARGINS,
@@ -21,97 +21,95 @@ import {
   loadImage,
   type CenterMode,
   type SliceMargins,
-} from '#/lib/nineSlice'
+} from "#/lib/nineSlice";
 
-type MarginKey = keyof SliceMargins
-type SourceKind = 'sample' | 'file'
+type MarginKey = keyof SliceMargins;
+type SourceKind = "sample" | "file";
 
 const MARGIN_FIELDS: Array<{ key: MarginKey; label: string }> = [
-  { key: 'top', label: 'Top' },
-  { key: 'right', label: 'Right' },
-  { key: 'bottom', label: 'Bottom' },
-  { key: 'left', label: 'Left' },
-]
+  { key: "top", label: "Top" },
+  { key: "right", label: "Right" },
+  { key: "bottom", label: "Bottom" },
+  { key: "left", label: "Left" },
+];
 
 const CENTER_MODES: Array<{ id: CenterMode; label: string }> = [
-  { id: 'stretch', label: 'Stretch' },
-  { id: 'repeat', label: 'Tile' },
-  { id: 'round', label: 'Round' },
-]
+  { id: "stretch", label: "Stretch" },
+  { id: "repeat", label: "Tile" },
+  { id: "round", label: "Round" },
+];
 
 const PREVIEW_FRAMES: Array<{
-  id: string
-  width: number
-  height: number
-  text: string
+  id: string;
+  width: number;
+  height: number;
+  text: string;
 }> = [
   {
-    id: 'wide',
+    id: "wide",
     width: 280,
     height: 160,
-    text: 'Quiet winds slice through serene landscapes in bounded moments.',
+    text: "Quiet winds slice through serene landscapes in bounded moments.",
   },
   {
-    id: 'tall',
+    id: "tall",
     width: 140,
     height: 220,
-    text: 'Slice of life',
+    text: "Slice of life",
   },
   {
-    id: 'bar',
+    id: "bar",
     width: 240,
     height: 96,
-    text: 'Contours of change',
+    text: "Contours of change",
   },
-]
+];
 
 export function NineSliceTool() {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const [sourceKind, setSourceKind] = useState<SourceKind>('sample')
-  const [file, setFile] = useState<File | null>(null)
-  const [sourceUrl, setSourceUrl] = useState<string | null>(null)
-  const [dims, setDims] = useState<{ width: number; height: number } | null>(
-    null,
-  )
-  const [margins, setMargins] = useState<SliceMargins>(SAMPLE_SLICE_MARGINS)
-  const [centerMode, setCenterMode] = useState<CenterMode>('stretch')
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const objectUrlRef = useRef<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [sourceKind, setSourceKind] = useState<SourceKind>("sample");
+  const [file, setFile] = useState<File | null>(null);
+  const [sourceUrl, setSourceUrl] = useState<string | null>(null);
+  const [dims, setDims] = useState<{ width: number; height: number } | null>(null);
+  const [margins, setMargins] = useState<SliceMargins>(SAMPLE_SLICE_MARGINS);
+  const [centerMode, setCenterMode] = useState<CenterMode>("stretch");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const objectUrlRef = useRef<string | null>(null);
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
     void (async () => {
       if (objectUrlRef.current) {
-        URL.revokeObjectURL(objectUrlRef.current)
-        objectUrlRef.current = null
+        URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = null;
       }
-      if (fileInputRef.current) fileInputRef.current.value = ''
+      if (fileInputRef.current) fileInputRef.current.value = "";
       try {
-        const img = await loadImage(samplePanelUrl)
-        if (cancelled) return
-        const width = img.naturalWidth
-        const height = img.naturalHeight
-        setDims({ width, height })
-        setSourceUrl(samplePanelUrl)
-        setSourceKind('sample')
-        setFile(null)
-        setMargins(clampSliceMargins(SAMPLE_SLICE_MARGINS, width, height))
+        const img = await loadImage(samplePanelUrl);
+        if (cancelled) return;
+        const width = img.naturalWidth;
+        const height = img.naturalHeight;
+        setDims({ width, height });
+        setSourceUrl(samplePanelUrl);
+        setSourceKind("sample");
+        setFile(null);
+        setMargins(clampSliceMargins(SAMPLE_SLICE_MARGINS, width, height));
       } catch (err) {
-        if (cancelled) return
-        setDims(null)
-        setSourceUrl(null)
-        setError(err instanceof Error ? err.message : 'Could not read image')
+        if (cancelled) return;
+        setDims(null);
+        setSourceUrl(null);
+        setError(err instanceof Error ? err.message : "Could not read image");
       }
-    })()
+    })();
     return () => {
-      cancelled = true
+      cancelled = true;
       if (objectUrlRef.current) {
-        URL.revokeObjectURL(objectUrlRef.current)
-        objectUrlRef.current = null
+        URL.revokeObjectURL(objectUrlRef.current);
+        objectUrlRef.current = null;
       }
-    }
-  }, [])
+    };
+  }, []);
 
   async function applySource(
     url: string,
@@ -119,115 +117,109 @@ export function NineSliceTool() {
     nextFile: File | null,
     preferSampleMargins: boolean,
   ) {
-    setError(null)
+    setError(null);
     try {
-      const img = await loadImage(url)
-      const width = img.naturalWidth
-      const height = img.naturalHeight
-      setDims({ width, height })
-      setSourceUrl(url)
-      setSourceKind(kind)
-      setFile(nextFile)
+      const img = await loadImage(url);
+      const width = img.naturalWidth;
+      const height = img.naturalHeight;
+      setDims({ width, height });
+      setSourceUrl(url);
+      setSourceKind(kind);
+      setFile(nextFile);
       setMargins(
         preferSampleMargins
           ? clampSliceMargins(SAMPLE_SLICE_MARGINS, width, height)
           : defaultSliceMargins(width, height),
-      )
+      );
     } catch (err) {
-      setDims(null)
-      setSourceUrl(null)
-      setError(err instanceof Error ? err.message : 'Could not read image')
+      setDims(null);
+      setSourceUrl(null);
+      setError(err instanceof Error ? err.message : "Could not read image");
     }
   }
 
   async function loadSample() {
     if (objectUrlRef.current) {
-      URL.revokeObjectURL(objectUrlRef.current)
-      objectUrlRef.current = null
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
     }
-    if (fileInputRef.current) fileInputRef.current.value = ''
-    await applySource(samplePanelUrl, 'sample', null, true)
+    if (fileInputRef.current) fileInputRef.current.value = "";
+    await applySource(samplePanelUrl, "sample", null, true);
   }
 
   async function loadFromFile(next: File | null) {
-    if (!next) return
+    if (!next) return;
     if (objectUrlRef.current) {
-      URL.revokeObjectURL(objectUrlRef.current)
-      objectUrlRef.current = null
+      URL.revokeObjectURL(objectUrlRef.current);
+      objectUrlRef.current = null;
     }
-    const url = URL.createObjectURL(next)
-    objectUrlRef.current = url
-    await applySource(url, 'file', next, false)
+    const url = URL.createObjectURL(next);
+    objectUrlRef.current = url;
+    await applySource(url, "file", next, false);
   }
 
-  const displayName =
-    sourceKind === 'sample'
-      ? SAMPLE_PANEL_FILE_NAME
-      : file?.name || 'slice.png'
+  const displayName = sourceKind === "sample" ? SAMPLE_PANEL_FILE_NAME : file?.name || "slice.png";
 
   const css = useMemo(() => {
-    if (!dims) return ''
+    if (!dims) return "";
     return formatBorderImageCss({
       fileName: displayName,
       margins,
       centerMode,
-    })
-  }, [dims, margins, centerMode, displayName])
+    });
+  }, [dims, margins, centerMode, displayName]);
 
   function previewStyle(width: number, height: number) {
-    if (!sourceUrl || !dims) return undefined
-    const border = `${margins.top}px ${margins.right}px ${margins.bottom}px ${margins.left}px`
+    if (!sourceUrl || !dims) return undefined;
+    const border = `${margins.top}px ${margins.right}px ${margins.bottom}px ${margins.left}px`;
     return {
       width,
       height,
-      boxSizing: 'border-box' as const,
-      borderStyle: 'solid',
+      boxSizing: "border-box" as const,
+      borderStyle: "solid",
       borderWidth: border,
       borderImageSource: `url("${sourceUrl}")`,
       borderImageSlice: `${margins.top} ${margins.right} ${margins.bottom} ${margins.left} fill`,
       borderImageWidth: border,
       borderImageRepeat: centerMode,
       padding: border,
-      background: 'transparent',
-      overflow: 'hidden' as const,
-      resize: 'both' as const,
+      background: "transparent",
+      overflow: "hidden" as const,
+      resize: "both" as const,
       minWidth: 96,
       minHeight: 72,
-      maxWidth: '100%',
-      color: 'var(--foreground)',
+      maxWidth: "100%",
+      color: "var(--foreground)",
       fontSize: 13,
       lineHeight: 1.35,
-    }
+    };
   }
 
   function updateMargin(key: MarginKey, value: number) {
-    if (!dims) return
-    setMargins((prev) =>
-      clampSliceMargins({ ...prev, [key]: value }, dims.width, dims.height),
-    )
+    if (!dims) return;
+    setMargins((prev) => clampSliceMargins({ ...prev, [key]: value }, dims.width, dims.height));
   }
 
   async function exportSlices() {
     if (!sourceUrl || !dims) {
-      setError('Choose an image first.')
-      return
+      setError("Choose an image first.");
+      return;
     }
-    setBusy(true)
-    setError(null)
+    setBusy(true);
+    setError(null);
     try {
-      const image = await loadImage(sourceUrl)
-      const slices = await exportSlicePngs(image, margins)
+      const image = await loadImage(sourceUrl);
+      const slices = await exportSlicePngs(image, margins);
       for (const slice of slices) {
-        downloadBlob(slice.blob, slice.fileName)
+        downloadBlob(slice.blob, slice.fileName);
       }
-      toast.success(`Exported ${slices.length} slices`)
+      toast.success(`Exported ${slices.length} slices`);
     } catch (err) {
-      const message =
-        err instanceof Error ? err.message : 'Could not export slices'
-      setError(message)
-      toast.error(message)
+      const message = err instanceof Error ? err.message : "Could not export slices";
+      setError(message);
+      toast.error(message);
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
   }
 
@@ -242,12 +234,12 @@ export function NineSliceTool() {
             hint="PNG, JPEG, or WebP"
             inputRef={fileInputRef}
             onFile={(next) => {
-              void loadFromFile(next)
+              void loadFromFile(next);
             }}
           />
           <Button
             type="button"
-            variant={sourceKind === 'sample' ? 'default' : 'outline'}
+            variant={sourceKind === "sample" ? "default" : "outline"}
             size="sm"
             onClick={() => void loadSample()}
           >
@@ -258,7 +250,7 @@ export function NineSliceTool() {
         {dims ? (
           <p className="m-0 text-xs tabular-nums text-muted-foreground">
             {displayName} · {dims.width}×{dims.height}
-            {sourceKind === 'sample' ? ' · demo panel' : ''}
+            {sourceKind === "sample" ? " · demo panel" : ""}
           </p>
         ) : null}
 
@@ -280,10 +272,8 @@ export function NineSliceTool() {
           {MARGIN_FIELDS.map(({ key, label }) => {
             const max = Math.max(
               1,
-              key === 'left' || key === 'right'
-                ? (dims?.width ?? 2) - 1
-                : (dims?.height ?? 2) - 1,
-            )
+              key === "left" || key === "right" ? (dims?.width ?? 2) - 1 : (dims?.height ?? 2) - 1,
+            );
             return (
               <div key={key} className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between gap-2">
@@ -297,9 +287,7 @@ export function NineSliceTool() {
                       value={margins[key]}
                       disabled={!dims}
                       className="h-7 w-16 px-2 text-right tabular-nums"
-                      onChange={(e) =>
-                        updateMargin(key, Number(e.target.value) || 0)
-                      }
+                      onChange={(e) => updateMargin(key, Number(e.target.value) || 0)}
                     />
                     <span className="text-xs text-muted-foreground">px</span>
                   </div>
@@ -311,12 +299,12 @@ export function NineSliceTool() {
                   disabled={!dims}
                   value={[margins[key]]}
                   onValueChange={(value) => {
-                    const next = Array.isArray(value) ? value[0] : value
-                    if (typeof next === 'number') updateMargin(key, next)
+                    const next = Array.isArray(value) ? value[0] : value;
+                    if (typeof next === "number") updateMargin(key, next);
                   }}
                 />
               </div>
-            )
+            );
           })}
         </div>
       </div>
@@ -330,7 +318,7 @@ export function NineSliceTool() {
               size="sm"
               variant="outline"
               disabled={!css}
-              onClick={() => void copyText(css, 'CSS')}
+              onClick={() => void copyText(css, "CSS")}
             >
               Copy
             </Button>
@@ -343,7 +331,7 @@ export function NineSliceTool() {
             className="min-h-32 font-mono text-xs"
           />
           <p className="m-0 text-xs text-muted-foreground">
-            Tip: try{' '}
+            Tip: try{" "}
             <a
               className="underline underline-offset-2"
               href="https://developer.mozilla.org/en-US/docs/Web/CSS/border-image-repeat"
@@ -351,7 +339,7 @@ export function NineSliceTool() {
               rel="noreferrer"
             >
               border-image-repeat
-            </a>{' '}
+            </a>{" "}
             — Stretch / Tile / Round below.
           </p>
         </div>
@@ -364,7 +352,7 @@ export function NineSliceTool() {
                 key={mode.id}
                 type="button"
                 size="sm"
-                variant={centerMode === mode.id ? 'default' : 'outline'}
+                variant={centerMode === mode.id ? "default" : "outline"}
                 onClick={() => setCenterMode(mode.id)}
               >
                 {mode.label}
@@ -400,29 +388,25 @@ export function NineSliceTool() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            disabled={!dims || busy}
-            onClick={() => void exportSlices()}
-          >
+          <Button type="button" disabled={!dims || busy} onClick={() => void exportSlices()}>
             {busy ? (
               <Loader2Icon data-icon="inline-start" className="animate-spin" />
             ) : (
               <DownloadIcon data-icon="inline-start" />
             )}
-            {busy ? 'Exporting…' : 'Download 9 slices'}
+            {busy ? "Exporting…" : "Download 9 slices"}
           </Button>
           <Button
             type="button"
             variant="outline"
             disabled={!dims}
             onClick={() => {
-              if (!dims) return
+              if (!dims) return;
               setMargins(
-                sourceKind === 'sample'
+                sourceKind === "sample"
                   ? clampSliceMargins(SAMPLE_SLICE_MARGINS, dims.width, dims.height)
                   : defaultSliceMargins(dims.width, dims.height),
-              )
+              );
             }}
           >
             Reset guides
@@ -436,5 +420,5 @@ export function NineSliceTool() {
         ) : null}
       </div>
     </div>
-  )
+  );
 }

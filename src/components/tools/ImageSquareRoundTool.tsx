@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Link } from '@tanstack/react-router'
-import { DownloadIcon, Loader2Icon, SquareRoundCornerIcon } from 'lucide-react'
-import { toast } from 'sonner'
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { DownloadIcon, Loader2Icon, SquareRoundCornerIcon } from "lucide-react";
+import { toast } from "sonner";
 import {
   ImageFileField,
   ImagePreviewFrame,
   imagePreviewClassName,
-} from '#/components/tools/ImageFileField'
-import { Button } from '#/components/ui/button'
-import { Checkbox } from '#/components/ui/checkbox'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { Slider } from '#/components/ui/slider'
+} from "#/components/tools/ImageFileField";
+import { Button } from "#/components/ui/button";
+import { Checkbox } from "#/components/ui/checkbox";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { Slider } from "#/components/ui/slider";
 import {
   RADIUS_PRESETS,
   clampRadius,
@@ -19,92 +19,87 @@ import {
   readSourceDimensions,
   renderSquareRound,
   type PadBackground,
-} from '#/lib/imageSquareRound'
+} from "#/lib/imageSquareRound";
 
 const BACKGROUNDS: { id: PadBackground; label: string }[] = [
-  { id: 'transparent', label: 'Clear' },
-  { id: 'white', label: 'White' },
-  { id: 'black', label: 'Black' },
-]
+  { id: "transparent", label: "Clear" },
+  { id: "white", label: "White" },
+  { id: "black", label: "Black" },
+];
 
 function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
 }
 
 export function ImageSquareRoundTool() {
-  const [file, setFile] = useState<File | null>(null)
+  const [file, setFile] = useState<File | null>(null);
   const [sourceDims, setSourceDims] = useState<{
-    width: number
-    height: number
-  } | null>(null)
-  const [padToSquare, setPadToSquare] = useState(true)
-  const [radius, setRadius] = useState(16)
-  const [background, setBackground] = useState<PadBackground>('transparent')
-  const [output, setOutput] = useState<Blob | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+    width: number;
+    height: number;
+  } | null>(null);
+  const [padToSquare, setPadToSquare] = useState(true);
+  const [radius, setRadius] = useState(16);
+  const [background, setBackground] = useState<PadBackground>("transparent");
+  const [output, setOutput] = useState<Blob | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [outputDims, setOutputDims] = useState<{
-    width: number
-    height: number
-  } | null>(null)
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+    width: number;
+    height: number;
+  } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const outSize = useMemo(() => {
-    if (!sourceDims) return null
+    if (!sourceDims) return null;
     if (!padToSquare) {
-      return { width: sourceDims.width, height: sourceDims.height }
+      return { width: sourceDims.width, height: sourceDims.height };
     }
-    const size = Math.max(sourceDims.width, sourceDims.height)
-    return { width: size, height: size }
-  }, [sourceDims, padToSquare])
+    const size = Math.max(sourceDims.width, sourceDims.height);
+    return { width: size, height: size };
+  }, [sourceDims, padToSquare]);
 
   // Solid bg rounds the padded canvas; clear rounds the source image bounds.
-  const radiusBounds =
-    background === 'transparent' && sourceDims
-      ? sourceDims
-      : outSize
+  const radiusBounds = background === "transparent" && sourceDims ? sourceDims : outSize;
   const maxRadius = radiusBounds
     ? Math.floor(Math.min(radiusBounds.width, radiusBounds.height) / 2)
-    : 0
+    : 0;
   const effectiveRadius = radiusBounds
     ? clampRadius(radius, radiusBounds.width, radiusBounds.height)
-    : 0
+    : 0;
 
   useEffect(() => {
     if (!file) {
-      setSourceDims(null)
-      return
+      setSourceDims(null);
+      return;
     }
-    let cancelled = false
+    let cancelled = false;
     void readSourceDimensions(file)
       .then((dims) => {
-        if (cancelled) return
-        setSourceDims(dims)
+        if (cancelled) return;
+        setSourceDims(dims);
       })
       .catch((err) => {
-        if (cancelled) return
-        setSourceDims(null)
-        setError(
-          err instanceof Error ? err.message : 'Could not read that image',
-        )
-      })
+        if (cancelled) return;
+        setSourceDims(null);
+        setError(err instanceof Error ? err.message : "Could not read that image");
+      });
     return () => {
-      cancelled = true
-    }
-  }, [file])
+      cancelled = true;
+    };
+  }, [file]);
 
   useEffect(() => {
     if (!file || !sourceDims) {
-      setOutput(null)
-      setOutputDims(null)
-      return
+      setOutput(null);
+      setOutputDims(null);
+      return;
     }
 
-    let cancelled = false
-    setBusy(true)
-    setError(null)
+    let cancelled = false;
+    setBusy(true);
+    setError(null);
 
     const timer = window.setTimeout(() => {
       void renderSquareRound(file, {
@@ -113,48 +108,46 @@ export function ImageSquareRoundTool() {
         background,
       })
         .then((result) => {
-          if (cancelled) return
-          setOutput(result.blob)
-          setOutputDims({ width: result.width, height: result.height })
+          if (cancelled) return;
+          setOutput(result.blob);
+          setOutputDims({ width: result.width, height: result.height });
         })
         .catch((err) => {
-          if (cancelled) return
-          setOutput(null)
-          setOutputDims(null)
-          setError(
-            err instanceof Error ? err.message : 'Could not process that image',
-          )
+          if (cancelled) return;
+          setOutput(null);
+          setOutputDims(null);
+          setError(err instanceof Error ? err.message : "Could not process that image");
         })
         .finally(() => {
-          if (!cancelled) setBusy(false)
-        })
-    }, 80)
+          if (!cancelled) setBusy(false);
+        });
+    }, 80);
 
     return () => {
-      cancelled = true
-      window.clearTimeout(timer)
-    }
-  }, [file, sourceDims, padToSquare, radius, background])
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
+  }, [file, sourceDims, padToSquare, radius, background]);
 
   useEffect(() => {
     if (!output) {
-      setPreviewUrl(null)
-      return
+      setPreviewUrl(null);
+      return;
     }
-    const url = URL.createObjectURL(output)
-    setPreviewUrl(url)
-    return () => URL.revokeObjectURL(url)
-  }, [output])
+    const url = URL.createObjectURL(output);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [output]);
 
   function download() {
-    if (!file || !output) return
-    const url = URL.createObjectURL(output)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = outputFileName(file.name, { padToSquare, radius })
-    anchor.click()
-    URL.revokeObjectURL(url)
-    toast.success('PNG downloaded')
+    if (!file || !output) return;
+    const url = URL.createObjectURL(output);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = outputFileName(file.name, { padToSquare, radius });
+    anchor.click();
+    URL.revokeObjectURL(url);
+    toast.success("PNG downloaded");
   }
 
   return (
@@ -165,10 +158,10 @@ export function ImageSquareRoundTool() {
           file={file}
           hint="PNG, JPEG, WebP, or SVG"
           onFile={(next) => {
-            setFile(next)
-            setError(null)
-            setOutput(null)
-            setOutputDims(null)
+            setFile(next);
+            setError(null);
+            setOutput(null);
+            setOutputDims(null);
           }}
         />
 
@@ -189,7 +182,7 @@ export function ImageSquareRoundTool() {
                 key={option.id}
                 type="button"
                 size="sm"
-                variant={background === option.id ? 'default' : 'outline'}
+                variant={background === option.id ? "default" : "outline"}
                 disabled={!file}
                 onClick={() => setBackground(option.id)}
               >
@@ -202,9 +195,7 @@ export function ImageSquareRoundTool() {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
             <Label htmlFor="square-round-radius">Corner radius</Label>
-            <span className="text-xs tabular-nums text-muted-foreground">
-              {effectiveRadius}px
-            </span>
+            <span className="text-xs tabular-nums text-muted-foreground">{effectiveRadius}px</span>
           </div>
           <div className="flex flex-wrap gap-1.5">
             {RADIUS_PRESETS.map((preset) => (
@@ -212,7 +203,7 @@ export function ImageSquareRoundTool() {
                 key={preset}
                 type="button"
                 size="sm"
-                variant={radius === preset ? 'default' : 'outline'}
+                variant={radius === preset ? "default" : "outline"}
                 disabled={!file || (maxRadius > 0 && preset > maxRadius)}
                 onClick={() => setRadius(preset)}
               >
@@ -228,8 +219,8 @@ export function ImageSquareRoundTool() {
             value={[Math.min(radius, Math.max(0, maxRadius))]}
             disabled={!file || maxRadius === 0}
             onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value
-              if (typeof next === 'number') setRadius(Math.round(next))
+              const next = Array.isArray(value) ? value[0] : value;
+              if (typeof next === "number") setRadius(Math.round(next));
             }}
           />
           <div className="flex items-center gap-2">
@@ -242,12 +233,12 @@ export function ImageSquareRoundTool() {
               disabled={!file}
               value={radius}
               onChange={(event) => {
-                const next = Number.parseInt(event.target.value, 10)
+                const next = Number.parseInt(event.target.value, 10);
                 if (!Number.isFinite(next)) {
-                  setRadius(0)
-                  return
+                  setRadius(0);
+                  return;
                 }
-                setRadius(next)
+                setRadius(next);
               }}
             />
             <span className="text-xs text-muted-foreground">px</span>
@@ -255,26 +246,22 @@ export function ImageSquareRoundTool() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            disabled={!file || busy || !output}
-            onClick={download}
-          >
+          <Button type="button" disabled={!file || busy || !output} onClick={download}>
             {busy ? (
               <Loader2Icon data-icon="inline-start" className="animate-spin" />
             ) : (
               <DownloadIcon data-icon="inline-start" />
             )}
-            {busy ? 'Working…' : 'Download PNG'}
+            {busy ? "Working…" : "Download PNG"}
           </Button>
           {file ? (
             <Button
               type="button"
               variant="ghost"
               onClick={() => {
-                setPadToSquare(true)
-                setRadius(16)
-                setBackground('transparent')
+                setPadToSquare(true);
+                setRadius(16);
+                setBackground("transparent");
               }}
             >
               Reset
@@ -285,21 +272,21 @@ export function ImageSquareRoundTool() {
         {error ? <p className="m-0 text-sm text-destructive">{error}</p> : null}
 
         <p className="m-0 text-xs text-muted-foreground">
-          Related:{' '}
+          Related:{" "}
           <Link
             to="/tools/image-crop"
             className="text-foreground underline-offset-4 hover:underline"
           >
             Crop
           </Link>
-          {' · '}
+          {" · "}
           <Link
             to="/tools/image-resize"
             className="text-foreground underline-offset-4 hover:underline"
           >
             Resize
           </Link>
-          {' · '}
+          {" · "}
           <Link
             to="/tools/image-format"
             className="text-foreground underline-offset-4 hover:underline"
@@ -323,13 +310,11 @@ export function ImageSquareRoundTool() {
             </div>
             <div className="rounded-lg border border-border bg-card/60 px-3 py-2">
               <dt className="text-xs text-muted-foreground">Output</dt>
-              <dd className="m-0 mt-0.5 font-medium">
-                {output ? formatBytes(output.size) : '—'}
-              </dd>
+              <dd className="m-0 mt-0.5 font-medium">{output ? formatBytes(output.size) : "—"}</dd>
               {outputDims ? (
                 <dd className="m-0 mt-0.5 text-xs tabular-nums text-muted-foreground">
                   {outputDims.width}×{outputDims.height}
-                  {effectiveRadius > 0 ? ` · r${effectiveRadius}` : ''}
+                  {effectiveRadius > 0 ? ` · r${effectiveRadius}` : ""}
                 </dd>
               ) : outSize ? (
                 <dd className="m-0 mt-0.5 text-xs tabular-nums text-muted-foreground">
@@ -367,5 +352,5 @@ export function ImageSquareRoundTool() {
         )}
       </div>
     </div>
-  )
+  );
 }

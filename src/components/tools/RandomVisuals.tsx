@@ -1,32 +1,32 @@
-import type { CSSProperties } from 'react'
-import type { CoinSide, DnDRollResult } from '#/lib/random'
-import { cn } from '#/lib/utils'
+import type { CSSProperties } from "react";
+import type { CoinSide, DnDRollResult } from "#/lib/random";
+import { cn } from "#/lib/utils";
 
 export function CoinVisual(props: { side: CoinSide; flipKey: number }) {
-  const heads = props.side === 'Heads'
+  const heads = props.side === "Heads";
   return (
     <div className="flex flex-col items-center gap-2 py-2">
-      <div className="relative size-28" style={{ perspective: '800px' }}>
+      <div className="relative size-28" style={{ perspective: "800px" }}>
         <div
           key={props.flipKey}
           className="relative size-full"
           style={{
-            transformStyle: 'preserve-3d',
-            animation: 'wt-coin-flip 0.8s ease-out forwards',
-            ['--wt-coin-end' as string]: heads ? '720deg' : '900deg',
+            transformStyle: "preserve-3d",
+            animation: "wt-coin-flip 0.8s ease-out forwards",
+            ["--wt-coin-end" as string]: heads ? "720deg" : "900deg",
           }}
         >
           <CoinFace
             label="H"
             caption="Heads"
             className="border-2 border-amber-700/50 bg-amber-400 text-amber-950"
-            style={{ transform: 'rotateY(0deg)' }}
+            style={{ transform: "rotateY(0deg)" }}
           />
           <CoinFace
             label="T"
             caption="Tails"
             className="border-2 border-zinc-600/50 bg-zinc-400 text-zinc-950"
-            style={{ transform: 'rotateY(180deg)' }}
+            style={{ transform: "rotateY(180deg)" }}
           />
         </div>
       </div>
@@ -38,24 +38,24 @@ export function CoinVisual(props: { side: CoinSide; flipKey: number }) {
         }
       `}</style>
     </div>
-  )
+  );
 }
 
 function CoinFace(props: {
-  label: string
-  caption: string
-  className?: string
-  style?: CSSProperties
+  label: string;
+  caption: string;
+  className?: string;
+  style?: CSSProperties;
 }) {
   return (
     <div
       className={cn(
- 'absolute inset-0 flex flex-col items-center justify-center rounded-full',
+        "absolute inset-0 flex flex-col items-center justify-center rounded-full",
         props.className,
       )}
       style={{
-        backfaceVisibility: 'hidden',
-        WebkitBackfaceVisibility: 'hidden',
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
         ...props.style,
       }}
       aria-hidden
@@ -65,13 +65,13 @@ function CoinFace(props: {
         {props.caption}
       </span>
     </div>
-  )
+  );
 }
 
 export function DnDVisual(props: { result: DnDRollResult; rollKey: number }) {
-  const { result } = props
-  const faces = result.kept.length > 0 ? result.kept : result.rolls
-  const sides = inferSides(result.expression)
+  const { result } = props;
+  const faces = result.kept.length > 0 ? result.kept : result.rolls;
+  const sides = inferSides(result.expression);
   return (
     <div className="flex flex-col gap-2 py-1">
       <div className="flex flex-wrap items-center justify-center gap-2 rounded-xl border border-border/60 bg-card px-3 py-4">
@@ -86,16 +86,10 @@ export function DnDVisual(props: { result: DnDRollResult; rollKey: number }) {
       </div>
       <div className="text-center">
         <p className="m-0 font-mono text-xs text-muted-foreground">{result.expression}</p>
-        <p className="m-0 text-2xl font-semibold tracking-tight tabular-nums">
-          {result.total}
-        </p>
-        {result.note ? (
-          <p className="m-0 text-xs text-muted-foreground">{result.note}</p>
-        ) : null}
+        <p className="m-0 text-2xl font-semibold tracking-tight tabular-nums">{result.total}</p>
+        {result.note ? <p className="m-0 text-xs text-muted-foreground">{result.note}</p> : null}
         {result.dropped.length > 0 ? (
-          <p className="m-0 text-xs text-muted-foreground">
-            dropped {result.dropped.join(', ')}
-          </p>
+          <p className="m-0 text-xs text-muted-foreground">dropped {result.dropped.join(", ")}</p>
         ) : null}
       </div>
       <style>{`
@@ -106,19 +100,19 @@ export function DnDVisual(props: { result: DnDRollResult; rollKey: number }) {
         }
       `}</style>
     </div>
-  )
+  );
 }
 
 function inferSides(expression: string): number {
-  const match = expression.match(/d(\d+)/i)
-  return match ? Number(match[1]) : 20
+  const match = expression.match(/d(\d+)/i);
+  return match ? Number(match[1]) : 20;
 }
 
 function DieFace(props: { value: number; sides: number; index: number }) {
   return (
     <div
       style={{
-        animation: 'wt-die-pop 0.45s ease-out both',
+        animation: "wt-die-pop 0.45s ease-out both",
         animationDelay: `${props.index * 40}ms`,
       }}
     >
@@ -137,19 +131,19 @@ function DieFace(props: { value: number; sides: number; index: number }) {
           style={{
             fontSize: props.value >= 100 ? 14 : 18,
             fontWeight: 700,
-            fontFamily: 'ui-monospace, monospace',
+            fontFamily: "ui-monospace, monospace",
           }}
         >
           {props.value}
         </text>
       </svg>
     </div>
-  )
+  );
 }
 
 function DieShape(props: { sides: number }) {
-  const fill = 'color-mix(in oklab, var(--primary) 24%, var(--card))'
-  const stroke = 'color-mix(in oklab, var(--foreground) 40%, transparent)'
+  const fill = "color-mix(in oklab, var(--primary) 24%, var(--card))";
+  const stroke = "color-mix(in oklab, var(--foreground) 40%, transparent)";
   switch (props.sides) {
     case 4:
       return (
@@ -160,7 +154,7 @@ function DieShape(props: { sides: number }) {
           strokeWidth="2"
           strokeLinejoin="round"
         />
-      )
+      );
     case 6:
       return (
         <rect
@@ -173,7 +167,7 @@ function DieShape(props: { sides: number }) {
           stroke={stroke}
           strokeWidth="2"
         />
-      )
+      );
     case 8:
       return (
         <polygon
@@ -183,7 +177,7 @@ function DieShape(props: { sides: number }) {
           strokeWidth="2"
           strokeLinejoin="round"
         />
-      )
+      );
     case 10:
       return (
         <polygon
@@ -193,7 +187,7 @@ function DieShape(props: { sides: number }) {
           strokeWidth="2"
           strokeLinejoin="round"
         />
-      )
+      );
     case 12:
       return (
         <polygon
@@ -203,7 +197,7 @@ function DieShape(props: { sides: number }) {
           strokeWidth="2"
           strokeLinejoin="round"
         />
-      )
+      );
     case 100:
       return (
         <>
@@ -218,7 +212,7 @@ function DieShape(props: { sides: number }) {
             opacity="0.5"
           />
         </>
-      )
+      );
     default:
       return (
         <polygon
@@ -228,16 +222,12 @@ function DieShape(props: { sides: number }) {
           strokeWidth="2"
           strokeLinejoin="round"
         />
-      )
+      );
   }
 }
 
-export function DiceVisual(props: {
-  rolls: number[]
-  sides: number
-  rollKey: number
-}) {
-  const total = props.rolls.reduce((sum, n) => sum + n, 0)
+export function DiceVisual(props: { rolls: number[]; sides: number; rollKey: number }) {
+  const total = props.rolls.reduce((sum, n) => sum + n, 0);
   return (
     <div className="flex flex-col gap-2 py-1">
       <div className="flex flex-wrap items-center justify-center gap-2 rounded-xl border border-border/60 bg-card px-3 py-4">
@@ -258,9 +248,7 @@ export function DiceVisual(props: {
           {props.rolls.length === 1 ? props.rolls[0] : total}
         </p>
         {props.rolls.length > 1 ? (
-          <p className="m-0 font-mono text-xs text-muted-foreground">
-            {props.rolls.join(' + ')}
-          </p>
+          <p className="m-0 font-mono text-xs text-muted-foreground">{props.rolls.join(" + ")}</p>
         ) : null}
       </div>
       <style>{`
@@ -271,7 +259,7 @@ export function DiceVisual(props: {
         }
       `}</style>
     </div>
-  )
+  );
 }
 
 const PIP_LAYOUTS: Record<number, Array<[number, number]>> = {
@@ -306,19 +294,19 @@ const PIP_LAYOUTS: Record<number, Array<[number, number]>> = {
     [46, 32],
     [46, 46],
   ],
-}
+};
 
 function StandardDie(props: { value: number; sides: number; index: number }) {
-  const usePips = props.sides === 6 && props.value >= 1 && props.value <= 6
-  const pips = usePips ? PIP_LAYOUTS[props.value]! : null
-  const fill = 'color-mix(in oklab, var(--card) 70%, var(--primary) 18%)'
-  const stroke = 'color-mix(in oklab, var(--foreground) 45%, transparent)'
-  const pipFill = 'color-mix(in oklab, var(--foreground) 82%, transparent)'
+  const usePips = props.sides === 6 && props.value >= 1 && props.value <= 6;
+  const pips = usePips ? PIP_LAYOUTS[props.value]! : null;
+  const fill = "color-mix(in oklab, var(--card) 70%, var(--primary) 18%)";
+  const stroke = "color-mix(in oklab, var(--foreground) 45%, transparent)";
+  const pipFill = "color-mix(in oklab, var(--foreground) 82%, transparent)";
 
   return (
     <div
       style={{
-        animation: 'wt-std-die-pop 0.5s ease-out both',
+        animation: "wt-std-die-pop 0.5s ease-out both",
         animationDelay: `${props.index * 45}ms`,
       }}
     >
@@ -338,56 +326,51 @@ function StandardDie(props: { value: number; sides: number; index: number }) {
           stroke={stroke}
           strokeWidth="2"
         />
-        {pips
-          ? pips.map(([cx, cy], i) => (
-              <circle key={i} cx={cx} cy={cy} r="4.5" fill={pipFill} />
-            ))
-          : (
-              <text
-                x="32"
-                y="38"
-                textAnchor="middle"
-                fill="currentColor"
-                style={{
-                  fontSize: props.value >= 100 ? 14 : props.value >= 10 ? 18 : 22,
-                  fontWeight: 700,
-                  fontFamily: 'ui-monospace, monospace',
-                }}
-              >
-                {props.value}
-              </text>
-            )}
+        {pips ? (
+          pips.map(([cx, cy], i) => <circle key={i} cx={cx} cy={cy} r="4.5" fill={pipFill} />)
+        ) : (
+          <text
+            x="32"
+            y="38"
+            textAnchor="middle"
+            fill="currentColor"
+            style={{
+              fontSize: props.value >= 100 ? 14 : props.value >= 10 ? 18 : 22,
+              fontWeight: 700,
+              fontFamily: "ui-monospace, monospace",
+            }}
+          >
+            {props.value}
+          </text>
+        )}
       </svg>
     </div>
-  )
+  );
 }
 
 export function RouletteVisual(props: {
-  options: string[]
-  winner: string | null
-  spinning: boolean
-  highlightIndex: number
+  options: string[];
+  winner: string | null;
+  spinning: boolean;
+  highlightIndex: number;
 }) {
   if (props.options.length === 0) {
     return (
-      <p className="m-0 py-6 text-center text-sm text-muted-foreground">
-        Add options to spin.
-      </p>
-    )
+      <p className="m-0 py-6 text-center text-sm text-muted-foreground">Add options to spin.</p>
+    );
   }
 
   // Odd window so the centered selection band lands on a row, not a gap.
-  let windowSize = Math.min(5, props.options.length)
-  if (windowSize % 2 === 0) windowSize -= 1
-  if (windowSize < 1) windowSize = 1
+  let windowSize = Math.min(5, props.options.length);
+  if (windowSize % 2 === 0) windowSize -= 1;
+  if (windowSize < 1) windowSize = 1;
 
-  const half = Math.floor(windowSize / 2)
+  const half = Math.floor(windowSize / 2);
   const rows = Array.from({ length: windowSize }, (_, offset) => {
     const index =
-      (props.highlightIndex - half + offset + props.options.length * 10) %
-      props.options.length
-    return { index, text: props.options[index]!, center: offset === half }
-  })
+      (props.highlightIndex - half + offset + props.options.length * 10) % props.options.length;
+    return { index, text: props.options[index]!, center: offset === half };
+  });
 
   return (
     <div className="flex flex-col items-center gap-3 py-2">
@@ -395,24 +378,19 @@ export function RouletteVisual(props: {
         <ul className="relative z-0 m-0 list-none p-0">
           {rows.map((row) => {
             const won =
-              !props.spinning &&
-              props.winner != null &&
-              row.center &&
-              row.text === props.winner
+              !props.spinning && props.winner != null && row.center && row.text === props.winner;
             return (
               <li
-                key={`${row.index}-${row.text}-${row.center ? 'c' : 's'}`}
+                key={`${row.index}-${row.text}-${row.center ? "c" : "s"}`}
                 className={cn(
- 'relative z-0 flex h-9 items-center justify-center truncate px-3 font-mono text-sm transition-colors',
-                  row.center
-                    ? 'z-30 text-foreground'
-                    : 'text-muted-foreground/45',
-                  won && 'font-semibold text-primary ',
+                  "relative z-0 flex h-9 items-center justify-center truncate px-3 font-mono text-sm transition-colors",
+                  row.center ? "z-30 text-foreground" : "text-muted-foreground/45",
+                  won && "font-semibold text-primary ",
                 )}
               >
                 {row.text}
               </li>
-            )
+            );
           })}
         </ul>
         <div
@@ -421,14 +399,12 @@ export function RouletteVisual(props: {
         />
       </div>
       {props.winner && !props.spinning ? (
-        <p className="m-0 text-lg font-semibold tracking-tight text-foreground ">
-          {props.winner}
-        </p>
+        <p className="m-0 text-lg font-semibold tracking-tight text-foreground ">{props.winner}</p>
       ) : (
         <p className="m-0 text-xs text-muted-foreground">
-          {props.spinning ? 'Spinning…' : 'Spin to pick one'}
+          {props.spinning ? "Spinning…" : "Spin to pick one"}
         </p>
       )}
     </div>
-  )
+  );
 }

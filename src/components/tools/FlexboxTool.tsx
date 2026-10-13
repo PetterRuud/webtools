@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react'
-import { CopyIcon } from 'lucide-react'
-import { Button } from '#/components/ui/button'
-import { Label } from '#/components/ui/label'
-import { Slider } from '#/components/ui/slider'
-import { copyText } from '#/lib/clipboard'
+import { useMemo, useState } from "react";
+import { CopyIcon } from "lucide-react";
+import { Button } from "#/components/ui/button";
+import { Label } from "#/components/ui/label";
+import { Slider } from "#/components/ui/slider";
+import { copyText } from "#/lib/clipboard";
 import {
   ALIGN_ITEMS,
   DEFAULT_FLEXBOX,
@@ -21,8 +21,8 @@ import {
   type FlexWrap,
   type FlexboxConfig,
   type JustifyContent,
-} from '#/lib/flexbox'
-const ITEM_HUES = [165, 75, 200, 25, 280, 140, 40, 320, 100, 220, 55, 185]
+} from "#/lib/flexbox";
+const ITEM_HUES = [165, 75, 200, 25, 280, 140, 40, 320, 100, 220, 55, 185];
 
 function OptionGroup<T extends string>({
   label,
@@ -31,44 +31,44 @@ function OptionGroup<T extends string>({
   onChange,
   format = shortLabel,
 }: {
-  label: string
-  value: T
-  options: readonly T[]
-  onChange: (next: T) => void
-  format?: (value: T) => string
+  label: string;
+  value: T;
+  options: readonly T[];
+  onChange: (next: T) => void;
+  format?: (value: T) => string;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
       <Label>{label}</Label>
       <div className="flex flex-wrap gap-1">
         {options.map((option) => {
-          const active = option === value
+          const active = option === value;
           return (
             <Button
               key={option}
               type="button"
               size="xs"
-              variant={active ? 'default' : 'outline'}
+              variant={active ? "default" : "outline"}
               aria-pressed={active}
               onClick={() => onChange(option)}
               className="font-mono"
             >
               {format(option)}
             </Button>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }
 
 export function FlexboxTool() {
-  const [config, setConfig] = useState<FlexboxConfig>(DEFAULT_FLEXBOX)
+  const [config, setConfig] = useState<FlexboxConfig>(DEFAULT_FLEXBOX);
 
-  const css = useMemo(() => buildFlexboxRule(config), [config])
+  const css = useMemo(() => buildFlexboxRule(config), [config]);
 
   function patch<K extends keyof FlexboxConfig>(key: K, value: FlexboxConfig[K]) {
-    setConfig((prev) => ({ ...prev, [key]: value }))
+    setConfig((prev) => ({ ...prev, [key]: value }));
   }
 
   return (
@@ -78,35 +78,33 @@ export function FlexboxTool() {
           label="Direction"
           value={config.flexDirection}
           options={FLEX_DIRECTIONS}
-          onChange={(value: FlexDirection) => patch('flexDirection', value)}
+          onChange={(value: FlexDirection) => patch("flexDirection", value)}
           format={(value) => value}
         />
         <OptionGroup
           label="Wrap"
           value={config.flexWrap}
           options={FLEX_WRAPS}
-          onChange={(value: FlexWrap) => patch('flexWrap', value)}
+          onChange={(value: FlexWrap) => patch("flexWrap", value)}
           format={(value) => value}
         />
         <OptionGroup
           label="Justify"
           value={config.justifyContent}
           options={JUSTIFY_CONTENTS}
-          onChange={(value: JustifyContent) => patch('justifyContent', value)}
+          onChange={(value: JustifyContent) => patch("justifyContent", value)}
         />
         <OptionGroup
           label="Align"
           value={config.alignItems}
           options={ALIGN_ITEMS}
-          onChange={(value: AlignItems) => patch('alignItems', value)}
+          onChange={(value: AlignItems) => patch("alignItems", value)}
         />
 
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
             <Label id="flex-gap-label">Gap</Label>
-            <span className="text-sm tabular-nums text-muted-foreground">
-              {config.gap}px
-            </span>
+            <span className="text-sm tabular-nums text-muted-foreground">{config.gap}px</span>
           </div>
           <Slider
             aria-labelledby="flex-gap-label"
@@ -115,8 +113,8 @@ export function FlexboxTool() {
             step={1}
             value={[config.gap]}
             onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value
-              if (typeof next === 'number') patch('gap', next)
+              const next = Array.isArray(value) ? value[0] : value;
+              if (typeof next === "number") patch("gap", next);
             }}
           />
         </div>
@@ -124,9 +122,7 @@ export function FlexboxTool() {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
             <Label id="flex-items-label">Items</Label>
-            <span className="text-sm tabular-nums text-muted-foreground">
-              {config.itemCount}
-            </span>
+            <span className="text-sm tabular-nums text-muted-foreground">{config.itemCount}</span>
           </div>
           <Slider
             aria-labelledby="flex-items-label"
@@ -135,8 +131,8 @@ export function FlexboxTool() {
             step={1}
             value={[config.itemCount]}
             onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value
-              if (typeof next === 'number') patch('itemCount', next)
+              const next = Array.isArray(value) ? value[0] : value;
+              if (typeof next === "number") patch("itemCount", next);
             }}
           />
         </div>
@@ -146,7 +142,7 @@ export function FlexboxTool() {
         <div
           className="min-h-56 rounded-xl border border-border bg-muted/40 p-3 transition-[background] duration-200 sm:min-h-72 sm:p-4"
           style={{
-            display: 'flex',
+            display: "flex",
             flexDirection: config.flexDirection,
             flexWrap: config.flexWrap,
             justifyContent: config.justifyContent,
@@ -156,33 +152,30 @@ export function FlexboxTool() {
           aria-label="Flexbox preview"
         >
           {Array.from({ length: config.itemCount }, (_, index) => {
-            const hue = ITEM_HUES[index % ITEM_HUES.length]
+            const hue = ITEM_HUES[index % ITEM_HUES.length];
             const grow =
-              config.alignItems === 'stretch' &&
-              (config.flexDirection === 'row' ||
-                config.flexDirection === 'row-reverse')
+              config.alignItems === "stretch" &&
+              (config.flexDirection === "row" || config.flexDirection === "row-reverse");
             return (
               <div
                 key={index}
                 className="flex min-h-12 min-w-12 items-center justify-center rounded-lg border border-border/60 px-3 py-2 text-sm font-medium tabular-nums text-foreground shadow-sm"
                 style={{
                   background: `oklch(0.78 0.1 ${hue} / 0.55)`,
-                  flex: grow ? '1 1 4.5rem' : '0 0 auto',
+                  flex: grow ? "1 1 4.5rem" : "0 0 auto",
                   width:
-                    config.flexDirection === 'column' ||
-                    config.flexDirection === 'column-reverse'
+                    config.flexDirection === "column" || config.flexDirection === "column-reverse"
                       ? undefined
-                      : '4.5rem',
+                      : "4.5rem",
                   height:
-                    config.flexDirection === 'column' ||
-                    config.flexDirection === 'column-reverse'
-                      ? '3rem'
+                    config.flexDirection === "column" || config.flexDirection === "column-reverse"
+                      ? "3rem"
                       : undefined,
                 }}
               >
                 {index + 1}
               </div>
-            )
+            );
           })}
         </div>
 
@@ -193,7 +186,7 @@ export function FlexboxTool() {
               type="button"
               size="sm"
               variant="outline"
-              onClick={() => void copyText(css, 'CSS')}
+              onClick={() => void copyText(css, "CSS")}
             >
               <CopyIcon data-icon="inline-start" />
               Copy CSS
@@ -205,5 +198,5 @@ export function FlexboxTool() {
         </div>
       </div>
     </div>
-  )
+  );
 }

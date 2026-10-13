@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
-import { BracesIcon, CopyIcon, Minimize2Icon } from 'lucide-react'
-import { toast } from 'sonner'
-import { Button } from '#/components/ui/button'
-import { Label } from '#/components/ui/label'
-import { Textarea } from '#/components/ui/textarea'
-import { copyText } from '#/lib/clipboard'
+import { useEffect, useMemo, useState } from "react";
+import { BracesIcon, CopyIcon, Minimize2Icon } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "#/components/ui/button";
+import { Label } from "#/components/ui/label";
+import { Textarea } from "#/components/ui/textarea";
+import { copyText } from "#/lib/clipboard";
 import {
   SAMPLE_SVG,
   downloadBlob,
@@ -17,116 +17,108 @@ import {
   stripComments,
   stripMetadata,
   svgToPngBlob,
-} from '#/lib/svgEditor'
-import { svgToReactComponent } from '#/lib/svgToReact'
+} from "#/lib/svgEditor";
+import { svgToReactComponent } from "#/lib/svgToReact";
 
-type RightPane = 'preview' | 'react'
+type RightPane = "preview" | "react";
 
 export function SvgEditorTool() {
-  const [source, setSource] = useState(SAMPLE_SVG)
-  const [error, setError] = useState<string | null>(null)
-  const [busyPng, setBusyPng] = useState(false)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [parseError, setParseError] = useState<string | null>(null)
-  const [rightPane, setRightPane] = useState<RightPane>('preview')
+  const [source, setSource] = useState(SAMPLE_SVG);
+  const [error, setError] = useState<string | null>(null);
+  const [busyPng, setBusyPng] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [parseError, setParseError] = useState<string | null>(null);
+  const [rightPane, setRightPane] = useState<RightPane>("preview");
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === "undefined") return;
     if (!source.trim()) {
-      setPreviewUrl(null)
-      setParseError(null)
-      return
+      setPreviewUrl(null);
+      setParseError(null);
+      return;
     }
 
-    const parsed = parseSvg(source)
+    const parsed = parseSvg(source);
     if (!parsed.ok) {
-      setPreviewUrl(null)
-      setParseError(parsed.error)
-      return
+      setPreviewUrl(null);
+      setParseError(parsed.error);
+      return;
     }
 
-    setParseError(null)
-    const url = URL.createObjectURL(
-      new Blob([source], { type: 'image/svg+xml;charset=utf-8' }),
-    )
-    setPreviewUrl(url)
-    return () => URL.revokeObjectURL(url)
-  }, [source])
+    setParseError(null);
+    const url = URL.createObjectURL(new Blob([source], { type: "image/svg+xml;charset=utf-8" }));
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [source]);
 
-  const charCount = useMemo(() => source.length.toLocaleString(), [source])
+  const charCount = useMemo(() => source.length.toLocaleString(), [source]);
 
   const reactResult = useMemo(() => {
-    if (typeof window === 'undefined') {
-      return { value: '', error: null as string | null }
+    if (typeof window === "undefined") {
+      return { value: "", error: null as string | null };
     }
     if (!source.trim()) {
-      return { value: '', error: null as string | null }
+      return { value: "", error: null as string | null };
     }
     try {
-      return { value: svgToReactComponent(source), error: null }
+      return { value: svgToReactComponent(source), error: null };
     } catch (err) {
       return {
-        value: '',
-        error: err instanceof Error ? err.message : 'React export failed',
-      }
+        value: "",
+        error: err instanceof Error ? err.message : "React export failed",
+      };
     }
-  }, [source])
+  }, [source]);
 
-  function applyTransform(
-    label: string,
-    transform: (value: string) => string,
-  ) {
+  function applyTransform(label: string, transform: (value: string) => string) {
     if (!source.trim()) {
-      setError('Paste SVG first.')
-      return
+      setError("Paste SVG first.");
+      return;
     }
     try {
-      const next = transform(source)
-      setSource(next)
-      setError(null)
-      toast.success(label)
+      const next = transform(source);
+      setSource(next);
+      setError(null);
+      toast.success(label);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Transform failed')
+      setError(err instanceof Error ? err.message : "Transform failed");
     }
   }
 
   async function downloadPng() {
     if (!source.trim()) {
-      setError('Paste SVG first.')
-      return
+      setError("Paste SVG first.");
+      return;
     }
-    setBusyPng(true)
+    setBusyPng(true);
     try {
-      const blob = await svgToPngBlob(source, 2)
-      downloadBlob('image.png', blob)
-      toast.success('PNG downloaded')
-      setError(null)
+      const blob = await svgToPngBlob(source, 2);
+      downloadBlob("image.png", blob);
+      toast.success("PNG downloaded");
+      setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'PNG export failed')
+      setError(err instanceof Error ? err.message : "PNG export failed");
     } finally {
-      setBusyPng(false)
+      setBusyPng(false);
     }
   }
 
-  const statusError = error ?? parseError
-  const reactError = reactResult.error
-  const paneError = rightPane === 'react' ? (reactError ?? statusError) : statusError
+  const statusError = error ?? parseError;
+  const reactError = reactResult.error;
+  const paneError = rightPane === "react" ? (reactError ?? statusError) : statusError;
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-1.5">
-          <Button
-            type="button"
-            onClick={() => applyTransform('Prettified', (v) => prettifySvg(v))}
-          >
+          <Button type="button" onClick={() => applyTransform("Prettified", (v) => prettifySvg(v))}>
             <BracesIcon data-icon="inline-start" />
             Prettify
           </Button>
           <Button
             type="button"
             variant="outline"
-            onClick={() => applyTransform('Minified', (v) => minifySvg(v))}
+            onClick={() => applyTransform("Minified", (v) => minifySvg(v))}
           >
             <Minimize2Icon data-icon="inline-start" />
             Minify
@@ -134,36 +126,28 @@ export function SvgEditorTool() {
           <Button
             type="button"
             variant="outline"
-            onClick={() =>
-              applyTransform('Comments removed', (v) => stripComments(v))
-            }
+            onClick={() => applyTransform("Comments removed", (v) => stripComments(v))}
           >
             Strip comments
           </Button>
           <Button
             type="button"
             variant="outline"
-            onClick={() =>
-              applyTransform('Metadata removed', (v) => stripMetadata(v))
-            }
+            onClick={() => applyTransform("Metadata removed", (v) => stripMetadata(v))}
           >
             Strip metadata
           </Button>
           <Button
             type="button"
             variant="secondary"
-            onClick={() =>
-              applyTransform('viewBox set', (v) => ensureViewBoxFromSize(v))
-            }
+            onClick={() => applyTransform("viewBox set", (v) => ensureViewBoxFromSize(v))}
           >
             viewBox from size
           </Button>
           <Button
             type="button"
             variant="secondary"
-            onClick={() =>
-              applyTransform('viewBox fitted', (v) => fitViewBoxToContent(v))
-            }
+            onClick={() => applyTransform("viewBox fitted", (v) => fitViewBoxToContent(v))}
           >
             Fit viewBox
           </Button>
@@ -173,8 +157,8 @@ export function SvgEditorTool() {
             type="button"
             variant="ghost"
             onClick={() => {
-              setSource(SAMPLE_SVG)
-              setError(null)
+              setSource(SAMPLE_SVG);
+              setError(null);
             }}
           >
             Sample
@@ -183,8 +167,8 @@ export function SvgEditorTool() {
             type="button"
             variant="ghost"
             onClick={() => {
-              setSource('')
-              setError(null)
+              setSource("");
+              setError(null);
             }}
           >
             Clear
@@ -201,7 +185,7 @@ export function SvgEditorTool() {
                 type="button"
                 size="sm"
                 variant="outline"
-                onClick={() => void copyText(source, 'SVG')}
+                onClick={() => void copyText(source, "SVG")}
                 disabled={!source.trim()}
               >
                 <CopyIcon data-icon="inline-start" />
@@ -213,15 +197,11 @@ export function SvgEditorTool() {
                 variant="outline"
                 onClick={() => {
                   if (!source.trim()) {
-                    setError('Paste SVG first.')
-                    return
+                    setError("Paste SVG first.");
+                    return;
                   }
-                  downloadTextFile(
-                    'image.svg',
-                    source,
-                    'image/svg+xml;charset=utf-8',
-                  )
-                  toast.success('SVG downloaded')
+                  downloadTextFile("image.svg", source, "image/svg+xml;charset=utf-8");
+                  toast.success("SVG downloaded");
                 }}
                 disabled={!source.trim()}
               >
@@ -234,7 +214,7 @@ export function SvgEditorTool() {
                 onClick={() => void downloadPng()}
                 disabled={!source.trim() || busyPng}
               >
-                {busyPng ? 'PNG…' : 'PNG'}
+                {busyPng ? "PNG…" : "PNG"}
               </Button>
             </div>
           </div>
@@ -242,8 +222,8 @@ export function SvgEditorTool() {
             id="svg-source"
             value={source}
             onChange={(event) => {
-              setSource(event.target.value)
-              setError(null)
+              setSource(event.target.value);
+              setError(null);
             }}
             spellCheck={false}
             placeholder="Paste SVG…"
@@ -259,26 +239,26 @@ export function SvgEditorTool() {
               <Button
                 type="button"
                 size="sm"
-                variant={rightPane === 'preview' ? 'default' : 'outline'}
-                onClick={() => setRightPane('preview')}
+                variant={rightPane === "preview" ? "default" : "outline"}
+                onClick={() => setRightPane("preview")}
               >
                 Preview
               </Button>
               <Button
                 type="button"
                 size="sm"
-                variant={rightPane === 'react' ? 'default' : 'outline'}
-                onClick={() => setRightPane('react')}
+                variant={rightPane === "react" ? "default" : "outline"}
+                onClick={() => setRightPane("react")}
               >
                 React
               </Button>
             </div>
-            {rightPane === 'react' ? (
+            {rightPane === "react" ? (
               <Button
                 type="button"
                 size="sm"
                 variant="outline"
-                onClick={() => void copyText(reactResult.value, 'React component')}
+                onClick={() => void copyText(reactResult.value, "React component")}
                 disabled={!reactResult.value}
               >
                 <CopyIcon data-icon="inline-start" />
@@ -287,23 +267,21 @@ export function SvgEditorTool() {
             ) : null}
           </div>
 
-          {rightPane === 'preview' ? (
+          {rightPane === "preview" ? (
             <div
               className="relative flex min-h-80 items-center justify-center overflow-auto rounded-lg border border-border p-4"
               style={{
                 backgroundImage:
-                  'linear-gradient(45deg, color-mix(in oklch, var(--muted) 70%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in oklch, var(--muted) 70%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in oklch, var(--muted) 70%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in oklch, var(--muted) 70%, transparent) 75%)',
-                backgroundSize: '16px 16px',
-                backgroundPosition: '0 0, 0 8px, 8px -8px, -8px 0',
-                backgroundColor: 'var(--background)',
+                  "linear-gradient(45deg, color-mix(in oklch, var(--muted) 70%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in oklch, var(--muted) 70%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in oklch, var(--muted) 70%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in oklch, var(--muted) 70%, transparent) 75%)",
+                backgroundSize: "16px 16px",
+                backgroundPosition: "0 0, 0 8px, 8px -8px, -8px 0",
+                backgroundColor: "var(--background)",
               }}
             >
               {!source.trim() ? (
                 <p className="m-0 text-sm text-muted-foreground">Paste SVG…</p>
               ) : paneError ? (
-                <p className="m-0 max-w-sm text-center text-sm text-destructive">
-                  {paneError}
-                </p>
+                <p className="m-0 max-w-sm text-center text-sm text-destructive">{paneError}</p>
               ) : previewUrl ? (
                 <img
                   src={previewUrl}
@@ -316,10 +294,7 @@ export function SvgEditorTool() {
             <Textarea
               id="svg-react"
               value={
-                !source.trim()
-                  ? ''
-                  : reactResult.value ||
-                    (reactError ? `// ${reactError}` : '')
+                !source.trim() ? "" : reactResult.value || (reactError ? `// ${reactError}` : "")
               }
               readOnly
               spellCheck={false}
@@ -328,19 +303,19 @@ export function SvgEditorTool() {
               aria-invalid={Boolean(reactError)}
             />
           )}
-          {rightPane === 'react' ? (
+          {rightPane === "react" ? (
             <p className="m-0 text-xs text-muted-foreground">
-              JSX · camelCase attrs · {'{...props}'} on root
+              JSX · camelCase attrs · {"{...props}"} on root
             </p>
           ) : null}
         </div>
       </div>
 
-      {statusError || (rightPane === 'react' && reactError) ? (
+      {statusError || (rightPane === "react" && reactError) ? (
         <p className="m-0 rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
-          {(rightPane === 'react' && reactError) || statusError}
+          {(rightPane === "react" && reactError) || statusError}
         </p>
       ) : null}
     </div>
-  )
+  );
 }

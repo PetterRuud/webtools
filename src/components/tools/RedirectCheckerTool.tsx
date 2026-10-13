@@ -1,51 +1,48 @@
-import { useState, type FormEvent } from 'react'
-import { ArrowRightIcon, Loader2Icon, RouteIcon } from 'lucide-react'
-import { useServerFn } from '@tanstack/react-start'
-import { toast } from 'sonner'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import {
-  HTTP_STATUS_CLASS_STYLES,
-  type HttpStatusClass,
-} from '#/lib/httpStatus'
-import { checkRedirectsFn } from '#/lib/seoFns'
-import { cn } from 'cn'
+import { useState, type FormEvent } from "react";
+import { ArrowRightIcon, Loader2Icon, RouteIcon } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { HTTP_STATUS_CLASS_STYLES, type HttpStatusClass } from "#/lib/httpStatus";
+import { checkRedirectsFn } from "#/lib/seoFns";
+import { cn } from "cn";
 
-type RedirectResult = Awaited<ReturnType<typeof checkRedirectsFn>>
+type RedirectResult = Awaited<ReturnType<typeof checkRedirectsFn>>;
 
 function statusClass(code: number): HttpStatusClass {
-  if (code >= 500) return '5xx'
-  if (code >= 400) return '4xx'
-  if (code >= 300) return '3xx'
-  if (code >= 200) return '2xx'
-  return '1xx'
+  if (code >= 500) return "5xx";
+  if (code >= 400) return "4xx";
+  if (code >= 300) return "3xx";
+  if (code >= 200) return "2xx";
+  return "1xx";
 }
 
 export function RedirectCheckerTool() {
-  const checkRedirects = useServerFn(checkRedirectsFn)
-  const [url, setUrl] = useState('https://example.com')
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [result, setResult] = useState<RedirectResult | null>(null)
+  const checkRedirects = useServerFn(checkRedirectsFn);
+  const [url, setUrl] = useState("https://example.com");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<RedirectResult | null>(null);
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault()
-    setBusy(true)
-    setError(null)
+    event.preventDefault();
+    setBusy(true);
+    setError(null);
     try {
-      const data = await checkRedirects({ data: { url } })
-      setResult(data)
+      const data = await checkRedirects({ data: { url } });
+      setResult(data);
       toast.success(
         data.redirected
           ? `${data.hopCount} hop(s) · ${data.totalMs} ms`
           : `No redirect · ${data.totalMs} ms`,
-      )
+      );
     } catch (err) {
-      setResult(null)
-      setError(err instanceof Error ? err.message : 'Check failed')
+      setResult(null);
+      setError(err instanceof Error ? err.message : "Check failed");
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
   }
 
@@ -54,10 +51,7 @@ export function RedirectCheckerTool() {
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
           <div className="flex flex-col gap-1">
-            <Label
-              htmlFor="redirect-url"
-              className="text-xs font-normal text-muted-foreground"
-            >
+            <Label htmlFor="redirect-url" className="text-xs font-normal text-muted-foreground">
               URL
             </Label>
             <Input
@@ -74,7 +68,7 @@ export function RedirectCheckerTool() {
             ) : (
               <RouteIcon data-icon="inline-start" />
             )}
-            {busy ? 'Following…' : 'Follow redirects'}
+            {busy ? "Following…" : "Follow redirects"}
           </Button>
         </div>
 
@@ -89,12 +83,10 @@ export function RedirectCheckerTool() {
             <>
               <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
                 <span>
-                  {result.hopCount} hop{result.hopCount === 1 ? '' : 's'}
+                  {result.hopCount} hop{result.hopCount === 1 ? "" : "s"}
                 </span>
                 <span className="font-mono tabular-nums">{result.totalMs} ms</span>
-                <span>
-                  {result.redirected ? 'Redirect chain' : 'Direct response'}
-                </span>
+                <span>{result.redirected ? "Redirect chain" : "Direct response"}</span>
               </div>
 
               <div className="rounded-xl border border-border/70 bg-card/40 px-3 py-2.5">
@@ -108,9 +100,8 @@ export function RedirectCheckerTool() {
 
               <ol className="m-0 list-none space-y-2 p-0">
                 {result.hops.map((hop, index) => {
-                  const klass =
-                    hop.status > 0 ? statusClass(hop.status) : '5xx'
-                  const styles = HTTP_STATUS_CLASS_STYLES[klass]
+                  const klass = hop.status > 0 ? statusClass(hop.status) : "5xx";
+                  const styles = HTTP_STATUS_CLASS_STYLES[klass];
                   return (
                     <li key={`${hop.url}-${index}`} className="relative">
                       {index < result.hops.length - 1 ? (
@@ -123,10 +114,8 @@ export function RedirectCheckerTool() {
                       ) : null}
                       <div
                         className={cn(
-                          'rounded-lg border px-3 py-2',
-                          hop.error
-                            ? 'border-destructive/40 bg-destructive/10'
-                            : styles.card,
+                          "rounded-lg border px-3 py-2",
+                          hop.error ? "border-destructive/40 bg-destructive/10" : styles.card,
                         )}
                       >
                         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
@@ -136,7 +125,7 @@ export function RedirectCheckerTool() {
                           {hop.status > 0 ? (
                             <span
                               className={cn(
-                                'rounded px-1.5 py-0.5 font-mono text-[0.7rem] font-semibold tabular-nums',
+                                "rounded px-1.5 py-0.5 font-mono text-[0.7rem] font-semibold tabular-nums",
                                 styles.badge,
                               )}
                             >
@@ -165,13 +154,11 @@ export function RedirectCheckerTool() {
                           </p>
                         ) : null}
                         {hop.error ? (
-                          <p className="m-0 mt-1 text-xs text-destructive">
-                            {hop.error}
-                          </p>
+                          <p className="m-0 mt-1 text-xs text-destructive">{hop.error}</p>
                         ) : null}
                       </div>
                     </li>
-                  )
+                  );
                 })}
               </ol>
             </>
@@ -183,5 +170,5 @@ export function RedirectCheckerTool() {
         </div>
       </div>
     </form>
-  )
+  );
 }

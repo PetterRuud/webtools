@@ -1,39 +1,31 @@
-import { useMemo, useState } from 'react'
-import { MinusIcon, PlusIcon } from 'lucide-react'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { Slider } from '#/components/ui/slider'
-import {
-  TIP_PRESETS,
-  calculateTip,
-  formatMoney,
-  parseAmount,
-} from '#/lib/tip'
+import { useMemo, useState } from "react";
+import { MinusIcon, PlusIcon } from "lucide-react";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { Slider } from "#/components/ui/slider";
+import { TIP_PRESETS, calculateTip, formatMoney, parseAmount } from "#/lib/tip";
 
-const DEFAULT_BILL = '64.50'
-const DEFAULT_TIP = 0
-const DEFAULT_PEOPLE = 2
+const DEFAULT_BILL = "64.50";
+const DEFAULT_TIP = 0;
+const DEFAULT_PEOPLE = 2;
 
 export function TipCalculatorTool() {
-  const [billDraft, setBillDraft] = useState(DEFAULT_BILL)
-  const [tipPercent, setTipPercent] = useState(DEFAULT_TIP)
-  const [peopleDraft, setPeopleDraft] = useState(String(DEFAULT_PEOPLE))
+  const [billDraft, setBillDraft] = useState(DEFAULT_BILL);
+  const [tipPercent, setTipPercent] = useState(DEFAULT_TIP);
+  const [peopleDraft, setPeopleDraft] = useState(String(DEFAULT_PEOPLE));
 
-  const bill = parseAmount(billDraft)
-  const people = parseAmount(peopleDraft)
-  const peopleInt =
-    people !== null && people >= 1 ? Math.floor(people) : null
+  const bill = parseAmount(billDraft);
+  const people = parseAmount(peopleDraft);
+  const peopleInt = people !== null && people >= 1 ? Math.floor(people) : null;
 
   const result = useMemo(() => {
-    if (bill === null || peopleInt === null) return null
-    return calculateTip({ bill, tipPercent, people: peopleInt })
-  }, [bill, tipPercent, peopleInt])
+    if (bill === null || peopleInt === null) return null;
+    return calculateTip({ bill, tipPercent, people: peopleInt });
+  }, [bill, tipPercent, peopleInt]);
 
-  const billInvalid = billDraft.trim() !== '' && (bill === null || bill < 0)
-  const peopleInvalid =
-    peopleDraft.trim() !== '' &&
-    (peopleInt === null || peopleInt < 1)
+  const billInvalid = billDraft.trim() !== "" && (bill === null || bill < 0);
+  const peopleInvalid = peopleDraft.trim() !== "" && (peopleInt === null || peopleInt < 1);
 
   return (
     <div className="grid gap-3 lg:grid-cols-2 lg:items-start lg:gap-4">
@@ -65,8 +57,8 @@ export function TipCalculatorTool() {
             step={1}
             value={[tipPercent]}
             onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value
-              if (typeof next === 'number') setTipPercent(next)
+              const next = Array.isArray(value) ? value[0] : value;
+              if (typeof next === "number") setTipPercent(next);
             }}
           />
           <div className="flex flex-wrap gap-1.5 pt-0.5">
@@ -75,7 +67,7 @@ export function TipCalculatorTool() {
                 key={preset}
                 type="button"
                 size="xs"
-                variant={tipPercent === preset ? 'default' : 'outline'}
+                variant={tipPercent === preset ? "default" : "outline"}
                 onClick={() => setTipPercent(preset)}
               >
                 {preset}%
@@ -87,9 +79,7 @@ export function TipCalculatorTool() {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
             <Label htmlFor="tip-people">Split people</Label>
-            <span className="text-sm tabular-nums text-muted-foreground">
-              {peopleInt ?? '—'}
-            </span>
+            <span className="text-sm tabular-nums text-muted-foreground">{peopleInt ?? "—"}</span>
           </div>
           <div className="flex items-center gap-2">
             <Button
@@ -100,7 +90,7 @@ export function TipCalculatorTool() {
               disabled={peopleInt === null || peopleInt <= 1}
               onClick={() => {
                 if (peopleInt !== null && peopleInt > 1) {
-                  setPeopleDraft(String(peopleInt - 1))
+                  setPeopleDraft(String(peopleInt - 1));
                 }
               }}
             >
@@ -120,8 +110,8 @@ export function TipCalculatorTool() {
               size="icon-sm"
               aria-label="More people"
               onClick={() => {
-                const next = peopleInt === null ? 1 : peopleInt + 1
-                setPeopleDraft(String(next))
+                const next = peopleInt === null ? 1 : peopleInt + 1;
+                setPeopleDraft(String(next));
               }}
             >
               <PlusIcon />
@@ -134,9 +124,9 @@ export function TipCalculatorTool() {
             type="button"
             variant="ghost"
             onClick={() => {
-              setBillDraft(DEFAULT_BILL)
-              setTipPercent(DEFAULT_TIP)
-              setPeopleDraft(String(DEFAULT_PEOPLE))
+              setBillDraft(DEFAULT_BILL);
+              setTipPercent(DEFAULT_TIP);
+              setPeopleDraft(String(DEFAULT_PEOPLE));
             }}
           >
             Reset
@@ -148,36 +138,21 @@ export function TipCalculatorTool() {
         className="rounded-xl border border-border/80 bg-card px-4 py-4 sm:px-5"
         aria-live="polite"
       >
-        <p className="m-0 mb-3 text-sm font-medium text-muted-foreground">
-          Result
-        </p>
-        <ResultRow
-          label="Bill"
-          value={result && bill !== null ? formatMoney(bill) : '—'}
-        />
-        <ResultRow
-          label={`Tip (${tipPercent}%)`}
-          value={result ? formatMoney(result.tip) : '—'}
-        />
+        <p className="m-0 mb-3 text-sm font-medium text-muted-foreground">Result</p>
+        <ResultRow label="Bill" value={result && bill !== null ? formatMoney(bill) : "—"} />
+        <ResultRow label={`Tip (${tipPercent}%)`} value={result ? formatMoney(result.tip) : "—"} />
+        <div className="my-2 border-t border-border/80" />
+        <ResultRow label="Total" value={result ? formatMoney(result.total) : "—"} emphasize />
         <div className="my-2 border-t border-border/80" />
         <ResultRow
-          label="Total"
-          value={result ? formatMoney(result.total) : '—'}
+          label={`Split × ${peopleInt ?? "—"}`}
+          value={result ? formatMoney(result.totalPerPerson) : "—"}
           emphasize
         />
-        <div className="my-2 border-t border-border/80" />
-        <ResultRow
-          label={`Split × ${peopleInt ?? '—'}`}
-          value={result ? formatMoney(result.totalPerPerson) : '—'}
-          emphasize
-        />
-        <ResultRow
-          label="Tip / person"
-          value={result ? formatMoney(result.tipPerPerson) : '—'}
-        />
+        <ResultRow label="Tip / person" value={result ? formatMoney(result.tipPerPerson) : "—"} />
       </div>
     </div>
-  )
+  );
 }
 
 function ResultRow({
@@ -185,9 +160,9 @@ function ResultRow({
   value,
   emphasize = false,
 }: {
-  label: string
-  value: string
-  emphasize?: boolean
+  label: string;
+  value: string;
+  emphasize?: boolean;
 }) {
   return (
     <div className="flex items-baseline justify-between gap-3 py-0.5">
@@ -195,12 +170,12 @@ function ResultRow({
       <span
         className={
           emphasize
-            ? 'font-heading text-xl tabular-nums tracking-tight text-foreground sm:text-2xl'
-            : 'font-mono text-base tabular-nums text-foreground'
+            ? "font-heading text-xl tabular-nums tracking-tight text-foreground sm:text-2xl"
+            : "font-mono text-base tabular-nums text-foreground"
         }
       >
         {value}
       </span>
     </div>
-  )
+  );
 }

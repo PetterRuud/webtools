@@ -1,36 +1,36 @@
-import { createMockScreenshotPng } from './mockPng.ts'
-import type { CaptureRequest, CaptureResult } from './types.ts'
+import { createMockScreenshotPng } from "./mockPng.ts";
+import type { CaptureRequest, CaptureResult } from "./types.ts";
 
 /** Minimal surface we need from env.BROWSER (BrowserRun). */
 export type BrowserScreenshotBinding = {
   quickAction: (
-    action: 'screenshot',
+    action: "screenshot",
     options: {
-      url: string
+      url: string;
       viewport?: {
-        width: number
-        height: number
-        deviceScaleFactor?: number
-      }
+        width: number;
+        height: number;
+        deviceScaleFactor?: number;
+      };
       screenshotOptions?: {
-        type?: 'png'
-        fullPage?: boolean
-      }
+        type?: "png";
+        fullPage?: boolean;
+      };
       gotoOptions?: {
-        waitUntil?: 'networkidle0' | 'domcontentloaded' | 'load'
-        timeout?: number
-      }
+        waitUntil?: "networkidle0" | "domcontentloaded" | "load";
+        timeout?: number;
+      };
     },
-  ) => Promise<Response>
-}
+  ) => Promise<Response>;
+};
 
 export async function captureWebsiteScreenshotWorkers(
   req: CaptureRequest,
   browser: BrowserScreenshotBinding | null | undefined,
 ): Promise<CaptureResult> {
-  if (browser && typeof browser.quickAction === 'function') {
+  if (browser && typeof browser.quickAction === "function") {
     try {
-      const res = await browser.quickAction('screenshot', {
+      const res = await browser.quickAction("screenshot", {
         url: req.url,
         viewport: {
           width: req.width,
@@ -38,18 +38,18 @@ export async function captureWebsiteScreenshotWorkers(
           deviceScaleFactor: req.deviceScaleFactor,
         },
         screenshotOptions: {
-          type: 'png',
+          type: "png",
           fullPage: req.fullPage,
         },
         gotoOptions: {
-          waitUntil: 'networkidle0',
+          waitUntil: "networkidle0",
           timeout: 45_000,
         },
-      })
+      });
       if (res.ok) {
-        const buf = new Uint8Array(await res.arrayBuffer())
+        const buf = new Uint8Array(await res.arrayBuffer());
         if (buf.byteLength > 0) {
-          return { png: buf, mode: 'browser-rendering' }
+          return { png: buf, mode: "browser-rendering" };
         }
       }
     } catch {
@@ -57,6 +57,6 @@ export async function captureWebsiteScreenshotWorkers(
     }
   }
 
-  const png = await createMockScreenshotPng(req.width, req.height)
-  return { png, mode: 'mock' }
+  const png = await createMockScreenshotPng(req.width, req.height);
+  return { png, mode: "mock" };
 }

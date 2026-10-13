@@ -4,23 +4,23 @@ import {
   useState,
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
-} from 'react'
-import { cn } from 'cn'
-import { clampSliceMargins, type SliceMargins } from '#/lib/nineSlice'
+} from "react";
+import { cn } from "cn";
+import { clampSliceMargins, type SliceMargins } from "#/lib/nineSlice";
 
-type GuideEdge = 'left' | 'right' | 'top' | 'bottom'
+type GuideEdge = "left" | "right" | "top" | "bottom";
 
 type DragState = {
-  edge: GuideEdge
-}
+  edge: GuideEdge;
+};
 
 type NineSliceGuidesProps = {
-  src: string
-  imageWidth: number
-  imageHeight: number
-  margins: SliceMargins
-  onChange: (next: SliceMargins) => void
-}
+  src: string;
+  imageWidth: number;
+  imageHeight: number;
+  margins: SliceMargins;
+  onChange: (next: SliceMargins) => void;
+};
 
 export function NineSliceGuides({
   src,
@@ -29,74 +29,72 @@ export function NineSliceGuides({
   margins,
   onChange,
 }: NineSliceGuidesProps) {
-  const frameRef = useRef<HTMLDivElement>(null)
-  const [display, setDisplay] = useState({ width: 0, height: 0 })
-  const dragRef = useRef<DragState | null>(null)
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [display, setDisplay] = useState({ width: 0, height: 0 });
+  const dragRef = useRef<DragState | null>(null);
 
   useEffect(() => {
-    const el = frameRef.current
-    if (!el) return
+    const el = frameRef.current;
+    if (!el) return;
     const update = () => {
-      const rect = el.getBoundingClientRect()
-      setDisplay({ width: rect.width, height: rect.height })
-    }
-    update()
-    const observer = new ResizeObserver(update)
-    observer.observe(el)
-    return () => observer.disconnect()
-  }, [src, imageWidth, imageHeight])
+      const rect = el.getBoundingClientRect();
+      setDisplay({ width: rect.width, height: rect.height });
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [src, imageWidth, imageHeight]);
 
-  const scaleX = display.width > 0 ? display.width / imageWidth : 1
-  const scaleY = display.height > 0 ? display.height / imageHeight : 1
+  const scaleX = display.width > 0 ? display.width / imageWidth : 1;
+  const scaleY = display.height > 0 ? display.height / imageHeight : 1;
 
   function applyDrag(clientX: number, clientY: number) {
-    const drag = dragRef.current
-    const el = frameRef.current
-    if (!drag || !el) return
-    const rect = el.getBoundingClientRect()
-    const next = { ...margins }
+    const drag = dragRef.current;
+    const el = frameRef.current;
+    if (!drag || !el) return;
+    const rect = el.getBoundingClientRect();
+    const next = { ...margins };
 
-    if (drag.edge === 'left' || drag.edge === 'right') {
-      const imageX =
-        ((clientX - rect.left) / Math.max(rect.width, 1)) * imageWidth
-      if (drag.edge === 'left') next.left = imageX
-      else next.right = imageWidth - imageX
+    if (drag.edge === "left" || drag.edge === "right") {
+      const imageX = ((clientX - rect.left) / Math.max(rect.width, 1)) * imageWidth;
+      if (drag.edge === "left") next.left = imageX;
+      else next.right = imageWidth - imageX;
     } else {
-      const imageY =
-        ((clientY - rect.top) / Math.max(rect.height, 1)) * imageHeight
-      if (drag.edge === 'top') next.top = imageY
-      else next.bottom = imageHeight - imageY
+      const imageY = ((clientY - rect.top) / Math.max(rect.height, 1)) * imageHeight;
+      if (drag.edge === "top") next.top = imageY;
+      else next.bottom = imageHeight - imageY;
     }
 
-    onChange(clampSliceMargins(next, imageWidth, imageHeight))
+    onChange(clampSliceMargins(next, imageWidth, imageHeight));
   }
 
   function onPointerDown(edge: GuideEdge, event: ReactPointerEvent) {
-    event.preventDefault()
-    event.stopPropagation()
-    dragRef.current = { edge }
-    event.currentTarget.setPointerCapture(event.pointerId)
+    event.preventDefault();
+    event.stopPropagation();
+    dragRef.current = { edge };
+    event.currentTarget.setPointerCapture(event.pointerId);
   }
 
   function onPointerMove(event: ReactPointerEvent) {
-    if (!dragRef.current) return
-    applyDrag(event.clientX, event.clientY)
+    if (!dragRef.current) return;
+    applyDrag(event.clientX, event.clientY);
   }
 
   function onPointerUp(event: ReactPointerEvent) {
-    if (!dragRef.current) return
-    dragRef.current = null
+    if (!dragRef.current) return;
+    dragRef.current = null;
     try {
-      event.currentTarget.releasePointerCapture(event.pointerId)
+      event.currentTarget.releasePointerCapture(event.pointerId);
     } catch {
       /* already released */
     }
   }
 
-  const leftPx = margins.left * scaleX
-  const rightPx = margins.right * scaleX
-  const topPx = margins.top * scaleY
-  const bottomPx = margins.bottom * scaleY
+  const leftPx = margins.left * scaleX;
+  const rightPx = margins.right * scaleX;
+  const topPx = margins.top * scaleY;
+  const bottomPx = margins.bottom * scaleY;
 
   return (
     <div
@@ -127,7 +125,7 @@ export function NineSliceGuides({
         orientation="vertical"
         style={{ left: leftPx }}
         label="L"
-        onPointerDown={(e) => onPointerDown('left', e)}
+        onPointerDown={(e) => onPointerDown("left", e)}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       />
@@ -135,7 +133,7 @@ export function NineSliceGuides({
         orientation="vertical"
         style={{ right: rightPx }}
         label="R"
-        onPointerDown={(e) => onPointerDown('right', e)}
+        onPointerDown={(e) => onPointerDown("right", e)}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       />
@@ -143,7 +141,7 @@ export function NineSliceGuides({
         orientation="horizontal"
         style={{ top: topPx }}
         label="T"
-        onPointerDown={(e) => onPointerDown('top', e)}
+        onPointerDown={(e) => onPointerDown("top", e)}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       />
@@ -151,12 +149,12 @@ export function NineSliceGuides({
         orientation="horizontal"
         style={{ bottom: bottomPx }}
         label="B"
-        onPointerDown={(e) => onPointerDown('bottom', e)}
+        onPointerDown={(e) => onPointerDown("bottom", e)}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
       />
     </div>
-  )
+  );
 }
 
 function GuideLine({
@@ -167,24 +165,24 @@ function GuideLine({
   onPointerMove,
   onPointerUp,
 }: {
-  orientation: 'vertical' | 'horizontal'
-  style: CSSProperties
-  label: string
-  onPointerDown: (event: ReactPointerEvent<HTMLDivElement>) => void
-  onPointerMove: (event: ReactPointerEvent<HTMLDivElement>) => void
-  onPointerUp: (event: ReactPointerEvent<HTMLDivElement>) => void
+  orientation: "vertical" | "horizontal";
+  style: CSSProperties;
+  label: string;
+  onPointerDown: (event: ReactPointerEvent<HTMLDivElement>) => void;
+  onPointerMove: (event: ReactPointerEvent<HTMLDivElement>) => void;
+  onPointerUp: (event: ReactPointerEvent<HTMLDivElement>) => void;
 }) {
-  const vertical = orientation === 'vertical'
+  const vertical = orientation === "vertical";
   return (
     <div
       role="slider"
       aria-label={`${label} slice guide`}
       tabIndex={0}
       className={cn(
-        'group absolute z-10 touch-none',
+        "group absolute z-10 touch-none",
         vertical
-          ? 'top-0 bottom-0 w-4 -translate-x-1/2 cursor-ew-resize'
-          : 'left-0 right-0 h-4 -translate-y-1/2 cursor-ns-resize',
+          ? "top-0 bottom-0 w-4 -translate-x-1/2 cursor-ew-resize"
+          : "left-0 right-0 h-4 -translate-y-1/2 cursor-ns-resize",
       )}
       style={style}
       onPointerDown={onPointerDown}
@@ -194,22 +192,20 @@ function GuideLine({
     >
       <div
         className={cn(
-          'absolute bg-cyan-300 shadow-[0_0_0_1px_rgb(0_0_0_/_0.4)] group-hover:bg-cyan-200 group-active:bg-cyan-100',
+          "absolute bg-cyan-300 shadow-[0_0_0_1px_rgb(0_0_0_/_0.4)] group-hover:bg-cyan-200 group-active:bg-cyan-100",
           vertical
-            ? 'left-1/2 top-0 h-full w-0.5 -translate-x-1/2'
-            : 'top-1/2 left-0 h-0.5 w-full -translate-y-1/2',
+            ? "left-1/2 top-0 h-full w-0.5 -translate-x-1/2"
+            : "top-1/2 left-0 h-0.5 w-full -translate-y-1/2",
         )}
       />
       <span
         className={cn(
-          'absolute rounded bg-cyan-300 px-1 py-0.5 text-[10px] font-semibold leading-none text-black group-hover:bg-cyan-200',
-          vertical
-            ? 'left-1/2 top-1 -translate-x-1/2'
-            : 'left-1 top-1/2 -translate-y-1/2',
+          "absolute rounded bg-cyan-300 px-1 py-0.5 text-[10px] font-semibold leading-none text-black group-hover:bg-cyan-200",
+          vertical ? "left-1/2 top-1 -translate-x-1/2" : "left-1 top-1/2 -translate-y-1/2",
         )}
       >
         {label}
       </span>
     </div>
-  )
+  );
 }

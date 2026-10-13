@@ -1,25 +1,25 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { ToolShell } from '#/components/ToolShell'
-import { RegexEditorTool } from '#/components/tools/RegexEditorTool'
+import { createFileRoute } from "@tanstack/react-router";
+import { ToolShell } from "#/components/ToolShell";
+import { RegexEditorTool } from "#/components/tools/RegexEditorTool";
 
-export const Route = createFileRoute('/tools/regex')({
+export const Route = createFileRoute("/tools/regex")({
   head: () => ({
     meta: [
-      { title: 'Regex editor · WebTools' },
+      { title: "Regex editor · WebTools" },
       {
-        name: 'description',
+        name: "description",
         content:
-          'Test regular expressions with presets, token breakdown, and live match highlights.',
+          "Test regular expressions with presets, token breakdown, and live match highlights.",
       },
     ],
   }),
   component: RegexPage,
-})
+});
 
 function RegexPage() {
   return (
     <ToolShell>
       <RegexEditorTool />
     </ToolShell>
-  )
+  );
 }

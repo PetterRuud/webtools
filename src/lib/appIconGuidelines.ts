@@ -9,7 +9,7 @@ export const IOS = {
   /** Approx continuous corner radius as % of width (visual preview only). */
   previewRadiusPercent: 22.37,
   appleTouchSize: 180,
-} as const
+} as const;
 
 /**
  * Android adaptive: 108dp layers; key art in ~66dp safe zone.
@@ -23,18 +23,17 @@ export const ANDROID = {
   /** Minimum inset so glyph stays in maskable safe zone (10% each side ≈ ø80%). */
   maskableMinPaddingPercent: 10,
   adaptiveSafeZoneRatio: 66 / 108,
-} as const
+} as const;
 
 /** PWA / site.webmanifest — separate `any` vs `maskable` (avoid `any maskable`). */
 export const WEB = {
   anySizes: [192, 512] as const,
   maskableSize: 512,
   faviconSizes: [16, 32, 48] as const,
-} as const
+} as const;
 
 export const GUIDELINE_BLURBS = {
-  ios: 'Square 1024² master · opaque · system applies squircle mask',
-  android:
-    'Maskable: full-bleed opaque · logo in center safe zone · Play 512² unmasked',
-  web: 'Manifest: separate any + maskable icons · 192 & 512 required',
-} as const
+  ios: "Square 1024² master · opaque · system applies squircle mask",
+  android: "Maskable: full-bleed opaque · logo in center safe zone · Play 512² unmasked",
+  web: "Manifest: separate any + maskable icons · 192 & 512 required",
+} as const;

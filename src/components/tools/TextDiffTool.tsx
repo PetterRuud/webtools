@@ -1,276 +1,274 @@
-import { useMemo, useState, type ReactNode } from 'react'
-import { ArrowLeftRightIcon } from 'lucide-react'
-import * as Diff from 'diff'
-import { DualTextareas } from '#/components/tools/DualTextareas'
-import { Button } from '#/components/ui/button'
-import { Label } from '#/components/ui/label'
-import { Textarea } from '#/components/ui/textarea'
-import { cn } from 'cn'
+import { useMemo, useState, type ReactNode } from "react";
+import { ArrowLeftRightIcon } from "lucide-react";
+import * as Diff from "diff";
+import { DualTextareas } from "#/components/tools/DualTextareas";
+import { Button } from "#/components/ui/button";
+import { Label } from "#/components/ui/label";
+import { Textarea } from "#/components/ui/textarea";
+import { cn } from "cn";
 
-type ViewMode = 'split' | 'unified'
-type LineKind = 'same' | 'added' | 'removed' | 'empty'
-type SegmentKind = 'same' | 'added' | 'removed'
+type ViewMode = "split" | "unified";
+type LineKind = "same" | "added" | "removed" | "empty";
+type SegmentKind = "same" | "added" | "removed";
 
 type Segment = {
-  text: string
-  type: SegmentKind
-}
+  text: string;
+  type: SegmentKind;
+};
 
 type DiffCell = {
-  text: string
-  type: LineKind
-  segments?: Segment[]
-}
+  text: string;
+  type: LineKind;
+  segments?: Segment[];
+};
 
 type DiffRow = {
-  left?: DiffCell
-  right?: DiffCell
-  unified?: DiffCell
-}
+  left?: DiffCell;
+  right?: DiffCell;
+  unified?: DiffCell;
+};
 
 function splitLines(value: string): string[] {
-  if (value === '') return []
-  return value.replace(/\n$/, '').split('\n')
+  if (value === "") return [];
+  return value.replace(/\n$/, "").split("\n");
 }
 
 /** True when tokens share enough characters to justify char-level marks. */
 function similarEnough(a: string, b: string): boolean {
-  const maxLen = Math.max(a.length, b.length)
-  if (maxLen === 0) return true
-  if (maxLen > 48) return false
-  if (/\s/.test(a) || /\s/.test(b)) return false
-  let same = 0
+  const maxLen = Math.max(a.length, b.length);
+  if (maxLen === 0) return true;
+  if (maxLen > 48) return false;
+  if (/\s/.test(a) || /\s/.test(b)) return false;
+  let same = 0;
   for (const part of Diff.diffChars(a, b)) {
-    if (!part.added && !part.removed) same += part.value.length
+    if (!part.added && !part.removed) same += part.value.length;
   }
-  return same / maxLen >= 0.45
+  return same / maxLen >= 0.45;
 }
 
 /** Prefer word-level hunks; refine similar single-token edits with char LCS. */
-function inlineSegments(before: string, after: string): {
-  left: Segment[]
-  right: Segment[]
+function inlineSegments(
+  before: string,
+  after: string,
+): {
+  left: Segment[];
+  right: Segment[];
 } {
-  const parts = Diff.diffWordsWithSpace(before, after)
-  const left: Segment[] = []
-  const right: Segment[] = []
+  const parts = Diff.diffWordsWithSpace(before, after);
+  const left: Segment[] = [];
+  const right: Segment[] = [];
 
-  let i = 0
+  let i = 0;
   while (i < parts.length) {
-    const part = parts[i]
-    const next = parts[i + 1]
+    const part = parts[i];
+    const next = parts[i + 1];
 
     if (part.removed && next?.added) {
-      const removed = part.value
-      const added = next.value
+      const removed = part.value;
+      const added = next.value;
 
       if (similarEnough(removed, added)) {
         for (const sub of Diff.diffChars(removed, added)) {
           if (sub.added) {
-            right.push({ text: sub.value, type: 'added' })
+            right.push({ text: sub.value, type: "added" });
           } else if (sub.removed) {
-            left.push({ text: sub.value, type: 'removed' })
+            left.push({ text: sub.value, type: "removed" });
           } else {
-            left.push({ text: sub.value, type: 'same' })
-            right.push({ text: sub.value, type: 'same' })
+            left.push({ text: sub.value, type: "same" });
+            right.push({ text: sub.value, type: "same" });
           }
         }
       } else {
-        left.push({ text: removed, type: 'removed' })
-        right.push({ text: added, type: 'added' })
+        left.push({ text: removed, type: "removed" });
+        right.push({ text: added, type: "added" });
       }
-      i += 2
-      continue
+      i += 2;
+      continue;
     }
 
     if (part.added) {
-      right.push({ text: part.value, type: 'added' })
+      right.push({ text: part.value, type: "added" });
     } else if (part.removed) {
-      left.push({ text: part.value, type: 'removed' })
+      left.push({ text: part.value, type: "removed" });
     } else {
-      left.push({ text: part.value, type: 'same' })
-      right.push({ text: part.value, type: 'same' })
+      left.push({ text: part.value, type: "same" });
+      right.push({ text: part.value, type: "same" });
     }
-    i += 1
+    i += 1;
   }
 
-  return { left, right }
+  return { left, right };
 }
 
 function buildRows(left: string, right: string, view: ViewMode): DiffRow[] {
-  const parts = Diff.diffLines(left, right)
+  const parts = Diff.diffLines(left, right);
 
-  if (view === 'unified') {
-    const rows: DiffRow[] = []
-    let i = 0
+  if (view === "unified") {
+    const rows: DiffRow[] = [];
+    let i = 0;
     while (i < parts.length) {
-      const part = parts[i]
-      const next = parts[i + 1]
+      const part = parts[i];
+      const next = parts[i + 1];
 
       if (part.removed && next?.added) {
-        const leftLines = splitLines(part.value)
-        const rightLines = splitLines(next.value)
-        const max = Math.max(leftLines.length, rightLines.length)
+        const leftLines = splitLines(part.value);
+        const rightLines = splitLines(next.value);
+        const max = Math.max(leftLines.length, rightLines.length);
         for (let n = 0; n < max; n += 1) {
-          const hasLeft = n < leftLines.length
-          const hasRight = n < rightLines.length
+          const hasLeft = n < leftLines.length;
+          const hasRight = n < rightLines.length;
           if (hasLeft && hasRight) {
             const { left: leftSegs, right: rightSegs } = inlineSegments(
               leftLines[n],
               rightLines[n],
-            )
+            );
             rows.push({
               unified: {
                 text: leftLines[n],
-                type: 'removed',
+                type: "removed",
                 segments: leftSegs,
               },
-            })
+            });
             rows.push({
               unified: {
                 text: rightLines[n],
-                type: 'added',
+                type: "added",
                 segments: rightSegs,
               },
-            })
+            });
           } else if (hasLeft) {
             rows.push({
-              unified: { text: leftLines[n], type: 'removed' },
-            })
+              unified: { text: leftLines[n], type: "removed" },
+            });
           } else {
             rows.push({
-              unified: { text: rightLines[n], type: 'added' },
-            })
+              unified: { text: rightLines[n], type: "added" },
+            });
           }
         }
-        i += 2
-        continue
+        i += 2;
+        continue;
       }
 
-      const lines = splitLines(part.value)
-      if (part.value === '' || (part.value === '\n' && lines.length === 1 && lines[0] === '')) {
-        i += 1
-        continue
+      const lines = splitLines(part.value);
+      if (part.value === "" || (part.value === "\n" && lines.length === 1 && lines[0] === "")) {
+        i += 1;
+        continue;
       }
-      const type: SegmentKind = part.added ? 'added' : part.removed ? 'removed' : 'same'
+      const type: SegmentKind = part.added ? "added" : part.removed ? "removed" : "same";
       for (const text of lines) {
-        rows.push({ unified: { text, type } })
+        rows.push({ unified: { text, type } });
       }
-      i += 1
+      i += 1;
     }
-    return rows
+    return rows;
   }
 
-  const rows: DiffRow[] = []
-  let i = 0
+  const rows: DiffRow[] = [];
+  let i = 0;
   while (i < parts.length) {
-    const part = parts[i]
-    const next = parts[i + 1]
+    const part = parts[i];
+    const next = parts[i + 1];
     if (part.removed && next?.added) {
-      const leftLines = splitLines(part.value)
-      const rightLines = splitLines(next.value)
-      const max = Math.max(leftLines.length, rightLines.length)
+      const leftLines = splitLines(part.value);
+      const rightLines = splitLines(next.value);
+      const max = Math.max(leftLines.length, rightLines.length);
       for (let n = 0; n < max; n += 1) {
-        const hasLeft = n < leftLines.length
-        const hasRight = n < rightLines.length
+        const hasLeft = n < leftLines.length;
+        const hasRight = n < rightLines.length;
         if (hasLeft && hasRight) {
-          const { left: leftSegs, right: rightSegs } = inlineSegments(
-            leftLines[n],
-            rightLines[n],
-          )
+          const { left: leftSegs, right: rightSegs } = inlineSegments(leftLines[n], rightLines[n]);
           rows.push({
-            left: { text: leftLines[n], type: 'removed', segments: leftSegs },
-            right: { text: rightLines[n], type: 'added', segments: rightSegs },
-          })
+            left: { text: leftLines[n], type: "removed", segments: leftSegs },
+            right: { text: rightLines[n], type: "added", segments: rightSegs },
+          });
         } else if (hasLeft) {
           rows.push({
-            left: { text: leftLines[n], type: 'removed' },
-            right: { text: '', type: 'empty' },
-          })
+            left: { text: leftLines[n], type: "removed" },
+            right: { text: "", type: "empty" },
+          });
         } else {
           rows.push({
-            left: { text: '', type: 'empty' },
-            right: { text: rightLines[n], type: 'added' },
-          })
+            left: { text: "", type: "empty" },
+            right: { text: rightLines[n], type: "added" },
+          });
         }
       }
-      i += 2
-      continue
+      i += 2;
+      continue;
     }
 
-    const lines = splitLines(part.value)
+    const lines = splitLines(part.value);
     for (const text of lines) {
       if (part.added) {
         rows.push({
-          left: { text: '', type: 'empty' },
-          right: { text, type: 'added' },
-        })
+          left: { text: "", type: "empty" },
+          right: { text, type: "added" },
+        });
       } else if (part.removed) {
         rows.push({
-          left: { text, type: 'removed' },
-          right: { text: '', type: 'empty' },
-        })
+          left: { text, type: "removed" },
+          right: { text: "", type: "empty" },
+        });
       } else {
         rows.push({
-          left: { text, type: 'same' },
-          right: { text, type: 'same' },
-        })
+          left: { text, type: "same" },
+          right: { text, type: "same" },
+        });
       }
     }
-    i += 1
+    i += 1;
   }
-  return rows
+  return rows;
 }
 
 /** Shared highlight fills — fixed hues so added/removed stay distinct from theme primary. */
-const DIFF_ADDED =
-  'bg-emerald-500/25 text-emerald-950 dark:bg-emerald-400/25 dark:text-emerald-50'
-const DIFF_REMOVED =
-  'bg-rose-500/25 text-rose-950 dark:bg-rose-400/25 dark:text-rose-50'
-const DIFF_SAME = 'bg-transparent'
+const DIFF_ADDED = "bg-emerald-500/25 text-emerald-950 dark:bg-emerald-400/25 dark:text-emerald-50";
+const DIFF_REMOVED = "bg-rose-500/25 text-rose-950 dark:bg-rose-400/25 dark:text-rose-50";
+const DIFF_SAME = "bg-transparent";
 
 function lineClass(type: LineKind, segments?: Segment[]) {
-  if (type === 'empty') {
-    return 'bg-muted/40 text-transparent'
+  if (type === "empty") {
+    return "bg-muted/40 text-transparent";
   }
   // Intra-line mode: keep the row neutral; only <mark> spans carry color.
   if (segments?.length) {
-    return DIFF_SAME
+    return DIFF_SAME;
   }
-  if (type === 'added') {
-    return DIFF_ADDED
+  if (type === "added") {
+    return DIFF_ADDED;
   }
-  if (type === 'removed') {
-    return DIFF_REMOVED
+  if (type === "removed") {
+    return DIFF_REMOVED;
   }
-  return DIFF_SAME
+  return DIFF_SAME;
 }
 
 function segmentClass(type: SegmentKind) {
-  if (type === 'added') {
-    return cn('rounded-[2px] text-foreground', DIFF_ADDED)
+  if (type === "added") {
+    return cn("rounded-[2px] text-foreground", DIFF_ADDED);
   }
-  if (type === 'removed') {
-    return cn('rounded-[2px] text-foreground', DIFF_REMOVED)
+  if (type === "removed") {
+    return cn("rounded-[2px] text-foreground", DIFF_REMOVED);
   }
-  return undefined
+  return undefined;
 }
 
 function renderSegments(segments: Segment[] | undefined, fallback: string): ReactNode {
   if (!segments || segments.length === 0) {
-    return fallback || ' '
+    return fallback || " ";
   }
   return segments.map((segment, index) => {
-    const mark = segmentClass(segment.type)
+    const mark = segmentClass(segment.type);
     if (!mark) {
-      return <span key={index}>{segment.text}</span>
+      return <span key={index}>{segment.text}</span>;
     }
     return (
-      <mark key={index} className={cn(mark, 'text-inherit')}>
+      <mark key={index} className={cn(mark, "text-inherit")}>
         {segment.text}
       </mark>
-    )
-  })
+    );
+  });
 }
 
 function DiffLegend() {
@@ -279,14 +277,14 @@ function DiffLegend() {
       <li className="inline-flex items-center gap-1">
         <span
           aria-hidden
-          className={cn('inline-block size-2.5 shrink-0 rounded-[2px]', DIFF_ADDED)}
+          className={cn("inline-block size-2.5 shrink-0 rounded-[2px]", DIFF_ADDED)}
         />
         Added
       </li>
       <li className="inline-flex items-center gap-1">
         <span
           aria-hidden
-          className={cn('inline-block size-2.5 shrink-0 rounded-[2px]', DIFF_REMOVED)}
+          className={cn("inline-block size-2.5 shrink-0 rounded-[2px]", DIFF_REMOVED)}
         />
         Removed
       </li>
@@ -304,48 +302,48 @@ function DiffLegend() {
         <span
           aria-hidden
           className={cn(
-            'inline-block size-2.5 shrink-0 rounded-[2px] border border-border',
+            "inline-block size-2.5 shrink-0 rounded-[2px] border border-border",
             DIFF_SAME,
           )}
         />
         Unchanged
       </li>
     </ul>
-  )
+  );
 }
 
 export function TextDiffTool() {
-  const [left, setLeft] = useState('alpha\nbeta\ncolour\ngamma\n')
-  const [right, setRight] = useState('alpha\nbeta edited\ncolor\ndelta\n')
-  const [view, setView] = useState<ViewMode>('split')
+  const [left, setLeft] = useState("alpha\nbeta\ncolour\ngamma\n");
+  const [right, setRight] = useState("alpha\nbeta edited\ncolor\ndelta\n");
+  const [view, setView] = useState<ViewMode>("split");
 
-  const rows = useMemo(() => buildRows(left, right, view), [left, right, view])
-  const hasInput = left.length > 0 || right.length > 0
+  const rows = useMemo(() => buildRows(left, right, view), [left, right, view]);
+  const hasInput = left.length > 0 || right.length > 0;
   const changeCount = useMemo(
     () =>
       rows.filter((row) => {
-        if (row.unified) return row.unified.type !== 'same'
-        const leftType = row.left?.type
-        const rightType = row.right?.type
-        return leftType === 'removed' || rightType === 'added'
+        if (row.unified) return row.unified.type !== "same";
+        const leftType = row.left?.type;
+        const rightType = row.right?.type;
+        return leftType === "removed" || rightType === "added";
       }).length,
     [rows],
-  )
+  );
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-1.5">
         <Button
           type="button"
-          variant={view === 'split' ? 'default' : 'outline'}
-          onClick={() => setView('split')}
+          variant={view === "split" ? "default" : "outline"}
+          onClick={() => setView("split")}
         >
           Side by side
         </Button>
         <Button
           type="button"
-          variant={view === 'unified' ? 'default' : 'outline'}
-          onClick={() => setView('unified')}
+          variant={view === "unified" ? "default" : "outline"}
+          onClick={() => setView("unified")}
         >
           Unified
         </Button>
@@ -353,8 +351,8 @@ export function TextDiffTool() {
           type="button"
           variant="secondary"
           onClick={() => {
-            setLeft(right)
-            setRight(left)
+            setLeft(right);
+            setRight(left);
           }}
         >
           <ArrowLeftRightIcon data-icon="inline-start" />
@@ -364,8 +362,8 @@ export function TextDiffTool() {
           type="button"
           variant="ghost"
           onClick={() => {
-            setLeft('')
-            setRight('')
+            setLeft("");
+            setRight("");
           }}
         >
           Clear
@@ -407,10 +405,10 @@ export function TextDiffTool() {
           </div>
           <p className="m-0 text-xs text-muted-foreground">
             {!hasInput
-              ? '—'
+              ? "—"
               : changeCount === 0
-                ? 'No differences'
-                : `${changeCount} changed line${changeCount === 1 ? '' : 's'}`}
+                ? "No differences"
+                : `${changeCount} changed line${changeCount === 1 ? "" : "s"}`}
           </p>
         </div>
 
@@ -418,31 +416,27 @@ export function TextDiffTool() {
           <p className="m-0 rounded-lg border border-dashed border-border px-3 py-6 text-center text-sm text-muted-foreground">
             Paste both sides to diff
           </p>
-        ) : view === 'unified' ? (
+        ) : view === "unified" ? (
           <div className="overflow-x-auto rounded-xl border border-border">
             <table className="w-full border-collapse font-mono text-[0.8rem] leading-6">
               <tbody>
                 {rows.map((row, index) => {
-                  const cell = row.unified!
+                  const cell = row.unified!;
                   return (
                     <tr key={index}>
                       <td
                         className={cn(
-                          'whitespace-pre-wrap px-3 py-0.5 align-top',
+                          "whitespace-pre-wrap px-3 py-0.5 align-top",
                           lineClass(cell.type, cell.segments),
                         )}
                       >
                         <span className="mr-2 inline-block w-3 text-muted-foreground">
-                          {cell.type === 'added'
-                            ? '+'
-                            : cell.type === 'removed'
-                              ? '−'
-                              : ' '}
+                          {cell.type === "added" ? "+" : cell.type === "removed" ? "−" : " "}
                         </span>
                         {renderSegments(cell.segments, cell.text)}
                       </td>
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>
@@ -458,13 +452,13 @@ export function TextDiffTool() {
               </thead>
               <tbody>
                 {rows.map((row, index) => {
-                  const leftCell = row.left!
-                  const rightCell = row.right!
+                  const leftCell = row.left!;
+                  const rightCell = row.right!;
                   return (
                     <tr key={index} className="border-t border-border/50">
                       <td
                         className={cn(
-                          'w-1/2 whitespace-pre-wrap px-3 py-0.5 align-top',
+                          "w-1/2 whitespace-pre-wrap px-3 py-0.5 align-top",
                           lineClass(leftCell.type, leftCell.segments),
                         )}
                       >
@@ -472,14 +466,14 @@ export function TextDiffTool() {
                       </td>
                       <td
                         className={cn(
-                          'w-1/2 whitespace-pre-wrap px-3 py-0.5 align-top',
+                          "w-1/2 whitespace-pre-wrap px-3 py-0.5 align-top",
                           lineClass(rightCell.type, rightCell.segments),
                         )}
                       >
                         {renderSegments(rightCell.segments, rightCell.text)}
                       </td>
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>
@@ -487,5 +481,5 @@ export function TextDiffTool() {
         )}
       </div>
     </div>
-  )
+  );
 }

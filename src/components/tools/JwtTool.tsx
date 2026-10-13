@@ -1,82 +1,82 @@
-import { useEffect, useMemo, useState } from 'react'
-import { CopyIcon } from 'lucide-react'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { Textarea } from '#/components/ui/textarea'
-import { copyText } from '#/lib/clipboard'
-import { decodeJwt, encodeJwt, prettyJson } from '#/lib/jwt'
+import { useEffect, useMemo, useState } from "react";
+import { CopyIcon } from "lucide-react";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { Textarea } from "#/components/ui/textarea";
+import { copyText } from "#/lib/clipboard";
+import { decodeJwt, encodeJwt, prettyJson } from "#/lib/jwt";
 
-type Mode = 'decode' | 'encode'
+type Mode = "decode" | "encode";
 
 const SAMPLE =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3ZWJ0b29scyIsIm5hbWUiOiJQZXR0ZXIiLCJpYXQiOjE3MTAwMDAwMDB9.signature'
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3ZWJ0b29scyIsIm5hbWUiOiJQZXR0ZXIiLCJpYXQiOjE3MTAwMDAwMDB9.signature";
 
 const DEFAULT_HEADER = `{
   "alg": "HS256",
   "typ": "JWT"
-}`
+}`;
 
 const DEFAULT_PAYLOAD = `{
   "sub": "webtools",
   "name": "Petter",
   "iat": 1710000000
-}`
+}`;
 
 export function JwtTool() {
-  const [mode, setMode] = useState<Mode>('decode')
-  const [token, setToken] = useState('')
-  const [header, setHeader] = useState(DEFAULT_HEADER)
-  const [payload, setPayload] = useState(DEFAULT_PAYLOAD)
-  const [secret, setSecret] = useState('')
-  const [encoded, setEncoded] = useState('')
-  const [encodeError, setEncodeError] = useState<string | null>(null)
+  const [mode, setMode] = useState<Mode>("decode");
+  const [token, setToken] = useState("");
+  const [header, setHeader] = useState(DEFAULT_HEADER);
+  const [payload, setPayload] = useState(DEFAULT_PAYLOAD);
+  const [secret, setSecret] = useState("");
+  const [encoded, setEncoded] = useState("");
+  const [encodeError, setEncodeError] = useState<string | null>(null);
 
-  const decoded = useMemo(() => decodeJwt(token), [token])
+  const decoded = useMemo(() => decodeJwt(token), [token]);
 
   useEffect(() => {
-    if (mode !== 'encode') return
-    let cancelled = false
+    if (mode !== "encode") return;
+    let cancelled = false;
     void encodeJwt({ header, payload, secret }).then((result) => {
-      if (cancelled) return
-      if ('error' in result) {
-        setEncoded('')
-        setEncodeError(result.error)
+      if (cancelled) return;
+      if ("error" in result) {
+        setEncoded("");
+        setEncodeError(result.error);
       } else {
-        setEncoded(result.token)
-        setEncodeError(null)
+        setEncoded(result.token);
+        setEncodeError(null);
       }
-    })
+    });
     return () => {
-      cancelled = true
-    }
-  }, [mode, header, payload, secret])
+      cancelled = true;
+    };
+  }, [mode, header, payload, secret]);
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
         <Button
           type="button"
-          variant={mode === 'decode' ? 'default' : 'outline'}
-          onClick={() => setMode('decode')}
+          variant={mode === "decode" ? "default" : "outline"}
+          onClick={() => setMode("decode")}
         >
           Decode
         </Button>
         <Button
           type="button"
-          variant={mode === 'encode' ? 'default' : 'outline'}
-          onClick={() => setMode('encode')}
+          variant={mode === "encode" ? "default" : "outline"}
+          onClick={() => setMode("encode")}
         >
           Encode
         </Button>
-        {mode === 'decode' ? (
+        {mode === "decode" ? (
           <Button type="button" variant="ghost" onClick={() => setToken(SAMPLE)}>
             Sample
           </Button>
         ) : null}
       </div>
 
-      {mode === 'decode' ? (
+      {mode === "decode" ? (
         <div className="grid gap-3 lg:grid-cols-2">
           <div className="flex flex-col gap-1.5">
             <Label htmlFor="jwt-token">Token</Label>
@@ -98,12 +98,12 @@ export function JwtTool() {
                 <PartBlock
                   title="Header"
                   value={prettyJson(decoded.header.json)}
-                  onCopy={() => void copyText(prettyJson(decoded.header.json), 'header')}
+                  onCopy={() => void copyText(prettyJson(decoded.header.json), "header")}
                 />
                 <PartBlock
                   title="Payload"
                   value={prettyJson(decoded.payload.json)}
-                  onCopy={() => void copyText(prettyJson(decoded.payload.json), 'payload')}
+                  onCopy={() => void copyText(prettyJson(decoded.payload.json), "payload")}
                 />
                 <div className="rounded-lg border border-border/70 bg-card/40 px-3 py-2">
                   <div className="mb-1 flex items-center justify-between gap-2">
@@ -111,11 +111,11 @@ export function JwtTool() {
                       Signature
                     </span>
                     <span className="text-[0.7rem] text-muted-foreground">
-                      {decoded.signed ? 'present (not verified)' : 'empty'}
+                      {decoded.signed ? "present (not verified)" : "empty"}
                     </span>
                   </div>
                   <p className="m-0 break-all font-mono text-[0.75rem] text-foreground">
-                    {decoded.signature || '—'}
+                    {decoded.signature || "—"}
                   </p>
                 </div>
               </>
@@ -169,7 +169,7 @@ export function JwtTool() {
                 size="sm"
                 variant="outline"
                 disabled={!encoded}
-                onClick={() => void copyText(encoded, 'JWT')}
+                onClick={() => void copyText(encoded, "JWT")}
               >
                 <CopyIcon data-icon="inline-start" />
                 Copy
@@ -181,27 +181,17 @@ export function JwtTool() {
               readOnly
               spellCheck={false}
               className="min-h-64 font-mono text-[0.8rem] leading-5"
-              placeholder={encodeError ?? 'Token updates as you edit…'}
+              placeholder={encodeError ?? "Token updates as you edit…"}
             />
-            {encodeError ? (
-              <p className="m-0 text-sm text-destructive">{encodeError}</p>
-            ) : null}
+            {encodeError ? <p className="m-0 text-sm text-destructive">{encodeError}</p> : null}
           </div>
         </div>
       )}
     </div>
-  )
+  );
 }
 
-function PartBlock({
-  title,
-  value,
-  onCopy,
-}: {
-  title: string
-  value: string
-  onCopy: () => void
-}) {
+function PartBlock({ title, value, onCopy }: { title: string; value: string; onCopy: () => void }) {
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between gap-2">
@@ -218,5 +208,5 @@ function PartBlock({
         className="min-h-28 font-mono text-[0.8rem] leading-5"
       />
     </div>
-  )
+  );
 }

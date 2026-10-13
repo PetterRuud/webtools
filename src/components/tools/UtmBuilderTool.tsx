@@ -1,35 +1,30 @@
-import { useMemo, useState } from 'react'
-import { CopyIcon } from 'lucide-react'
-import { toast } from 'sonner'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { copyText } from '#/lib/clipboard'
-import {
-  UTM_PRESETS,
-  UTM_SAMPLE,
-  buildUtmUrl,
-  type UtmParams,
-} from '#/lib/utmBuilder'
-import { cn } from 'cn'
+import { useMemo, useState } from "react";
+import { CopyIcon } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { copyText } from "#/lib/clipboard";
+import { UTM_PRESETS, UTM_SAMPLE, buildUtmUrl, type UtmParams } from "#/lib/utmBuilder";
+import { cn } from "cn";
 
 export function UtmBuilderTool() {
-  const [params, setParams] = useState<UtmParams>(UTM_SAMPLE)
+  const [params, setParams] = useState<UtmParams>(UTM_SAMPLE);
 
-  const result = useMemo(() => buildUtmUrl(params), [params])
+  const result = useMemo(() => buildUtmUrl(params), [params]);
 
   function setField<K extends keyof UtmParams>(key: K, value: UtmParams[K]) {
-    setParams((prev) => ({ ...prev, [key]: value }))
+    setParams((prev) => ({ ...prev, [key]: value }));
   }
 
   function applyPreset(id: string) {
-    const preset = UTM_PRESETS.find((p) => p.id === id)
-    if (!preset) return
+    const preset = UTM_PRESETS.find((p) => p.id === id);
+    if (!preset) return;
     setParams((prev) => ({
       ...prev,
       source: preset.source,
       medium: preset.medium,
-    }))
+    }));
   }
 
   return (
@@ -42,10 +37,10 @@ export function UtmBuilderTool() {
               type="button"
               onClick={() => applyPreset(preset.id)}
               className={cn(
-                'inline-flex h-7 items-center rounded-md border border-border/80 bg-card/40 px-2.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground',
+                "inline-flex h-7 items-center rounded-md border border-border/80 bg-card/40 px-2.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground",
                 params.source === preset.source &&
                   params.medium === preset.medium &&
-                  'border-transparent bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground',
+                  "border-transparent bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground",
               )}
             >
               {preset.label}
@@ -55,19 +50,16 @@ export function UtmBuilderTool() {
 
         {(
           [
-            ['url', 'URL', 'https://example.com/page'],
-            ['source', 'utm_source', 'google'],
-            ['medium', 'utm_medium', 'cpc'],
-            ['campaign', 'utm_campaign', 'spring-sale'],
-            ['term', 'utm_term (optional)', 'keyword'],
-            ['content', 'utm_content (optional)', 'header-cta'],
+            ["url", "URL", "https://example.com/page"],
+            ["source", "utm_source", "google"],
+            ["medium", "utm_medium", "cpc"],
+            ["campaign", "utm_campaign", "spring-sale"],
+            ["term", "utm_term (optional)", "keyword"],
+            ["content", "utm_content (optional)", "header-cta"],
           ] as const
         ).map(([key, label, placeholder]) => (
           <div key={key} className="flex flex-col gap-1">
-            <Label
-              htmlFor={`utm-${key}`}
-              className="text-xs font-normal text-muted-foreground"
-            >
+            <Label htmlFor={`utm-${key}`} className="text-xs font-normal text-muted-foreground">
               {label}
             </Label>
             <Input
@@ -94,8 +86,8 @@ export function UtmBuilderTool() {
               variant="outline"
               className="w-fit"
               onClick={async () => {
-                await copyText(result.url)
-                toast.success('URL copied')
+                await copyText(result.url);
+                toast.success("URL copied");
               }}
             >
               <CopyIcon data-icon="inline-start" />
@@ -107,5 +99,5 @@ export function UtmBuilderTool() {
         )}
       </div>
     </div>
-  )
+  );
 }

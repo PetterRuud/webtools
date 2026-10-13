@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react'
-import { Input } from '#/components/ui/input'
-import { copyText } from '#/lib/clipboard'
+import { useMemo, useState } from "react";
+import { Input } from "#/components/ui/input";
+import { copyText } from "#/lib/clipboard";
 import {
   TAILWIND_CATEGORIES,
   TAILWIND_CATEGORY_STYLES,
@@ -9,19 +9,19 @@ import {
   groupUtilitiesByCategory,
   type CategoryFilter,
   type TailwindCategoryId,
-} from '#/lib/tailwindCheatSheet'
-import { cn } from '#/lib/utils'
+} from "#/lib/tailwindCheatSheet";
+import { cn } from "#/lib/utils";
 
 export function TailwindCheatSheetTool() {
-  const [query, setQuery] = useState('')
-  const [category, setCategory] = useState<CategoryFilter>('all')
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<CategoryFilter>("all");
 
   const visible = useMemo(
     () => filterTailwindUtilities(TAILWIND_UTILITIES, { query, category }),
     [query, category],
-  )
+  );
 
-  const groups = useMemo(() => groupUtilitiesByCategory(visible), [visible])
+  const groups = useMemo(() => groupUtilitiesByCategory(visible), [visible]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -39,17 +39,11 @@ export function TailwindCheatSheetTool() {
         </p>
       </div>
 
-      <div
-        className="flex flex-wrap gap-1.5"
-        role="tablist"
-        aria-label="Utility category"
-      >
+      <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Utility category">
         {TAILWIND_CATEGORIES.map((item) => {
-          const selected = category === item.id
+          const selected = category === item.id;
           const tones =
-            item.id === 'all'
-              ? null
-              : TAILWIND_CATEGORY_STYLES[item.id as TailwindCategoryId]
+            item.id === "all" ? null : TAILWIND_CATEGORY_STYLES[item.id as TailwindCategoryId];
 
           return (
             <button
@@ -59,19 +53,19 @@ export function TailwindCheatSheetTool() {
               aria-selected={selected}
               onClick={() => setCategory(item.id)}
               className={cn(
-                'inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors',
-                item.id === 'all'
+                "inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors",
+                item.id === "all"
                   ? selected
-                    ? 'border-transparent bg-primary text-primary-foreground'
-                    : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground'
+                    ? "border-transparent bg-primary text-primary-foreground"
+                    : "border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground"
                   : selected
                     ? tones!.chipActive
-                    : cn('bg-card/40', tones!.chip),
+                    : cn("bg-card/40", tones!.chip),
               )}
             >
               {item.label}
             </button>
-          )
+          );
         })}
       </div>
 
@@ -82,13 +76,13 @@ export function TailwindCheatSheetTool() {
       ) : (
         <div className="flex flex-col gap-4">
           {groups.map((group) => {
-            const tones = TAILWIND_CATEGORY_STYLES[group.category.id as TailwindCategoryId]
+            const tones = TAILWIND_CATEGORY_STYLES[group.category.id as TailwindCategoryId];
             return (
               <section key={group.category.id} className="flex flex-col gap-1.5">
                 <div className="flex items-baseline justify-between gap-2">
                   <h2
                     className={cn(
-                      'font-heading m-0 text-[0.8rem] font-semibold tracking-wide uppercase',
+                      "font-heading m-0 text-[0.8rem] font-semibold tracking-wide uppercase",
                       tones.heading,
                     )}
                   >
@@ -105,14 +99,14 @@ export function TailwindCheatSheetTool() {
                         type="button"
                         onClick={() => copyText(item.className, item.className)}
                         className={cn(
-                          'group flex w-full items-baseline gap-2 rounded-md border border-border/70 border-l-[3px] bg-card/30 px-2.5 py-1.5 text-left transition-colors hover:border-border hover:bg-muted/50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none',
+                          "group flex w-full items-baseline gap-2 rounded-md border border-border/70 border-l-[3px] bg-card/30 px-2.5 py-1.5 text-left transition-colors hover:border-border hover:bg-muted/50 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none",
                           tones.rail,
                         )}
                         title="Copy class"
                       >
                         <code
                           className={cn(
-                            'font-mono text-[0.84rem] leading-5 font-semibold break-all',
+                            "font-mono text-[0.84rem] leading-5 font-semibold break-all",
                             tones.className,
                           )}
                         >
@@ -131,10 +125,10 @@ export function TailwindCheatSheetTool() {
                   ))}
                 </ul>
               </section>
-            )
+            );
           })}
         </div>
       )}
     </div>
-  )
+  );
 }

@@ -1,15 +1,15 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Link } from '@tanstack/react-router'
-import { ArrowLeftRightIcon, DownloadIcon, Loader2Icon } from 'lucide-react'
-import { toast } from 'sonner'
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { ArrowLeftRightIcon, DownloadIcon, Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
 import {
   ImageFileField,
   ImagePreviewFrame,
   imagePreviewClassName,
-} from '#/components/tools/ImageFileField'
-import { Button } from '#/components/ui/button'
-import { Label } from '#/components/ui/label'
-import { Slider } from '#/components/ui/slider'
+} from "#/components/tools/ImageFileField";
+import { Button } from "#/components/ui/button";
+import { Label } from "#/components/ui/label";
+import { Slider } from "#/components/ui/slider";
 import {
   OUTPUT_FORMATS,
   convertImageFormat,
@@ -18,118 +18,112 @@ import {
   looksLikeHeic,
   outputFileName,
   type OutputFormat,
-} from '#/lib/imageFormat'
+} from "#/lib/imageFormat";
 
-const ACCEPT =
-  'image/*,.heic,.heif,image/heic,image/heif,image/heic-sequence,image/heif-sequence'
+const ACCEPT = "image/*,.heic,.heif,image/heic,image/heif,image/heic-sequence,image/heif-sequence";
 
 export function ImageFormatTool() {
-  const [file, setFile] = useState<File | null>(null)
-  const [sourceUrl, setSourceUrl] = useState<string | null>(null)
-  const [previewBusy, setPreviewBusy] = useState(false)
-  const [format, setFormat] = useState<OutputFormat>('webp')
-  const [quality, setQuality] = useState(0.9)
-  const [output, setOutput] = useState<Blob | null>(null)
-  const [outputUrl, setOutputUrl] = useState<string | null>(null)
-  const [dims, setDims] = useState<{ width: number; height: number } | null>(
-    null,
-  )
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [file, setFile] = useState<File | null>(null);
+  const [sourceUrl, setSourceUrl] = useState<string | null>(null);
+  const [previewBusy, setPreviewBusy] = useState(false);
+  const [format, setFormat] = useState<OutputFormat>("webp");
+  const [quality, setQuality] = useState(0.9);
+  const [output, setOutput] = useState<Blob | null>(null);
+  const [outputUrl, setOutputUrl] = useState<string | null>(null);
+  const [dims, setDims] = useState<{ width: number; height: number } | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const selected = OUTPUT_FORMATS.find((item) => item.id === format)!
-  const lossy = selected.lossy
-  const heicSource = Boolean(file && looksLikeHeic(file))
+  const selected = OUTPUT_FORMATS.find((item) => item.id === format)!;
+  const lossy = selected.lossy;
+  const heicSource = Boolean(file && looksLikeHeic(file));
 
   useEffect(() => {
     if (!file) {
-      setSourceUrl(null)
-      setPreviewBusy(false)
-      return
+      setSourceUrl(null);
+      setPreviewBusy(false);
+      return;
     }
 
-    let activeUrl: string | null = null
-    let cancelled = false
-    setPreviewBusy(true)
-    setSourceUrl(null)
+    let activeUrl: string | null = null;
+    let cancelled = false;
+    setPreviewBusy(true);
+    setSourceUrl(null);
 
     void createSourcePreviewUrl(file)
       .then((url) => {
         if (cancelled) {
-          URL.revokeObjectURL(url)
-          return
+          URL.revokeObjectURL(url);
+          return;
         }
-        activeUrl = url
-        setSourceUrl(url)
+        activeUrl = url;
+        setSourceUrl(url);
       })
       .catch(() => {
-        if (!cancelled) setSourceUrl(null)
+        if (!cancelled) setSourceUrl(null);
       })
       .finally(() => {
-        if (!cancelled) setPreviewBusy(false)
-      })
+        if (!cancelled) setPreviewBusy(false);
+      });
 
     return () => {
-      cancelled = true
-      if (activeUrl) URL.revokeObjectURL(activeUrl)
-    }
-  }, [file])
+      cancelled = true;
+      if (activeUrl) URL.revokeObjectURL(activeUrl);
+    };
+  }, [file]);
 
   useEffect(() => {
     if (!output) {
-      setOutputUrl(null)
-      return
+      setOutputUrl(null);
+      return;
     }
-    const url = URL.createObjectURL(output)
-    setOutputUrl(url)
-    return () => URL.revokeObjectURL(url)
-  }, [output])
+    const url = URL.createObjectURL(output);
+    setOutputUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [output]);
 
   const downloadName = useMemo(
-    () =>
-      file
-        ? outputFileName(file.name, format)
-        : `converted.${selected.extension}`,
+    () => (file ? outputFileName(file.name, format) : `converted.${selected.extension}`),
     [file, format, selected.extension],
-  )
+  );
 
   function onPick(next: File | null) {
-    setFile(next)
-    setOutput(null)
-    setDims(null)
-    setError(null)
+    setFile(next);
+    setOutput(null);
+    setDims(null);
+    setError(null);
     if (next && looksLikeHeic(next)) {
-      setFormat('jpeg')
+      setFormat("jpeg");
     }
   }
 
   async function convert() {
     if (!file) {
-      setError('Pick an image first.')
-      return
+      setError("Pick an image first.");
+      return;
     }
-    setBusy(true)
-    setError(null)
+    setBusy(true);
+    setError(null);
     try {
-      const result = await convertImageFormat(file, format, quality)
-      setOutput(result.blob)
-      setDims({ width: result.width, height: result.height })
-      toast.success(`Converted to ${selected.label}`)
+      const result = await convertImageFormat(file, format, quality);
+      setOutput(result.blob);
+      setDims({ width: result.width, height: result.height });
+      toast.success(`Converted to ${selected.label}`);
     } catch (err) {
-      setOutput(null)
-      setDims(null)
-      setError(err instanceof Error ? err.message : 'Conversion failed')
+      setOutput(null);
+      setDims(null);
+      setError(err instanceof Error ? err.message : "Conversion failed");
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
   }
 
   function download() {
-    if (!output || !outputUrl) return
-    const anchor = document.createElement('a')
-    anchor.href = outputUrl
-    anchor.download = downloadName
-    anchor.click()
+    if (!output || !outputUrl) return;
+    const anchor = document.createElement("a");
+    anchor.href = outputUrl;
+    anchor.download = downloadName;
+    anchor.click();
   }
 
   return (
@@ -144,8 +138,8 @@ export function ImageFormatTool() {
           meta={
             file ? (
               <p className="m-0 text-xs text-muted-foreground">
-                {file.type ? file.type : heicSource ? 'HEIC' : 'Unknown type'}
-                {heicSource ? ' · decoded locally' : ''}
+                {file.type ? file.type : heicSource ? "HEIC" : "Unknown type"}
+                {heicSource ? " · decoded locally" : ""}
               </p>
             ) : null
           }
@@ -153,16 +147,10 @@ export function ImageFormatTool() {
 
         {sourceUrl ? (
           <ImagePreviewFrame>
-            <img
-              src={sourceUrl}
-              alt="Source preview"
-              className={imagePreviewClassName}
-            />
+            <img src={sourceUrl} alt="Source preview" className={imagePreviewClassName} />
           </ImagePreviewFrame>
         ) : previewBusy ? (
-          <p className="m-0 text-sm text-muted-foreground">
-            Decoding HEIC preview…
-          </p>
+          <p className="m-0 text-sm text-muted-foreground">Decoding HEIC preview…</p>
         ) : file ? (
           <p className="m-0 text-sm text-muted-foreground">Preview unavailable</p>
         ) : null}
@@ -175,11 +163,11 @@ export function ImageFormatTool() {
                 key={item.id}
                 type="button"
                 size="sm"
-                variant={format === item.id ? 'default' : 'outline'}
+                variant={format === item.id ? "default" : "outline"}
                 onClick={() => {
-                  setFormat(item.id)
-                  setOutput(null)
-                  setError(null)
+                  setFormat(item.id);
+                  setOutput(null);
+                  setError(null);
                 }}
               >
                 {item.label}
@@ -203,10 +191,10 @@ export function ImageFormatTool() {
               step={0.05}
               value={[quality]}
               onValueChange={(value) => {
-                const next = Array.isArray(value) ? value[0] : value
-                if (typeof next === 'number') {
-                  setQuality(next)
-                  setOutput(null)
+                const next = Array.isArray(value) ? value[0] : value;
+                if (typeof next === "number") {
+                  setQuality(next);
+                  setOutput(null);
                 }
               }}
             />
@@ -214,24 +202,15 @@ export function ImageFormatTool() {
         ) : null}
 
         <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            onClick={() => void convert()}
-            disabled={busy || !file}
-          >
+          <Button type="button" onClick={() => void convert()} disabled={busy || !file}>
             {busy ? (
               <Loader2Icon data-icon="inline-start" className="animate-spin" />
             ) : (
               <ArrowLeftRightIcon data-icon="inline-start" />
             )}
-            {busy ? 'Converting…' : `Convert to ${selected.label}`}
+            {busy ? "Converting…" : `Convert to ${selected.label}`}
           </Button>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={download}
-            disabled={!output}
-          >
+          <Button type="button" variant="outline" onClick={download} disabled={!output}>
             <DownloadIcon data-icon="inline-start" />
             Download
           </Button>
@@ -239,9 +218,9 @@ export function ImageFormatTool() {
             type="button"
             variant="ghost"
             onClick={() => {
-              onPick(null)
-              setFormat('webp')
-              setQuality(0.9)
+              onPick(null);
+              setFormat("webp");
+              setQuality(0.9);
             }}
           >
             Clear
@@ -255,21 +234,21 @@ export function ImageFormatTool() {
         ) : null}
 
         <p className="m-0 text-xs text-muted-foreground">
-          Related:{' '}
+          Related:{" "}
           <Link
             to="/tools/image-resize"
             className="text-foreground underline-offset-4 hover:underline"
           >
             Resize
           </Link>
-          {' · '}
+          {" · "}
           <Link
             to="/tools/image-crop"
             className="text-foreground underline-offset-4 hover:underline"
           >
             Crop
           </Link>
-          {' · '}
+          {" · "}
           <Link
             to="/tools/image-compress"
             className="text-foreground underline-offset-4 hover:underline"
@@ -288,16 +267,11 @@ export function ImageFormatTool() {
               </h2>
               <p className="m-0 text-xs text-muted-foreground">
                 {downloadName}
-                {dims ? ` · ${dims.width}×${dims.height}` : ''} ·{' '}
-                {formatBytes(output.size)}
+                {dims ? ` · ${dims.width}×${dims.height}` : ""} · {formatBytes(output.size)}
               </p>
             </div>
             <ImagePreviewFrame>
-              <img
-                src={outputUrl}
-                alt="Converted preview"
-                className={imagePreviewClassName}
-              />
+              <img src={outputUrl} alt="Converted preview" className={imagePreviewClassName} />
             </ImagePreviewFrame>
           </>
         ) : (
@@ -307,5 +281,5 @@ export function ImageFormatTool() {
         )}
       </div>
     </div>
-  )
+  );
 }

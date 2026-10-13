@@ -1,10 +1,10 @@
-import { CopyIcon } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
-import { Button } from '#/components/ui/button'
-import { Checkbox } from '#/components/ui/checkbox'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { copyText } from '#/lib/clipboard'
+import { CopyIcon } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Button } from "#/components/ui/button";
+import { Checkbox } from "#/components/ui/checkbox";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { copyText } from "#/lib/clipboard";
 import {
   CRON_PRESETS,
   buildExpression,
@@ -21,100 +21,84 @@ import {
   type CronState,
   type FieldMode,
   type FieldState,
-} from '#/lib/crontab'
-import { cn } from '#/lib/utils'
+} from "#/lib/crontab";
+import { cn } from "#/lib/utils";
 
-const FIELD_ORDER: CronFieldName[] = [
-  'minute',
-  'hour',
-  'dayOfMonth',
-  'month',
-  'dayOfWeek',
-]
+const FIELD_ORDER: CronFieldName[] = ["minute", "hour", "dayOfMonth", "month", "dayOfWeek"];
 
 const MODES: { id: FieldMode; label: string }[] = [
-  { id: 'every', label: 'Every' },
-  { id: 'step', label: 'Step' },
-  { id: 'specific', label: 'At' },
-  { id: 'range', label: 'Range' },
-  { id: 'list', label: 'List' },
-]
+  { id: "every", label: "Every" },
+  { id: "step", label: "Step" },
+  { id: "specific", label: "At" },
+  { id: "range", label: "Range" },
+  { id: "list", label: "List" },
+];
 
-const DOW_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as const
+const DOW_SHORT = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 const MONTH_SHORT = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-] as const
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+] as const;
 
 export function CrontabTool() {
-  const [state, setState] = useState<CronState>(() => createDefaultCronState(false))
-  const [draft, setDraft] = useState(() =>
-    buildExpression(createDefaultCronState(false)),
-  )
-  const [parseError, setParseError] = useState<string | null>(null)
-  const [mounted, setMounted] = useState(false)
+  const [state, setState] = useState<CronState>(() => createDefaultCronState(false));
+  const [draft, setDraft] = useState(() => buildExpression(createDefaultCronState(false)));
+  const [parseError, setParseError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
-  const expression = useMemo(() => buildExpression(state), [state])
-  const summary = useMemo(() => describeExpression(expression), [expression])
-  const runs = useMemo(
-    () => (mounted ? nextRuns(expression, 5) : null),
-    [expression, mounted],
-  )
-  const timeZone = mounted
-    ? Intl.DateTimeFormat().resolvedOptions().timeZone
-    : 'local'
+  const expression = useMemo(() => buildExpression(state), [state]);
+  const summary = useMemo(() => describeExpression(expression), [expression]);
+  const runs = useMemo(() => (mounted ? nextRuns(expression, 5) : null), [expression, mounted]);
+  const timeZone = mounted ? Intl.DateTimeFormat().resolvedOptions().timeZone : "local";
 
   function applyState(next: CronState) {
-    setState(next)
-    setDraft(buildExpression(next))
-    setParseError(null)
+    setState(next);
+    setDraft(buildExpression(next));
+    setParseError(null);
   }
 
-  function updateField(
-    name: CronFieldName,
-    patch: Partial<FieldState> | FieldState,
-  ) {
+  function updateField(name: CronFieldName, patch: Partial<FieldState> | FieldState) {
     setState((prev) => {
-      const field = { ...prev.fields[name], ...patch }
-      field.raw = serializeField(field, fieldSpec(name))
+      const field = { ...prev.fields[name], ...patch };
+      field.raw = serializeField(field, fieldSpec(name));
       const next = {
         ...prev,
         fields: { ...prev.fields, [name]: field },
-      }
-      setDraft(buildExpression(next))
-      setParseError(null)
-      return next
-    })
+      };
+      setDraft(buildExpression(next));
+      setParseError(null);
+      return next;
+    });
   }
 
   function applyPreset(presetExpression: string) {
-    if (state.withSeconds && presetExpression.split(' ').length === 5) {
-      const withSec = parseExpression(`0 ${presetExpression}`)
+    if (state.withSeconds && presetExpression.split(" ").length === 5) {
+      const withSec = parseExpression(`0 ${presetExpression}`);
       if (withSec.ok) {
-        applyState({ ...withSec.state, withSeconds: true })
-        return
+        applyState({ ...withSec.state, withSeconds: true });
+        return;
       }
     }
-    const parsed = parseExpression(presetExpression)
+    const parsed = parseExpression(presetExpression);
     if (!parsed.ok) {
-      setParseError(parsed.error)
-      return
+      setParseError(parsed.error);
+      return;
     }
-    applyState(parsed.state)
+    applyState(parsed.state);
   }
 
   function toggleSeconds(enabled: boolean) {
@@ -125,39 +109,34 @@ export function CrontabTool() {
         fields: {
           ...prev.fields,
           second:
-            enabled &&
-            prev.fields.second.mode === 'every' &&
-            prev.fields.second.raw === '*'
+            enabled && prev.fields.second.mode === "every" && prev.fields.second.raw === "*"
               ? {
-                  mode: 'specific',
+                  mode: "specific",
                   step: 1,
                   values: [0],
                   from: 0,
                   to: 59,
-                  raw: '0',
+                  raw: "0",
                 }
               : prev.fields.second,
         },
-      }
-      setDraft(buildExpression(next))
-      setParseError(null)
-      return next
-    })
+      };
+      setDraft(buildExpression(next));
+      setParseError(null);
+      return next;
+    });
   }
 
   const editorFields: CronFieldName[] = state.withSeconds
-    ? ['second', ...FIELD_ORDER]
-    : FIELD_ORDER
+    ? ["second", ...FIELD_ORDER]
+    : FIELD_ORDER;
 
   return (
     <div className="grid gap-3 md:grid-cols-2 md:items-start">
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
-            <Label
-              htmlFor="cron-expression"
-              className="text-xs text-muted-foreground"
-            >
+            <Label htmlFor="cron-expression" className="text-xs text-muted-foreground">
               Expression
             </Label>
             <Label className="flex items-center gap-1.5 text-xs font-normal text-muted-foreground">
@@ -173,13 +152,13 @@ export function CrontabTool() {
               id="cron-expression"
               value={draft}
               onValueChange={(value) => {
-                setDraft(value)
-                const parsed = parseExpression(value)
+                setDraft(value);
+                const parsed = parseExpression(value);
                 if (parsed.ok) {
-                  setState(parsed.state)
-                  setParseError(null)
+                  setState(parsed.state);
+                  setParseError(null);
                 } else {
-                  setParseError(parsed.error)
+                  setParseError(parsed.error);
                 }
               }}
               spellCheck={false}
@@ -193,7 +172,7 @@ export function CrontabTool() {
               size="icon"
               className="shrink-0"
               aria-label="Copy expression"
-              onClick={() => void copyText(expression, 'cron expression')}
+              onClick={() => void copyText(expression, "cron expression")}
             >
               <CopyIcon />
             </Button>
@@ -202,9 +181,7 @@ export function CrontabTool() {
             <p className="m-0 text-xs text-destructive">{parseError}</p>
           ) : (
             <p className="m-0 font-mono text-[0.7rem] tracking-wide text-muted-foreground">
-              {state.withSeconds
-                ? 'sec min hour dom month dow'
-                : 'min hour dom month dow'}
+              {state.withSeconds ? "sec min hour dom month dow" : "min hour dom month dow"}
             </p>
           )}
         </div>
@@ -215,23 +192,22 @@ export function CrontabTool() {
             {CRON_PRESETS.map((preset) => {
               const active =
                 !parseError &&
-                (expression === preset.expression ||
-                  expression === `0 ${preset.expression}`)
+                (expression === preset.expression || expression === `0 ${preset.expression}`);
               return (
                 <button
                   key={preset.id}
                   type="button"
                   onClick={() => applyPreset(preset.expression)}
                   className={cn(
-                    'inline-flex h-7 items-center rounded-md border px-2 text-xs font-medium transition-colors',
+                    "inline-flex h-7 items-center rounded-md border px-2 text-xs font-medium transition-colors",
                     active
-                      ? 'border-transparent bg-primary text-primary-foreground'
-                      : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground',
+                      ? "border-transparent bg-primary text-primary-foreground"
+                      : "border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}
                 >
                   {preset.label}
                 </button>
-              )
+              );
             })}
           </div>
         </div>
@@ -244,16 +220,10 @@ export function CrontabTool() {
               state={state.fields[name]}
               onChange={(patch) => updateField(name, patch)}
               onMode={(mode) =>
-                updateField(
-                  name,
-                  setFieldMode(state.fields[name], mode, fieldSpec(name)),
-                )
+                updateField(name, setFieldMode(state.fields[name], mode, fieldSpec(name)))
               }
               onToggle={(value) =>
-                updateField(
-                  name,
-                  toggleListValue(state.fields[name], value, fieldSpec(name)),
-                )
+                updateField(name, toggleListValue(state.fields[name], value, fieldSpec(name)))
               }
             />
           ))}
@@ -266,9 +236,7 @@ export function CrontabTool() {
             Summary
           </p>
           <p className="mt-1 mb-0 text-sm leading-5 text-foreground">{summary}</p>
-          <p className="mt-2 mb-0 font-mono text-xs text-muted-foreground">
-            {expression}
-          </p>
+          <p className="mt-2 mb-0 font-mono text-xs text-muted-foreground">{expression}</p>
         </div>
 
         <div className="bg-muted/30 rounded-lg border border-border/80 px-3 py-2.5">
@@ -297,7 +265,7 @@ export function CrontabTool() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 function FieldEditor({
@@ -307,21 +275,19 @@ function FieldEditor({
   onMode,
   onToggle,
 }: {
-  name: CronFieldName
-  state: FieldState
-  onChange: (patch: Partial<FieldState>) => void
-  onMode: (mode: FieldMode) => void
-  onToggle: (value: number) => void
+  name: CronFieldName;
+  state: FieldState;
+  onChange: (patch: Partial<FieldState>) => void;
+  onMode: (mode: FieldMode) => void;
+  onToggle: (value: number) => void;
 }) {
-  const spec = fieldSpec(name)
+  const spec = fieldSpec(name);
 
   return (
     <div className="rounded-lg border border-border/70 bg-card/30 px-2.5 py-2">
       <div className="mb-1.5 flex items-center justify-between gap-2">
         <span className="text-xs font-medium text-foreground">{spec.label}</span>
-        <span className="font-mono text-[0.65rem] text-muted-foreground">
-          {state.raw}
-        </span>
+        <span className="font-mono text-[0.65rem] text-muted-foreground">{state.raw}</span>
       </div>
 
       <div className="mb-2 flex flex-wrap gap-1">
@@ -331,10 +297,10 @@ function FieldEditor({
             type="button"
             onClick={() => onMode(mode.id)}
             className={cn(
-              'inline-flex h-6 items-center rounded px-1.5 text-[0.7rem] font-medium transition-colors',
+              "inline-flex h-6 items-center rounded px-1.5 text-[0.7rem] font-medium transition-colors",
               state.mode === mode.id
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground',
+                ? "bg-primary text-primary-foreground"
+                : "bg-muted/60 text-muted-foreground hover:bg-muted hover:text-foreground",
             )}
           >
             {mode.label}
@@ -342,13 +308,13 @@ function FieldEditor({
         ))}
       </div>
 
-      {state.mode === 'every' ? (
+      {state.mode === "every" ? (
         <p className="m-0 text-xs text-muted-foreground">
           Any value ({spec.min}–{spec.max})
         </p>
       ) : null}
 
-      {state.mode === 'step' ? (
+      {state.mode === "step" ? (
         <Label className="flex items-center gap-2 text-xs font-normal text-muted-foreground">
           Every
           <Input
@@ -357,8 +323,8 @@ function FieldEditor({
             max={spec.max}
             value={String(state.step)}
             onValueChange={(v) => {
-              const step = Math.max(1, Number(v) || 1)
-              onChange({ step, raw: `*/${step}` })
+              const step = Math.max(1, Number(v) || 1);
+              onChange({ step, raw: `*/${step}` });
             }}
             className="h-7 w-16 font-mono text-xs"
           />
@@ -366,15 +332,11 @@ function FieldEditor({
         </Label>
       ) : null}
 
-      {state.mode === 'specific' ? (
-        <SpecificControl
-          name={name}
-          value={state.values[0] ?? spec.min}
-          onChange={onChange}
-        />
+      {state.mode === "specific" ? (
+        <SpecificControl name={name} value={state.values[0] ?? spec.min} onChange={onChange} />
       ) : null}
 
-      {state.mode === 'range' ? (
+      {state.mode === "range" ? (
         <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
           <Input
             type="number"
@@ -396,11 +358,11 @@ function FieldEditor({
         </div>
       ) : null}
 
-      {state.mode === 'list' ? (
+      {state.mode === "list" ? (
         <ListPicker name={name} values={state.values} onToggle={onToggle} />
       ) : null}
     </div>
-  )
+  );
 }
 
 function SpecificControl({
@@ -408,13 +370,13 @@ function SpecificControl({
   value,
   onChange,
 }: {
-  name: CronFieldName
-  value: number
-  onChange: (patch: Partial<FieldState>) => void
+  name: CronFieldName;
+  value: number;
+  onChange: (patch: Partial<FieldState>) => void;
 }) {
-  const spec = fieldSpec(name)
+  const spec = fieldSpec(name);
 
-  if (name === 'dayOfWeek') {
+  if (name === "dayOfWeek") {
     return (
       <div className="flex flex-wrap gap-1">
         {DOW_SHORT.map((label, i) => (
@@ -426,10 +388,10 @@ function SpecificControl({
           />
         ))}
       </div>
-    )
+    );
   }
 
-  if (name === 'month') {
+  if (name === "month") {
     return (
       <div className="flex flex-wrap gap-1">
         {MONTH_SHORT.map((label, i) => (
@@ -441,7 +403,7 @@ function SpecificControl({
           />
         ))}
       </div>
-    )
+    );
   }
 
   return (
@@ -451,12 +413,12 @@ function SpecificControl({
       max={spec.max}
       value={String(value)}
       onValueChange={(v) => {
-        const n = Math.min(spec.max, Math.max(spec.min, Number(v) || spec.min))
-        onChange({ values: [n], raw: String(n) })
+        const n = Math.min(spec.max, Math.max(spec.min, Number(v) || spec.min));
+        onChange({ values: [n], raw: String(n) });
       }}
       className="h-7 w-20 font-mono text-xs"
     />
-  )
+  );
 }
 
 function ListPicker({
@@ -464,11 +426,11 @@ function ListPicker({
   values,
   onToggle,
 }: {
-  name: CronFieldName
-  values: number[]
-  onToggle: (value: number) => void
+  name: CronFieldName;
+  values: number[];
+  onToggle: (value: number) => void;
 }) {
-  if (name === 'dayOfWeek') {
+  if (name === "dayOfWeek") {
     return (
       <div className="flex flex-wrap gap-1">
         {DOW_SHORT.map((label, i) => (
@@ -480,10 +442,10 @@ function ListPicker({
           />
         ))}
       </div>
-    )
+    );
   }
 
-  if (name === 'month') {
+  if (name === "month") {
     return (
       <div className="flex flex-wrap gap-1">
         {MONTH_SHORT.map((label, i) => (
@@ -495,52 +457,39 @@ function ListPicker({
           />
         ))}
       </div>
-    )
+    );
   }
 
-  const spec = fieldSpec(name)
+  const spec = fieldSpec(name);
   const items =
-    name === 'dayOfMonth'
+    name === "dayOfMonth"
       ? Array.from({ length: 31 }, (_, i) => i + 1)
-      : name === 'hour'
+      : name === "hour"
         ? Array.from({ length: 24 }, (_, i) => i)
-        : Array.from({ length: spec.max - spec.min + 1 }, (_, i) => spec.min + i)
+        : Array.from({ length: spec.max - spec.min + 1 }, (_, i) => spec.min + i);
 
   return (
     <div className="flex max-h-28 flex-wrap gap-1 overflow-y-auto">
       {items.map((n) => (
-        <Chip
-          key={n}
-          active={values.includes(n)}
-          label={String(n)}
-          onClick={() => onToggle(n)}
-        />
+        <Chip key={n} active={values.includes(n)} label={String(n)} onClick={() => onToggle(n)} />
       ))}
     </div>
-  )
+  );
 }
 
-function Chip({
-  active,
-  label,
-  onClick,
-}: {
-  active: boolean
-  label: string
-  onClick: () => void
-}) {
+function Chip({ active, label, onClick }: { active: boolean; label: string; onClick: () => void }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={cn(
-        'inline-flex h-6 min-w-7 items-center justify-center rounded px-1.5 font-mono text-[0.7rem] tabular-nums transition-colors',
+        "inline-flex h-6 min-w-7 items-center justify-center rounded px-1.5 font-mono text-[0.7rem] tabular-nums transition-colors",
         active
-          ? 'bg-primary text-primary-foreground'
-          : 'bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground',
+          ? "bg-primary text-primary-foreground"
+          : "bg-muted/50 text-muted-foreground hover:bg-muted hover:text-foreground",
       )}
     >
       {label}
     </button>
-  )
+  );
 }

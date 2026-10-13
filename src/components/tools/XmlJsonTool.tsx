@@ -1,13 +1,13 @@
-import { useMemo, useState } from 'react'
-import { CopyIcon } from 'lucide-react'
-import { DualTextareas } from '#/components/tools/DualTextareas'
-import { Button } from '#/components/ui/button'
-import { Label } from '#/components/ui/label'
-import { Textarea } from '#/components/ui/textarea'
-import { copyText } from '#/lib/clipboard'
-import { jsonToXml, stringifyJson, xmlToJson } from '#/lib/xmlJson'
+import { useMemo, useState } from "react";
+import { CopyIcon } from "lucide-react";
+import { DualTextareas } from "#/components/tools/DualTextareas";
+import { Button } from "#/components/ui/button";
+import { Label } from "#/components/ui/label";
+import { Textarea } from "#/components/ui/textarea";
+import { copyText } from "#/lib/clipboard";
+import { jsonToXml, stringifyJson, xmlToJson } from "#/lib/xmlJson";
 
-type Mode = 'xml-to-json' | 'json-to-xml'
+type Mode = "xml-to-json" | "json-to-xml";
 
 const SAMPLE_XML = `<catalog id="1">
   <book sku="wt-01">
@@ -17,7 +17,7 @@ const SAMPLE_XML = `<catalog id="1">
       <tag>json</tag>
     </tags>
   </book>
-</catalog>`
+</catalog>`;
 
 const SAMPLE_JSON = `{
   "catalog": {
@@ -30,44 +30,44 @@ const SAMPLE_JSON = `{
       }
     }
   }
-}`
+}`;
 
 export function XmlJsonTool() {
-  const [mode, setMode] = useState<Mode>('xml-to-json')
-  const [input, setInput] = useState('')
-  const [pretty, setPretty] = useState(true)
+  const [mode, setMode] = useState<Mode>("xml-to-json");
+  const [input, setInput] = useState("");
+  const [pretty, setPretty] = useState(true);
 
   const result = useMemo(() => {
     if (!input.trim()) {
-      return { value: '', error: null as string | null }
+      return { value: "", error: null as string | null };
     }
     try {
-      if (mode === 'xml-to-json') {
+      if (mode === "xml-to-json") {
         return {
           value: stringifyJson(xmlToJson(input), pretty),
           error: null,
-        }
+        };
       }
-      return { value: jsonToXml(input), error: null }
+      return { value: jsonToXml(input), error: null };
     } catch (err) {
       return {
-        value: '',
-        error: err instanceof Error ? err.message : 'Conversion failed',
-      }
+        value: "",
+        error: err instanceof Error ? err.message : "Conversion failed",
+      };
     }
-  }, [input, mode, pretty])
+  }, [input, mode, pretty]);
 
   function loadSample() {
-    setInput(mode === 'xml-to-json' ? SAMPLE_XML : SAMPLE_JSON)
+    setInput(mode === "xml-to-json" ? SAMPLE_XML : SAMPLE_JSON);
   }
 
   function swapMode(next: Mode) {
-    setMode(next)
+    setMode(next);
     // Keep input; conversion re-runs for the new direction.
   }
 
-  const inputLabel = mode === 'xml-to-json' ? 'XML' : 'JSON'
-  const outputLabel = mode === 'xml-to-json' ? 'JSON' : 'XML'
+  const inputLabel = mode === "xml-to-json" ? "XML" : "JSON";
+  const outputLabel = mode === "xml-to-json" ? "JSON" : "XML";
 
   return (
     <div className="flex flex-col gap-3">
@@ -75,15 +75,15 @@ export function XmlJsonTool() {
         <div className="flex flex-wrap gap-1.5">
           <Button
             type="button"
-            variant={mode === 'xml-to-json' ? 'default' : 'outline'}
-            onClick={() => swapMode('xml-to-json')}
+            variant={mode === "xml-to-json" ? "default" : "outline"}
+            onClick={() => swapMode("xml-to-json")}
           >
             XML → JSON
           </Button>
           <Button
             type="button"
-            variant={mode === 'json-to-xml' ? 'default' : 'outline'}
-            onClick={() => swapMode('json-to-xml')}
+            variant={mode === "json-to-xml" ? "default" : "outline"}
+            onClick={() => swapMode("json-to-xml")}
           >
             JSON → XML
           </Button>
@@ -91,13 +91,13 @@ export function XmlJsonTool() {
             Sample
           </Button>
         </div>
-        {mode === 'xml-to-json' ? (
+        {mode === "xml-to-json" ? (
           <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
             <span>JSON</span>
             <Button
               type="button"
               size="sm"
-              variant={pretty ? 'default' : 'outline'}
+              variant={pretty ? "default" : "outline"}
               onClick={() => setPretty(true)}
             >
               Pretty
@@ -105,7 +105,7 @@ export function XmlJsonTool() {
             <Button
               type="button"
               size="sm"
-              variant={!pretty ? 'default' : 'outline'}
+              variant={!pretty ? "default" : "outline"}
               onClick={() => setPretty(false)}
             >
               Minify
@@ -137,9 +137,7 @@ export function XmlJsonTool() {
             value={input}
             onChange={(event) => setInput(event.target.value)}
             spellCheck={false}
-            placeholder={
-              mode === 'xml-to-json' ? 'Paste XML…' : 'Paste JSON…'
-            }
+            placeholder={mode === "xml-to-json" ? "Paste XML…" : "Paste JSON…"}
             className="min-h-64 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
             aria-invalid={Boolean(result.error)}
           />
@@ -150,13 +148,7 @@ export function XmlJsonTool() {
             value={result.value}
             readOnly
             spellCheck={false}
-            placeholder={
-              !input.trim()
-                ? 'Result…'
-                : result.error
-                  ? 'Fix input…'
-                  : ''
-            }
+            placeholder={!input.trim() ? "Result…" : result.error ? "Fix input…" : ""}
             className="min-h-64 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
           />
         }
@@ -168,5 +160,5 @@ export function XmlJsonTool() {
         </p>
       ) : null}
     </div>
-  )
+  );
 }

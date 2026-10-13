@@ -1,50 +1,44 @@
-import { cn } from 'cn'
+import { cn } from "cn";
 
 type AppIconPlatformPreviewsProps = {
-  iconUrl: string | null
-  appName: string
-  shortName: string
-}
+  iconUrl: string | null;
+  appName: string;
+  shortName: string;
+};
 
 const FILLER = [
-  'bg-sky-500',
-  'bg-emerald-500',
-  'bg-amber-500',
-  'bg-rose-500',
-  'bg-violet-500',
-  'bg-cyan-500',
-  'bg-orange-500',
-  'bg-lime-500',
-] as const
+  "bg-sky-500",
+  "bg-emerald-500",
+  "bg-amber-500",
+  "bg-rose-500",
+  "bg-violet-500",
+  "bg-cyan-500",
+  "bg-orange-500",
+  "bg-lime-500",
+] as const;
 
 function SlotIcon({
   src,
   className,
   placeholderClassName,
 }: {
-  src: string | null
-  className?: string
-  placeholderClassName?: string
+  src: string | null;
+  className?: string;
+  placeholderClassName?: string;
 }) {
   if (src) {
     return (
       <img
         src={src}
         alt=""
-        className={cn('block size-full object-contain', className)}
+        className={cn("block size-full object-contain", className)}
         draggable={false}
       />
-    )
+    );
   }
   return (
-    <div
-      className={cn(
-        'size-full bg-muted-foreground/25',
-        placeholderClassName,
-        className,
-      )}
-    />
-  )
+    <div className={cn("size-full bg-muted-foreground/25", placeholderClassName, className)} />
+  );
 }
 
 function HomeGrid({
@@ -55,48 +49,43 @@ function HomeGrid({
   labelClass,
   fillerTone,
 }: {
-  wallpaper: string
-  iconUrl: string | null
-  label: string
-  radiusClass: string
-  labelClass: string
-  fillerTone: 'dark' | 'light'
+  wallpaper: string;
+  iconUrl: string | null;
+  label: string;
+  radiusClass: string;
+  labelClass: string;
+  fillerTone: "dark" | "light";
 }) {
   return (
-    <div className={cn('rounded-xl px-3 py-4', wallpaper)}>
+    <div className={cn("rounded-xl px-3 py-4", wallpaper)}>
       <div className="mx-auto grid max-w-[13rem] grid-cols-4 gap-x-2.5 gap-y-3">
         {Array.from({ length: 8 }, (_, slot) => {
-          const isApp = slot === 0
+          const isApp = slot === 0;
           return (
             <div key={slot} className="flex flex-col items-center gap-1">
               <div
                 className={cn(
-                  'size-10 overflow-hidden shadow-sm',
+                  "size-10 overflow-hidden shadow-sm",
                   radiusClass,
                   !isApp &&
-                    (fillerTone === 'dark'
+                    (fillerTone === "dark"
                       ? FILLER[slot % FILLER.length]
                       : FILLER[slot % FILLER.length]),
                 )}
               >
-                {isApp ? (
-                  <SlotIcon src={iconUrl} className={radiusClass} />
-                ) : null}
+                {isApp ? <SlotIcon src={iconUrl} className={radiusClass} /> : null}
               </div>
               <span
-                className={cn(
-                  'max-w-10 truncate text-center text-[9px] leading-none',
-                  labelClass,
-                )}
+                className={cn("max-w-10 truncate text-center text-[9px] leading-none", labelClass)}
               >
-                {isApp ? label : 'App'}
+                {isApp ? label : "App"}
               </span>
             </div>
-          )
+          );
         })}
       </div>
     </div>
-  )
+  );
 }
 
 function ShapeCard({
@@ -104,9 +93,9 @@ function ShapeCard({
   subtitle,
   children,
 }: {
-  title: string
-  subtitle: string
-  children: React.ReactNode
+  title: string;
+  subtitle: string;
+  children: React.ReactNode;
 }) {
   return (
     <div className="flex flex-col items-center gap-2 rounded-lg border border-border bg-card px-2 py-3">
@@ -118,7 +107,7 @@ function ShapeCard({
         <p className="m-0 text-[10px] text-muted-foreground">{subtitle}</p>
       </div>
     </div>
-  )
+  );
 }
 
 /** Always-on platform mocks — iOS + Android homes, plus shape samples. */
@@ -127,7 +116,7 @@ export function AppIconPlatformPreviews({
   appName,
   shortName,
 }: AppIconPlatformPreviewsProps) {
-  const label = shortName.trim() || appName.trim() || 'Your App'
+  const label = shortName.trim() || appName.trim() || "Your App";
 
   return (
     <div className="flex flex-col gap-3">
@@ -186,9 +175,7 @@ export function AppIconPlatformPreviews({
           <div className="size-3.5 overflow-hidden rounded-sm">
             <SlotIcon src={iconUrl} />
           </div>
-          <span className="max-w-28 truncate text-[11px] text-foreground">
-            {label}
-          </span>
+          <span className="max-w-28 truncate text-[11px] text-foreground">{label}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="size-8 overflow-hidden rounded-lg">
@@ -204,5 +191,5 @@ export function AppIconPlatformPreviews({
         </div>
       </div>
     </div>
-  )
+  );
 }

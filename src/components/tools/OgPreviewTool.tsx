@@ -1,21 +1,15 @@
-import { useState, type FormEvent, type ReactNode } from 'react'
-import { Loader2Icon, Share2Icon } from 'lucide-react'
-import { useServerFn } from '@tanstack/react-start'
-import { toast } from 'sonner'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { hostnameOf, type OgPreviewFields } from '#/lib/ogPreview'
-import { fetchPageMetaFn } from '#/lib/seoFns'
-import { cn } from 'cn'
+import { useState, type FormEvent, type ReactNode } from "react";
+import { Loader2Icon, Share2Icon } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { hostnameOf, type OgPreviewFields } from "#/lib/ogPreview";
+import { fetchPageMetaFn } from "#/lib/seoFns";
+import { cn } from "cn";
 
-function CardShell({
-  label,
-  children,
-}: {
-  label: string
-  children: ReactNode
-}) {
+function CardShell({ label, children }: { label: string; children: ReactNode }) {
   return (
     <section className="flex min-w-0 flex-col gap-2 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
       <h2 className="m-0 text-[0.7rem] font-semibold tracking-wide text-muted-foreground uppercase">
@@ -23,11 +17,11 @@ function CardShell({
       </h2>
       {children}
     </section>
-  )
+  );
 }
 
 function FacebookCard({ fields }: { fields: OgPreviewFields }) {
-  const host = hostnameOf(fields.url || 'https://example.com')
+  const host = hostnameOf(fields.url || "https://example.com");
   return (
     <div className="overflow-hidden rounded-lg border border-border/80 bg-background">
       {fields.image ? (
@@ -37,7 +31,7 @@ function FacebookCard({ fields }: { fields: OgPreviewFields }) {
             alt=""
             className="size-full object-cover"
             onError={(e) => {
-              ;(e.target as HTMLImageElement).style.display = 'none'
+              (e.target as HTMLImageElement).style.display = "none";
             }}
           />
         </div>
@@ -51,14 +45,14 @@ function FacebookCard({ fields }: { fields: OgPreviewFields }) {
           {host}
         </p>
         <p className="m-0 truncate text-sm font-semibold text-foreground">
-          {fields.title || 'Title'}
+          {fields.title || "Title"}
         </p>
         <p className="m-0 line-clamp-2 text-xs text-muted-foreground">
-          {fields.description || 'Description'}
+          {fields.description || "Description"}
         </p>
       </div>
     </div>
-  )
+  );
 }
 
 function XCard({ fields }: { fields: OgPreviewFields }) {
@@ -71,7 +65,7 @@ function XCard({ fields }: { fields: OgPreviewFields }) {
             alt=""
             className="size-full object-cover"
             onError={(e) => {
-              ;(e.target as HTMLImageElement).style.display = 'none'
+              (e.target as HTMLImageElement).style.display = "none";
             }}
           />
         </div>
@@ -82,17 +76,17 @@ function XCard({ fields }: { fields: OgPreviewFields }) {
       )}
       <div className="space-y-0.5 px-3 py-2">
         <p className="m-0 truncate text-sm font-semibold text-foreground">
-          {fields.title || 'Title'}
+          {fields.title || "Title"}
         </p>
         <p className="m-0 line-clamp-2 text-xs text-muted-foreground">
-          {fields.description || 'Description'}
+          {fields.description || "Description"}
         </p>
         <p className="m-0 truncate text-xs text-muted-foreground">
-          {hostnameOf(fields.url || 'https://example.com')}
+          {hostnameOf(fields.url || "https://example.com")}
         </p>
       </div>
     </div>
-  )
+  );
 }
 
 function LinkedInCard({ fields }: { fields: OgPreviewFields }) {
@@ -105,7 +99,7 @@ function LinkedInCard({ fields }: { fields: OgPreviewFields }) {
             alt=""
             className="size-full object-cover"
             onError={(e) => {
-              ;(e.target as HTMLImageElement).style.display = 'none'
+              (e.target as HTMLImageElement).style.display = "none";
             }}
           />
         </div>
@@ -116,42 +110,42 @@ function LinkedInCard({ fields }: { fields: OgPreviewFields }) {
       )}
       <div className="space-y-0.5 px-3 py-2">
         <p className="m-0 truncate text-sm font-semibold text-foreground">
-          {fields.title || 'Title'}
+          {fields.title || "Title"}
         </p>
         <p className="m-0 truncate text-xs text-muted-foreground">
-          {hostnameOf(fields.url || 'https://example.com')}
+          {hostnameOf(fields.url || "https://example.com")}
         </p>
       </div>
     </div>
-  )
+  );
 }
 
-type MetaResult = Awaited<ReturnType<typeof fetchPageMetaFn>>
+type MetaResult = Awaited<ReturnType<typeof fetchPageMetaFn>>;
 
 export function OgPreviewTool() {
-  const fetchMeta = useServerFn(fetchPageMetaFn)
-  const [url, setUrl] = useState('https://example.com')
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [result, setResult] = useState<MetaResult | null>(null)
+  const fetchMeta = useServerFn(fetchPageMetaFn);
+  const [url, setUrl] = useState("https://example.com");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<MetaResult | null>(null);
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault()
-    setBusy(true)
-    setError(null)
+    event.preventDefault();
+    setBusy(true);
+    setError(null);
     try {
-      const data = await fetchMeta({ data: { url } })
-      setResult(data)
-      toast.success('OG tags loaded')
+      const data = await fetchMeta({ data: { url } });
+      setResult(data);
+      toast.success("OG tags loaded");
     } catch (err) {
-      setResult(null)
-      setError(err instanceof Error ? err.message : 'Fetch failed')
+      setResult(null);
+      setError(err instanceof Error ? err.message : "Fetch failed");
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
   }
 
-  const fields = result?.fields
+  const fields = result?.fields;
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-3 lg:gap-4">
@@ -175,7 +169,7 @@ export function OgPreviewTool() {
           ) : (
             <Share2Icon data-icon="inline-start" />
           )}
-          {busy ? 'Fetching…' : 'Preview'}
+          {busy ? "Fetching…" : "Preview"}
         </Button>
       </div>
 
@@ -188,34 +182,23 @@ export function OgPreviewTool() {
       {result ? (
         <dl className="m-0 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 rounded-xl border border-border/70 bg-card/40 p-3 text-sm sm:p-4">
           <dt className="text-muted-foreground">Status</dt>
-          <dd className="m-0 font-mono tabular-nums">{result.status ?? '—'}</dd>
+          <dd className="m-0 font-mono tabular-nums">{result.status ?? "—"}</dd>
           <dt className="text-muted-foreground">Final URL</dt>
           <dd className="m-0 truncate font-mono text-[0.8rem]">{result.finalUrl}</dd>
           <dt className="text-muted-foreground">Canonical</dt>
-          <dd className="m-0 truncate font-mono text-[0.8rem]">
-            {result.canonical || '—'}
-          </dd>
+          <dd className="m-0 truncate font-mono text-[0.8rem]">{result.canonical || "—"}</dd>
           <dt className="text-muted-foreground">og:title</dt>
-          <dd className="m-0 truncate">{fields?.title || '—'}</dd>
+          <dd className="m-0 truncate">{fields?.title || "—"}</dd>
           <dt className="text-muted-foreground">og:description</dt>
-          <dd className="m-0 line-clamp-2">{fields?.description || '—'}</dd>
+          <dd className="m-0 line-clamp-2">{fields?.description || "—"}</dd>
           <dt className="text-muted-foreground">og:image</dt>
-          <dd className="m-0 truncate font-mono text-[0.8rem]">
-            {fields?.image || '—'}
-          </dd>
+          <dd className="m-0 truncate font-mono text-[0.8rem]">{fields?.image || "—"}</dd>
           <dt className="text-muted-foreground">twitter:card</dt>
-          <dd className="m-0 font-mono text-[0.8rem]">
-            {fields?.twitterCard || '—'}
-          </dd>
+          <dd className="m-0 font-mono text-[0.8rem]">{fields?.twitterCard || "—"}</dd>
         </dl>
       ) : null}
 
-      <div
-        className={cn(
-          'grid gap-3',
-          fields ? 'md:grid-cols-3' : '',
-        )}
-      >
+      <div className={cn("grid gap-3", fields ? "md:grid-cols-3" : "")}>
         {fields ? (
           <>
             <CardShell label="Facebook">
@@ -229,11 +212,9 @@ export function OgPreviewTool() {
             </CardShell>
           </>
         ) : (
-          <p className="m-0 text-sm text-muted-foreground">
-            Fetch a URL to preview social cards.
-          </p>
+          <p className="m-0 text-sm text-muted-foreground">Fetch a URL to preview social cards.</p>
         )}
       </div>
     </form>
-  )
+  );
 }

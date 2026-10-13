@@ -1,32 +1,32 @@
-import { useState, type FormEvent } from 'react'
-import { Loader2Icon, ShieldCheckIcon } from 'lucide-react'
-import { useServerFn } from '@tanstack/react-start'
-import { toast } from 'sonner'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { Textarea } from '#/components/ui/textarea'
-import { SAMPLE_ROBOTS } from '#/lib/robotsTxt'
-import { checkRobotsTxtFn } from '#/lib/seoFns'
-import { cn } from 'cn'
+import { useState, type FormEvent } from "react";
+import { Loader2Icon, ShieldCheckIcon } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { toast } from "sonner";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { Textarea } from "#/components/ui/textarea";
+import { SAMPLE_ROBOTS } from "#/lib/robotsTxt";
+import { checkRobotsTxtFn } from "#/lib/seoFns";
+import { cn } from "cn";
 
-type RobotsResult = Awaited<ReturnType<typeof checkRobotsTxtFn>>
+type RobotsResult = Awaited<ReturnType<typeof checkRobotsTxtFn>>;
 
 export function RobotsTxtTool() {
-  const checkRobots = useServerFn(checkRobotsTxtFn)
-  const [url, setUrl] = useState('https://example.com')
-  const [paths, setPaths] = useState('/\n/admin\n/blog/post\n/private/secret')
-  const [userAgent, setUserAgent] = useState('*')
-  const [robotsText, setRobotsText] = useState('')
-  const [usePaste, setUsePaste] = useState(false)
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [result, setResult] = useState<RobotsResult | null>(null)
+  const checkRobots = useServerFn(checkRobotsTxtFn);
+  const [url, setUrl] = useState("https://example.com");
+  const [paths, setPaths] = useState("/\n/admin\n/blog/post\n/private/secret");
+  const [userAgent, setUserAgent] = useState("*");
+  const [robotsText, setRobotsText] = useState("");
+  const [usePaste, setUsePaste] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [result, setResult] = useState<RobotsResult | null>(null);
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault()
-    setBusy(true)
-    setError(null)
+    event.preventDefault();
+    setBusy(true);
+    setError(null);
     try {
       const data = await checkRobots({
         data: {
@@ -35,14 +35,14 @@ export function RobotsTxtTool() {
           userAgent,
           robotsText: usePaste ? robotsText : null,
         },
-      })
-      setResult(data)
-      toast.success('robots.txt checked')
+      });
+      setResult(data);
+      toast.success("robots.txt checked");
     } catch (err) {
-      setResult(null)
-      setError(err instanceof Error ? err.message : 'Check failed')
+      setResult(null);
+      setError(err instanceof Error ? err.message : "Check failed");
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
   }
 
@@ -51,8 +51,8 @@ export function RobotsTxtTool() {
       <div className="flex flex-wrap gap-1.5">
         {(
           [
-            { id: false, label: 'Fetch URL' },
-            { id: true, label: 'Paste robots.txt' },
+            { id: false, label: "Fetch URL" },
+            { id: true, label: "Paste robots.txt" },
           ] as const
         ).map((item) => (
           <button
@@ -61,8 +61,8 @@ export function RobotsTxtTool() {
             onClick={() => setUsePaste(item.id)}
             className={
               usePaste === item.id
-                ? 'inline-flex h-7 items-center rounded-md bg-primary px-2.5 text-xs font-medium text-primary-foreground'
-                : 'inline-flex h-7 items-center rounded-md border border-border/80 bg-card/40 px-2.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground'
+                ? "inline-flex h-7 items-center rounded-md bg-primary px-2.5 text-xs font-medium text-primary-foreground"
+                : "inline-flex h-7 items-center rounded-md border border-border/80 bg-card/40 px-2.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
             }
           >
             {item.label}
@@ -87,10 +87,7 @@ export function RobotsTxtTool() {
           ) : (
             <div className="flex flex-col gap-1">
               <div className="flex items-center justify-between gap-2">
-                <Label
-                  htmlFor="robots-raw"
-                  className="text-xs font-normal text-muted-foreground"
-                >
+                <Label htmlFor="robots-raw" className="text-xs font-normal text-muted-foreground">
                   robots.txt
                 </Label>
                 <button
@@ -111,25 +108,14 @@ export function RobotsTxtTool() {
           )}
 
           <div className="flex flex-col gap-1">
-            <Label
-              htmlFor="robots-ua"
-              className="text-xs font-normal text-muted-foreground"
-            >
+            <Label htmlFor="robots-ua" className="text-xs font-normal text-muted-foreground">
               User-agent
             </Label>
-            <Input
-              id="robots-ua"
-              value={userAgent}
-              onValueChange={setUserAgent}
-              placeholder="*"
-            />
+            <Input id="robots-ua" value={userAgent} onValueChange={setUserAgent} placeholder="*" />
           </div>
 
           <div className="flex flex-col gap-1">
-            <Label
-              htmlFor="robots-paths"
-              className="text-xs font-normal text-muted-foreground"
-            >
+            <Label htmlFor="robots-paths" className="text-xs font-normal text-muted-foreground">
               Paths to test (one per line)
             </Label>
             <Textarea
@@ -146,7 +132,7 @@ export function RobotsTxtTool() {
             ) : (
               <ShieldCheckIcon data-icon="inline-start" />
             )}
-            {busy ? 'Checking…' : 'Check'}
+            {busy ? "Checking…" : "Check"}
           </Button>
         </div>
 
@@ -177,39 +163,33 @@ export function RobotsTxtTool() {
                     <li
                       key={check.path}
                       className={cn(
-                        'flex flex-wrap items-baseline gap-x-2 gap-y-1 rounded-lg border px-3 py-2 text-sm',
+                        "flex flex-wrap items-baseline gap-x-2 gap-y-1 rounded-lg border px-3 py-2 text-sm",
                         check.allowed
-                          ? 'border-emerald-500/35 bg-emerald-500/10'
-                          : 'border-destructive/40 bg-destructive/10',
+                          ? "border-emerald-500/35 bg-emerald-500/10"
+                          : "border-destructive/40 bg-destructive/10",
                       )}
                     >
                       <span
                         className={cn(
-                          'rounded px-1.5 py-0.5 font-mono text-[0.65rem] font-semibold uppercase',
+                          "rounded px-1.5 py-0.5 font-mono text-[0.65rem] font-semibold uppercase",
                           check.allowed
-                            ? 'bg-emerald-500/20 text-emerald-800 dark:text-emerald-200'
-                            : 'bg-destructive/20 text-destructive',
+                            ? "bg-emerald-500/20 text-emerald-800 dark:text-emerald-200"
+                            : "bg-destructive/20 text-destructive",
                         )}
                       >
-                        {check.allowed ? 'allow' : 'disallow'}
+                        {check.allowed ? "allow" : "disallow"}
                       </span>
                       <span className="font-mono text-[0.8rem]">{check.path}</span>
                       {check.matchedBy ? (
-                        <span className="text-xs text-muted-foreground">
-                          {check.matchedBy}
-                        </span>
+                        <span className="text-xs text-muted-foreground">{check.matchedBy}</span>
                       ) : (
-                        <span className="text-xs text-muted-foreground">
-                          no rule match
-                        </span>
+                        <span className="text-xs text-muted-foreground">no rule match</span>
                       )}
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="m-0 text-sm text-muted-foreground">
-                  No paths to test.
-                </p>
+                <p className="m-0 text-sm text-muted-foreground">No paths to test.</p>
               )}
 
               {result.sitemaps.length > 0 ? (
@@ -228,9 +208,7 @@ export function RobotsTxtTool() {
               ) : null}
 
               <div className="flex flex-col gap-1">
-                <Label className="text-xs font-normal text-muted-foreground">
-                  Raw
-                </Label>
+                <Label className="text-xs font-normal text-muted-foreground">Raw</Label>
                 <Textarea
                   readOnly
                   value={result.raw}
@@ -246,5 +224,5 @@ export function RobotsTxtTool() {
         </div>
       </div>
     </form>
-  )
+  );
 }

@@ -1,7 +1,7 @@
-import { Link, useRouterState } from '@tanstack/react-router'
-import { CodeIcon, MenuIcon } from 'lucide-react'
-import { useState } from 'react'
-import { ModeToggle } from '#/components/mode-toggle'
+import { Link, useRouterState } from "@tanstack/react-router";
+import { CodeIcon, MenuIcon } from "lucide-react";
+import { useState } from "react";
+import { ModeToggle } from "#/components/mode-toggle";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,37 +9,21 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '#/components/ui/breadcrumb'
-import { Button } from '#/components/ui/button'
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-  ItemTitle,
-} from '#/components/ui/item'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '#/components/ui/sheet'
-import { TOOL_ICONS } from '#/lib/tool-icons'
-import {
-  groupToolsByCategory,
-  TOOLS,
-  type ToolLink,
-} from '#/lib/tools'
+} from "#/components/ui/breadcrumb";
+import { Button } from "#/components/ui/button";
+import { Item, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "#/components/ui/item";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "#/components/ui/sheet";
+import { TOOL_ICONS } from "#/lib/tool-icons";
+import { groupToolsByCategory, TOOLS, type ToolLink } from "#/lib/tools";
 
-const toolGroups = groupToolsByCategory(TOOLS)
+const toolGroups = groupToolsByCategory(TOOLS);
 
-const TOOL_BY_PATH = new Map(TOOLS.map((tool) => [tool.to, tool]))
+const TOOL_BY_PATH = new Map(TOOLS.map((tool) => [tool.to, tool]));
 
 export default function Header() {
-  const [open, setOpen] = useState(false)
-  const pathname = useRouterState({ select: (s) => s.location.pathname })
-  const currentTool = TOOL_BY_PATH.get(pathname as ToolLink['to'])
+  const [open, setOpen] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const currentTool = TOOL_BY_PATH.get(pathname as ToolLink["to"]);
 
   return (
     <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:px-6">
@@ -75,18 +59,11 @@ export default function Header() {
 
       <nav className="flex shrink-0 items-center gap-1.5 text-sm text-muted-foreground sm:gap-2">
         <Sheet open={open} onOpenChange={setOpen}>
-          <SheetTrigger
-            render={
-              <Button variant="outline" size="default" className="gap-1.5" />
-            }
-          >
+          <SheetTrigger render={<Button variant="outline" size="default" className="gap-1.5" />}>
             <MenuIcon className="size-4 opacity-80" aria-hidden />
             Tools
           </SheetTrigger>
-          <SheetContent
-            side="right"
-            className="w-[min(22rem,100vw)] gap-0 p-0 sm:max-w-sm"
-          >
+          <SheetContent side="right" className="w-[min(22rem,100vw)] gap-0 p-0 sm:max-w-sm">
             <SheetHeader className="border-b border-border/70 px-4 py-3">
               <SheetTitle className="text-sm">Tools</SheetTitle>
             </SheetHeader>
@@ -106,10 +83,7 @@ export default function Header() {
                   <ul className="m-0 flex list-none flex-col gap-1 p-0">
                     {uniqueTools(group.tools).map((tool) => (
                       <li key={`${group.category.id}-${tool.to}`}>
-                        <ToolSheetLink
-                          tool={tool}
-                          onNavigate={() => setOpen(false)}
-                        />
+                        <ToolSheetLink tool={tool} onNavigate={() => setOpen(false)} />
                       </li>
                     ))}
                   </ul>
@@ -122,26 +96,20 @@ export default function Header() {
         <ModeToggle />
       </nav>
     </header>
-  )
+  );
 }
 
 function uniqueTools(tools: ToolLink[]) {
-  const seen = new Set<ToolLink['to']>()
+  const seen = new Set<ToolLink["to"]>();
   return tools.filter((tool) => {
-    if (seen.has(tool.to)) return false
-    seen.add(tool.to)
-    return true
-  })
+    if (seen.has(tool.to)) return false;
+    seen.add(tool.to);
+    return true;
+  });
 }
 
-function ToolSheetLink({
-  tool,
-  onNavigate,
-}: {
-  tool: ToolLink
-  onNavigate: () => void
-}) {
-  const Icon = TOOL_ICONS[tool.to]
+function ToolSheetLink({ tool, onNavigate }: { tool: ToolLink; onNavigate: () => void }) {
+  const Icon = TOOL_ICONS[tool.to];
 
   return (
     <Item
@@ -158,10 +126,8 @@ function ToolSheetLink({
       </ItemMedia>
       <ItemContent className="min-w-0 gap-0">
         <ItemTitle className="font-heading text-foreground">{tool.name}</ItemTitle>
-        <ItemDescription className="line-clamp-1 text-xs leading-4">
-          {tool.blurb}
-        </ItemDescription>
+        <ItemDescription className="line-clamp-1 text-xs leading-4">{tool.blurb}</ItemDescription>
       </ItemContent>
     </Item>
-  )
+  );
 }

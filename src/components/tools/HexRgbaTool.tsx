@@ -1,10 +1,10 @@
-import { useMemo, useState } from 'react'
-import { CopyIcon } from 'lucide-react'
-import { toast } from 'sonner'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { Slider } from '#/components/ui/slider'
+import { useMemo, useState } from "react";
+import { CopyIcon } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { Slider } from "#/components/ui/slider";
 import {
   COLOR_FORMAT_META,
   formatColor,
@@ -13,63 +13,63 @@ import {
   rgbaToHex,
   type ColorFormat,
   type Rgba,
-} from '#/lib/color'
+} from "#/lib/color";
 
-const FORMATS: ColorFormat[] = ['hex', 'rgba', 'hsl', 'hwb', 'oklch']
+const FORMATS: ColorFormat[] = ["hex", "rgba", "hsl", "hwb", "oklch"];
 
-const DEFAULT_COLOR: Rgba = { r: 47, g: 111, b: 102, a: 1 }
+const DEFAULT_COLOR: Rgba = { r: 47, g: 111, b: 102, a: 1 };
 
 function draftsFromColor(color: Rgba): Record<ColorFormat, string> {
   return {
     hex: rgbaToHex(color),
-    rgba: formatColor('rgba', color),
-    hsl: formatColor('hsl', color),
-    hwb: formatColor('hwb', color),
-    oklch: formatColor('oklch', color),
-  }
+    rgba: formatColor("rgba", color),
+    hsl: formatColor("hsl", color),
+    hwb: formatColor("hwb", color),
+    oklch: formatColor("oklch", color),
+  };
 }
 
 async function copyText(value: string, label: string) {
   try {
-    await navigator.clipboard.writeText(value)
-    toast.success(`Copied ${label}`)
+    await navigator.clipboard.writeText(value);
+    toast.success(`Copied ${label}`);
   } catch {
-    toast.error('Clipboard unavailable')
+    toast.error("Clipboard unavailable");
   }
 }
 
 export function HexRgbaTool() {
-  const [channels, setChannels] = useState<Rgba>(DEFAULT_COLOR)
-  const [drafts, setDrafts] = useState(() => draftsFromColor(DEFAULT_COLOR))
-  const [errors, setErrors] = useState<Partial<Record<ColorFormat, string>>>({})
+  const [channels, setChannels] = useState<Rgba>(DEFAULT_COLOR);
+  const [drafts, setDrafts] = useState(() => draftsFromColor(DEFAULT_COLOR));
+  const [errors, setErrors] = useState<Partial<Record<ColorFormat, string>>>({});
 
-  const preview = useMemo(() => formatRgba(channels), [channels])
+  const preview = useMemo(() => formatRgba(channels), [channels]);
 
   function applyColor(next: Rgba, source?: ColorFormat) {
-    const formatted = draftsFromColor(next)
-    setChannels(next)
+    const formatted = draftsFromColor(next);
+    setChannels(next);
     setDrafts((prev) => ({
       ...formatted,
       ...(source ? { [source]: prev[source] } : {}),
-    }))
-    setErrors({})
+    }));
+    setErrors({});
   }
 
   function onFormatChange(format: ColorFormat, value: string) {
-    setDrafts((prev) => ({ ...prev, [format]: value }))
-    const parsed = parseColor(format, value)
+    setDrafts((prev) => ({ ...prev, [format]: value }));
+    const parsed = parseColor(format, value);
     if (!parsed) {
       setErrors((prev) => ({
         ...prev,
         [format]: COLOR_FORMAT_META[format].error,
-      }))
-      return
+      }));
+      return;
     }
-    applyColor(parsed, format)
+    applyColor(parsed, format);
   }
 
   function updateChannel(key: keyof Rgba, value: number) {
-    applyColor({ ...channels, [key]: value })
+    applyColor({ ...channels, [key]: value });
   }
 
   return (
@@ -88,8 +88,8 @@ export function HexRgbaTool() {
 
         <div className="flex flex-col gap-3">
           {FORMATS.map((format) => {
-            const meta = COLOR_FORMAT_META[format]
-            const error = errors[format]
+            const meta = COLOR_FORMAT_META[format];
+            const error = errors[format];
             return (
               <div key={format} className="flex flex-col gap-1">
                 <Label htmlFor={`color-${format}`}>{meta.label}</Label>
@@ -107,21 +107,19 @@ export function HexRgbaTool() {
                     variant="outline"
                     onClick={() => {
                       if (errors[format] || !parseColor(format, drafts[format])) {
-                        toast.error(`Fix ${meta.label} first`)
-                        return
+                        toast.error(`Fix ${meta.label} first`);
+                        return;
                       }
-                      void copyText(formatColor(format, channels), meta.label)
+                      void copyText(formatColor(format, channels), meta.label);
                     }}
                   >
                     <CopyIcon data-icon="inline-start" />
                     Copy
                   </Button>
                 </div>
-                {error ? (
-                  <p className="m-0 text-xs text-destructive">{error}</p>
-                ) : null}
+                {error ? <p className="m-0 text-xs text-destructive">{error}</p> : null}
               </div>
-            )
+            );
           })}
         </div>
       </div>
@@ -130,33 +128,33 @@ export function HexRgbaTool() {
         <p className="m-0 text-sm font-medium text-foreground">Channels</p>
         {(
           [
-            ['r', 'Red', 255],
-            ['g', 'Green', 255],
-            ['b', 'Blue', 255],
-            ['a', 'Alpha', 1],
+            ["r", "Red", 255],
+            ["g", "Green", 255],
+            ["b", "Blue", 255],
+            ["a", "Alpha", 1],
           ] as const
         ).map(([key, label, max]) => (
           <div key={key} className="flex flex-col gap-1.5">
             <div className="flex items-center justify-between gap-3">
               <Label id={`channel-${key}-label`}>{label}</Label>
               <span className="text-sm tabular-nums text-muted-foreground">
-                {key === 'a' ? channels.a.toFixed(2) : Math.round(channels[key])}
+                {key === "a" ? channels.a.toFixed(2) : Math.round(channels[key])}
               </span>
             </div>
             <Slider
               aria-labelledby={`channel-${key}-label`}
               min={0}
               max={max}
-              step={key === 'a' ? 0.01 : 1}
+              step={key === "a" ? 0.01 : 1}
               value={[channels[key]]}
               onValueChange={(value) => {
-                const next = Array.isArray(value) ? value[0] : value
-                if (typeof next === 'number') updateChannel(key, next)
+                const next = Array.isArray(value) ? value[0] : value;
+                if (typeof next === "number") updateChannel(key, next);
               }}
             />
           </div>
         ))}
       </div>
     </div>
-  )
+  );
 }

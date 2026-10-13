@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState } from 'react'
-import { DownloadIcon, Loader2Icon } from 'lucide-react'
-import { toast } from 'sonner'
-import { Button } from '#/components/ui/button'
-import { Checkbox } from '#/components/ui/checkbox'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
+import { useEffect, useRef, useState } from "react";
+import { DownloadIcon, Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "#/components/ui/button";
+import { Checkbox } from "#/components/ui/checkbox";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '#/components/ui/select'
-import { Slider } from '#/components/ui/slider'
-import { Textarea } from '#/components/ui/textarea'
+} from "#/components/ui/select";
+import { Slider } from "#/components/ui/slider";
+import { Textarea } from "#/components/ui/textarea";
 import {
   BACKGROUND_PRESETS,
   DEFAULT_LINE_HEIGHT,
@@ -30,76 +30,69 @@ import {
   type LanguageId,
   type ThemeId,
   type WindowChrome,
-} from '#/lib/codeScreenshot'
-import { cn } from 'cn'
+} from "#/lib/codeScreenshot";
+import { cn } from "cn";
 
 export function CodeScreenshotTool() {
-  const captureRef = useRef<HTMLDivElement>(null)
-  const [code, setCode] = useState(SAMPLE_CODE)
-  const [language, setLanguage] = useState<LanguageId>('typescript')
-  const [theme, setTheme] = useState<ThemeId>('github-dark')
-  const [chrome, setChrome] = useState<WindowChrome>('macos')
-  const [backgroundId, setBackgroundId] = useState(BACKGROUND_PRESETS[0].id)
-  const [customBackground, setCustomBackground] = useState('#0f766e')
-  const [padding, setPadding] = useState(DEFAULT_PADDING)
-  const [fontSize, setFontSize] = useState(14)
-  const [fontFamily, setFontFamily] = useState<FontFamilyId>('jetbrains')
-  const [showLineNumbers, setShowLineNumbers] = useState(true)
-  const [showTitle, setShowTitle] = useState(true)
-  const [title, setTitle] = useState('fibonacci.ts')
-  const [highlightedHtml, setHighlightedHtml] = useState('')
-  const [windowBg, setWindowBg] = useState('#24292e')
-  const [highlightError, setHighlightError] = useState<string | null>(null)
-  const [exporting, setExporting] = useState(false)
+  const captureRef = useRef<HTMLDivElement>(null);
+  const [code, setCode] = useState(SAMPLE_CODE);
+  const [language, setLanguage] = useState<LanguageId>("typescript");
+  const [theme, setTheme] = useState<ThemeId>("github-dark");
+  const [chrome, setChrome] = useState<WindowChrome>("macos");
+  const [backgroundId, setBackgroundId] = useState(BACKGROUND_PRESETS[0].id);
+  const [customBackground, setCustomBackground] = useState("#0f766e");
+  const [padding, setPadding] = useState(DEFAULT_PADDING);
+  const [fontSize, setFontSize] = useState(14);
+  const [fontFamily, setFontFamily] = useState<FontFamilyId>("jetbrains");
+  const [showLineNumbers, setShowLineNumbers] = useState(true);
+  const [showTitle, setShowTitle] = useState(true);
+  const [title, setTitle] = useState("fibonacci.ts");
+  const [highlightedHtml, setHighlightedHtml] = useState("");
+  const [windowBg, setWindowBg] = useState("#24292e");
+  const [highlightError, setHighlightError] = useState<string | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   const background =
-    backgroundId === 'custom'
+    backgroundId === "custom"
       ? customBackground
-      : (BACKGROUND_PRESETS.find((preset) => preset.id === backgroundId)
-          ?.value ?? BACKGROUND_PRESETS[0].value)
+      : (BACKGROUND_PRESETS.find((preset) => preset.id === backgroundId)?.value ??
+        BACKGROUND_PRESETS[0].value);
 
   const fontStack =
-    FONT_FAMILIES.find((item) => item.id === fontFamily)?.stack ??
-    FONT_FAMILIES[0].stack
+    FONT_FAMILIES.find((item) => item.id === fontFamily)?.stack ?? FONT_FAMILIES[0].stack;
 
   useEffect(() => {
     try {
-      const { html, background } = highlightCode(code || ' ', language, theme)
-      setHighlightedHtml(html)
-      setWindowBg(background)
-      setHighlightError(null)
+      const { html, background } = highlightCode(code || " ", language, theme);
+      setHighlightedHtml(html);
+      setWindowBg(background);
+      setHighlightError(null);
     } catch (error) {
-      setHighlightError(
-        error instanceof Error ? error.message : 'Highlight failed',
-      )
+      setHighlightError(error instanceof Error ? error.message : "Highlight failed");
     }
-  }, [code, language, theme])
+  }, [code, language, theme]);
 
   async function exportPng() {
-    const node = captureRef.current
+    const node = captureRef.current;
     if (!node) {
-      toast.error('Preview not ready')
-      return
+      toast.error("Preview not ready");
+      return;
     }
     if (!code.trim()) {
-      toast.error('Paste code first')
-      return
+      toast.error("Paste code first");
+      return;
     }
 
-    setExporting(true)
+    setExporting(true);
     try {
-      const dataUrl = await exportElementToPng(node, { pixelRatio: 2 })
-      const safeName = (title.trim() || 'code')
-        .replace(/[^\w.-]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-      downloadDataUrl(dataUrl, `${safeName || 'code-screenshot'}.png`)
-      toast.success('PNG downloaded')
+      const dataUrl = await exportElementToPng(node, { pixelRatio: 2 });
+      const safeName = (title.trim() || "code").replace(/[^\w.-]+/g, "-").replace(/^-+|-+$/g, "");
+      downloadDataUrl(dataUrl, `${safeName || "code-screenshot"}.png`);
+      toast.success("PNG downloaded");
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Export failed',
-      )
+      toast.error(error instanceof Error ? error.message : "Export failed");
     } finally {
-      setExporting(false)
+      setExporting(false);
     }
   }
 
@@ -109,12 +102,7 @@ export function CodeScreenshotTool() {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
             <Label htmlFor="code-shot-source">Code</Label>
-            <Button
-              type="button"
-              size="xs"
-              variant="ghost"
-              onClick={() => setCode(SAMPLE_CODE)}
-            >
+            <Button type="button" size="xs" variant="ghost" onClick={() => setCode(SAMPLE_CODE)}>
               Sample
             </Button>
           </div>
@@ -134,7 +122,7 @@ export function CodeScreenshotTool() {
             <Select
               value={language}
               onValueChange={(value) => {
-                if (value) setLanguage(value as LanguageId)
+                if (value) setLanguage(value as LanguageId);
               }}
             >
               <SelectTrigger className="w-full">
@@ -154,7 +142,7 @@ export function CodeScreenshotTool() {
             <Select
               value={theme}
               onValueChange={(value) => {
-                if (value) setTheme(value as ThemeId)
+                if (value) setTheme(value as ThemeId);
               }}
             >
               <SelectTrigger className="w-full">
@@ -174,7 +162,7 @@ export function CodeScreenshotTool() {
             <Select
               value={chrome}
               onValueChange={(value) => {
-                if (value) setChrome(value as WindowChrome)
+                if (value) setChrome(value as WindowChrome);
               }}
             >
               <SelectTrigger className="w-full">
@@ -194,7 +182,7 @@ export function CodeScreenshotTool() {
             <Select
               value={fontFamily}
               onValueChange={(value) => {
-                if (value) setFontFamily(value as FontFamilyId)
+                if (value) setFontFamily(value as FontFamilyId);
               }}
             >
               <SelectTrigger className="w-full">
@@ -216,7 +204,7 @@ export function CodeScreenshotTool() {
           <Select
             value={backgroundId}
             onValueChange={(value) => {
-              if (value) setBackgroundId(value)
+              if (value) setBackgroundId(value);
             }}
           >
             <SelectTrigger className="w-full">
@@ -233,15 +221,11 @@ export function CodeScreenshotTool() {
           </Select>
         </Label>
 
-        {backgroundId === 'custom' ? (
+        {backgroundId === "custom" ? (
           <div className="flex items-center gap-2">
             <Input
               type="color"
-              value={
-                /^#[0-9a-fA-F]{6}$/.test(customBackground)
-                  ? customBackground
-                  : '#0f766e'
-              }
+              value={/^#[0-9a-fA-F]{6}$/.test(customBackground) ? customBackground : "#0f766e"}
               onChange={(event) => setCustomBackground(event.target.value)}
               className="h-8 w-10 cursor-pointer rounded-md border border-input bg-transparent p-0.5"
               aria-label="Custom background color"
@@ -259,9 +243,7 @@ export function CodeScreenshotTool() {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
             <Label id="code-shot-padding-label">Padding</Label>
-            <span className="text-sm tabular-nums text-muted-foreground">
-              {padding}px
-            </span>
+            <span className="text-sm tabular-nums text-muted-foreground">{padding}px</span>
           </div>
           <Slider
             aria-labelledby="code-shot-padding-label"
@@ -270,8 +252,8 @@ export function CodeScreenshotTool() {
             step={1}
             value={[padding]}
             onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value
-              if (typeof next === 'number') setPadding(next)
+              const next = Array.isArray(value) ? value[0] : value;
+              if (typeof next === "number") setPadding(next);
             }}
           />
         </div>
@@ -279,9 +261,7 @@ export function CodeScreenshotTool() {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
             <Label id="code-shot-font-size-label">Font size</Label>
-            <span className="text-sm tabular-nums text-muted-foreground">
-              {fontSize}px
-            </span>
+            <span className="text-sm tabular-nums text-muted-foreground">{fontSize}px</span>
           </div>
           <Slider
             aria-labelledby="code-shot-font-size-label"
@@ -290,8 +270,8 @@ export function CodeScreenshotTool() {
             step={1}
             value={[fontSize]}
             onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value
-              if (typeof next === 'number') setFontSize(next)
+              const next = Array.isArray(value) ? value[0] : value;
+              if (typeof next === "number") setFontSize(next);
             }}
           />
         </div>
@@ -300,9 +280,7 @@ export function CodeScreenshotTool() {
           <Label className="flex cursor-pointer items-center gap-2 text-sm font-normal">
             <Checkbox
               checked={showLineNumbers}
-              onCheckedChange={(checked) =>
-                setShowLineNumbers(checked === true)
-              }
+              onCheckedChange={(checked) => setShowLineNumbers(checked === true)}
               aria-label="Line numbers"
             />
             <span>Line numbers</span>
@@ -330,9 +308,7 @@ export function CodeScreenshotTool() {
           </div>
         ) : null}
 
-        {highlightError ? (
-          <p className="m-0 text-sm text-destructive">{highlightError}</p>
-        ) : null}
+        {highlightError ? <p className="m-0 text-sm text-destructive">{highlightError}</p> : null}
 
         <div className="flex flex-wrap gap-1.5 pt-1">
           <Button type="button" onClick={() => void exportPng()} disabled={exporting}>
@@ -341,14 +317,14 @@ export function CodeScreenshotTool() {
             ) : (
               <DownloadIcon data-icon="inline-start" />
             )}
-            {exporting ? 'Exporting…' : 'Download PNG'}
+            {exporting ? "Exporting…" : "Download PNG"}
           </Button>
           <Button
             type="button"
             variant="outline"
             onClick={() => {
-              setCode('')
-              setTitle('untitled')
+              setCode("");
+              setTitle("untitled");
             }}
           >
             Clear
@@ -359,76 +335,73 @@ export function CodeScreenshotTool() {
       <div className="flex flex-col gap-2">
         <div className="overflow-auto rounded-xl border border-border/80 bg-muted/40 p-2 sm:p-3">
           <div className="mx-auto w-full max-w-full overflow-hidden rounded-lg border border-border/60">
-          <div
-            ref={captureRef}
-            className="w-full max-w-full"
-            style={{
-              padding: `${padding}px`,
-              background,
-            }}
-          >
             <div
-              className="overflow-hidden rounded-xl border border-black/20"
-              style={{ backgroundColor: windowBg }}
+              ref={captureRef}
+              className="w-full max-w-full"
+              style={{
+                padding: `${padding}px`,
+                background,
+              }}
             >
-              {chrome !== 'none' || showTitle ? (
-                <div
-                  className={cn(
-                    'flex items-center gap-3 border-b border-white/5 px-3.5',
-                    chrome === 'none' ? 'py-2' : 'py-2.5',
-                  )}
-                  style={{
-                    backgroundColor: `color-mix(in srgb, ${windowBg} 92%, white 8%)`,
-                  }}
-                >
-                  {chrome === 'macos' ? (
-                    <div className="flex shrink-0 items-center gap-1.5" aria-hidden>
-                      <span className="size-3 rounded-full bg-[#ff5f57]" />
-                      <span className="size-3 rounded-full bg-[#febc2e]" />
-                      <span className="size-3 rounded-full bg-[#28c840]" />
-                    </div>
-                  ) : null}
-                  {chrome === 'windows' ? (
-                    <div
-                      className="ml-auto flex shrink-0 items-center gap-3 text-[11px] text-white/55"
-                      aria-hidden
-                    >
-                      <span>—</span>
-                      <span>□</span>
-                      <span>×</span>
-                    </div>
-                  ) : null}
-                  {showTitle ? (
-                    <div
-                      className={cn(
-                        'min-w-0 truncate font-mono text-[11px] tracking-wide text-white/55',
-                        chrome === 'macos' && 'flex-1 text-center',
-                        chrome === 'windows' && 'order-first flex-1',
-                        chrome === 'none' && 'flex-1 text-center',
-                      )}
-                    >
-                      {title || 'untitled'}
-                    </div>
-                  ) : chrome === 'macos' ? (
-                    <div className="flex-1" />
-                  ) : null}
-                </div>
-              ) : null}
-
               <div
-                className={cn(
-                  'code-shot-preview p-3',
-                  showLineNumbers && 'code-shot-lines',
-                )}
-                style={{
-                  fontFamily: fontStack,
-                  fontSize: `${fontSize}px`,
-                  lineHeight: DEFAULT_LINE_HEIGHT,
-                }}
-                dangerouslySetInnerHTML={{ __html: highlightedHtml }}
-              />
+                className="overflow-hidden rounded-xl border border-black/20"
+                style={{ backgroundColor: windowBg }}
+              >
+                {chrome !== "none" || showTitle ? (
+                  <div
+                    className={cn(
+                      "flex items-center gap-3 border-b border-white/5 px-3.5",
+                      chrome === "none" ? "py-2" : "py-2.5",
+                    )}
+                    style={{
+                      backgroundColor: `color-mix(in srgb, ${windowBg} 92%, white 8%)`,
+                    }}
+                  >
+                    {chrome === "macos" ? (
+                      <div className="flex shrink-0 items-center gap-1.5" aria-hidden>
+                        <span className="size-3 rounded-full bg-[#ff5f57]" />
+                        <span className="size-3 rounded-full bg-[#febc2e]" />
+                        <span className="size-3 rounded-full bg-[#28c840]" />
+                      </div>
+                    ) : null}
+                    {chrome === "windows" ? (
+                      <div
+                        className="ml-auto flex shrink-0 items-center gap-3 text-[11px] text-white/55"
+                        aria-hidden
+                      >
+                        <span>—</span>
+                        <span>□</span>
+                        <span>×</span>
+                      </div>
+                    ) : null}
+                    {showTitle ? (
+                      <div
+                        className={cn(
+                          "min-w-0 truncate font-mono text-[11px] tracking-wide text-white/55",
+                          chrome === "macos" && "flex-1 text-center",
+                          chrome === "windows" && "order-first flex-1",
+                          chrome === "none" && "flex-1 text-center",
+                        )}
+                      >
+                        {title || "untitled"}
+                      </div>
+                    ) : chrome === "macos" ? (
+                      <div className="flex-1" />
+                    ) : null}
+                  </div>
+                ) : null}
+
+                <div
+                  className={cn("code-shot-preview p-3", showLineNumbers && "code-shot-lines")}
+                  style={{
+                    fontFamily: fontStack,
+                    fontSize: `${fontSize}px`,
+                    lineHeight: DEFAULT_LINE_HEIGHT,
+                  }}
+                  dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+                />
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
@@ -473,5 +446,5 @@ export function CodeScreenshotTool() {
         }
       `}</style>
     </div>
-  )
+  );
 }

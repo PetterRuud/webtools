@@ -1,109 +1,109 @@
-import { useEffect, useState, type FormEvent } from 'react'
-import { Loader2Icon, SparklesIcon } from 'lucide-react'
-import { toast } from 'sonner'
-import { ImageFileField, imagePreviewClassName } from '#/components/tools/ImageFileField'
-import { Button } from '#/components/ui/button'
-import { Checkbox } from '#/components/ui/checkbox'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
+import { useEffect, useState, type FormEvent } from "react";
+import { Loader2Icon, SparklesIcon } from "lucide-react";
+import { toast } from "sonner";
+import { ImageFileField, imagePreviewClassName } from "#/components/tools/ImageFileField";
+import { Button } from "#/components/ui/button";
+import { Checkbox } from "#/components/ui/checkbox";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '#/components/ui/select'
+} from "#/components/ui/select";
 
 const CHECKER =
-  'linear-gradient(45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%)'
+  "linear-gradient(45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(-45deg, color-mix(in oklab, var(--border) 70%, transparent) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%), linear-gradient(-45deg, transparent 75%, color-mix(in oklab, var(--border) 70%, transparent) 75%)";
 
-type FitMode = 'inside' | 'outside' | 'cover' | 'contain' | 'fill'
+type FitMode = "inside" | "outside" | "cover" | "contain" | "fill";
 
 function optNumber(value: string): string {
-  return value.trim()
+  return value.trim();
 }
 
 export function TransparentTool() {
-  const [white, setWhite] = useState<File | null>(null)
-  const [black, setBlack] = useState<File | null>(null)
-  const [cropLeft, setCropLeft] = useState('')
-  const [cropTop, setCropTop] = useState('')
-  const [cropWidth, setCropWidth] = useState('')
-  const [cropHeight, setCropHeight] = useState('')
-  const [resizeWidth, setResizeWidth] = useState('')
-  const [resizeHeight, setResizeHeight] = useState('')
-  const [resizeFit, setResizeFit] = useState<FitMode>('inside')
-  const [resizeNoUpscale, setResizeNoUpscale] = useState(false)
-  const [trimInputs, setTrimInputs] = useState(false)
-  const [trimThreshold, setTrimThreshold] = useState('')
-  const [trimResult, setTrimResult] = useState(false)
-  const [trimResultThreshold, setTrimResultThreshold] = useState('')
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [white, setWhite] = useState<File | null>(null);
+  const [black, setBlack] = useState<File | null>(null);
+  const [cropLeft, setCropLeft] = useState("");
+  const [cropTop, setCropTop] = useState("");
+  const [cropWidth, setCropWidth] = useState("");
+  const [cropHeight, setCropHeight] = useState("");
+  const [resizeWidth, setResizeWidth] = useState("");
+  const [resizeHeight, setResizeHeight] = useState("");
+  const [resizeFit, setResizeFit] = useState<FitMode>("inside");
+  const [resizeNoUpscale, setResizeNoUpscale] = useState(false);
+  const [trimInputs, setTrimInputs] = useState(false);
+  const [trimThreshold, setTrimThreshold] = useState("");
+  const [trimResult, setTrimResult] = useState(false);
+  const [trimResultThreshold, setTrimResultThreshold] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
-    }
-  }, [previewUrl])
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault()
+    event.preventDefault();
     if (!white || !black) {
-      setError('Choose both white-bg and black-bg images.')
-      return
+      setError("Choose both white-bg and black-bg images.");
+      return;
     }
 
-    setBusy(true)
-    setError(null)
+    setBusy(true);
+    setError(null);
     if (previewUrl) {
-      URL.revokeObjectURL(previewUrl)
-      setPreviewUrl(null)
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
     }
 
-    const fd = new FormData()
-    fd.set('white', white)
-    fd.set('black', black)
-    if (optNumber(cropLeft)) fd.set('cropLeft', optNumber(cropLeft))
-    if (optNumber(cropTop)) fd.set('cropTop', optNumber(cropTop))
-    if (optNumber(cropWidth)) fd.set('cropWidth', optNumber(cropWidth))
-    if (optNumber(cropHeight)) fd.set('cropHeight', optNumber(cropHeight))
-    if (optNumber(resizeWidth)) fd.set('resizeWidth', optNumber(resizeWidth))
-    if (optNumber(resizeHeight)) fd.set('resizeHeight', optNumber(resizeHeight))
-    fd.set('resizeFit', resizeFit)
-    if (resizeNoUpscale) fd.set('resizeNoUpscale', 'true')
-    if (trimInputs) fd.set('trimInputs', 'true')
+    const fd = new FormData();
+    fd.set("white", white);
+    fd.set("black", black);
+    if (optNumber(cropLeft)) fd.set("cropLeft", optNumber(cropLeft));
+    if (optNumber(cropTop)) fd.set("cropTop", optNumber(cropTop));
+    if (optNumber(cropWidth)) fd.set("cropWidth", optNumber(cropWidth));
+    if (optNumber(cropHeight)) fd.set("cropHeight", optNumber(cropHeight));
+    if (optNumber(resizeWidth)) fd.set("resizeWidth", optNumber(resizeWidth));
+    if (optNumber(resizeHeight)) fd.set("resizeHeight", optNumber(resizeHeight));
+    fd.set("resizeFit", resizeFit);
+    if (resizeNoUpscale) fd.set("resizeNoUpscale", "true");
+    if (trimInputs) fd.set("trimInputs", "true");
     if (optNumber(trimThreshold)) {
-      fd.set('trimThreshold', optNumber(trimThreshold))
+      fd.set("trimThreshold", optNumber(trimThreshold));
     }
-    if (trimResult) fd.set('trimResult', 'true')
+    if (trimResult) fd.set("trimResult", "true");
     if (optNumber(trimResultThreshold)) {
-      fd.set('trimResultThreshold', optNumber(trimResultThreshold))
+      fd.set("trimResultThreshold", optNumber(trimResultThreshold));
     }
 
     try {
-      const res = await fetch('/api/transparent/extract', {
-        method: 'POST',
+      const res = await fetch("/api/transparent/extract", {
+        method: "POST",
         body: fd,
-      })
+      });
       if (!res.ok) {
-        let msg = res.statusText
+        let msg = res.statusText;
         try {
-          const j = (await res.json()) as { error?: string }
-          if (j.error) msg = j.error
+          const j = (await res.json()) as { error?: string };
+          if (j.error) msg = j.error;
         } catch {
           /* ignore */
         }
-        throw new Error(msg)
+        throw new Error(msg);
       }
-      const blob = await res.blob()
-      setPreviewUrl(URL.createObjectURL(blob))
-      toast.success('PNG ready')
+      const blob = await res.blob();
+      setPreviewUrl(URL.createObjectURL(blob));
+      toast.success("PNG ready");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Processing failed')
+      setError(err instanceof Error ? err.message : "Processing failed");
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
   }
 
@@ -136,43 +136,26 @@ export function TransparentTool() {
           </legend>
 
           <div className="grid grid-cols-2 gap-2">
-            <NumField
-              label="Crop left"
-              value={cropLeft}
-              onChange={setCropLeft}
-            />
+            <NumField label="Crop left" value={cropLeft} onChange={setCropLeft} />
             <NumField label="Crop top" value={cropTop} onChange={setCropTop} />
-            <NumField
-              label="Crop width"
-              value={cropWidth}
-              onChange={setCropWidth}
-            />
-            <NumField
-              label="Crop height"
-              value={cropHeight}
-              onChange={setCropHeight}
-            />
+            <NumField label="Crop width" value={cropWidth} onChange={setCropWidth} />
+            <NumField label="Crop height" value={cropHeight} onChange={setCropHeight} />
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <NumField
-              label="Resize width"
-              value={resizeWidth}
-              onChange={setResizeWidth}
-            />
-            <NumField
-              label="Resize height"
-              value={resizeHeight}
-              onChange={setResizeHeight}
-            />
+            <NumField label="Resize width" value={resizeWidth} onChange={setResizeWidth} />
+            <NumField label="Resize height" value={resizeHeight} onChange={setResizeHeight} />
             <div className="col-span-2 flex flex-col gap-1">
-              <Label htmlFor="transparent-fit" className="text-xs font-normal text-muted-foreground">
+              <Label
+                htmlFor="transparent-fit"
+                className="text-xs font-normal text-muted-foreground"
+              >
                 Fit mode
               </Label>
               <Select
                 value={resizeFit}
                 onValueChange={(value) => {
-                  if (value) setResizeFit(value as FitMode)
+                  if (value) setResizeFit(value as FitMode);
                 }}
               >
                 <SelectTrigger id="transparent-fit" className="w-full">
@@ -224,7 +207,7 @@ export function TransparentTool() {
           ) : (
             <SparklesIcon data-icon="inline-start" />
           )}
-          {busy ? 'Processing…' : 'Generate PNG'}
+          {busy ? "Processing…" : "Generate PNG"}
         </Button>
 
         {error ? (
@@ -240,18 +223,12 @@ export function TransparentTool() {
         </h2>
         <div
           className="flex min-h-48 flex-1 items-center justify-center rounded-lg border border-border bg-[length:16px_16px] bg-[position:0_0,0_8px,8px_-8px,-8px_0] p-4"
-          style={{ backgroundImage: CHECKER, backgroundColor: '#2a2a2a' }}
+          style={{ backgroundImage: CHECKER, backgroundColor: "#2a2a2a" }}
         >
           {previewUrl ? (
-            <img
-              src={previewUrl}
-              alt="Transparent PNG result"
-              className={imagePreviewClassName}
-            />
+            <img src={previewUrl} alt="Transparent PNG result" className={imagePreviewClassName} />
           ) : (
-            <span className="text-sm text-muted-foreground">
-              Preview after processing
-            </span>
+            <span className="text-sm text-muted-foreground">Preview after processing</span>
           )}
         </div>
         {previewUrl ? (
@@ -265,19 +242,19 @@ export function TransparentTool() {
         ) : null}
       </section>
     </form>
-  )
+  );
 }
 
 function NumField({
   label,
   value,
   onChange,
-  placeholder = '—',
+  placeholder = "—",
 }: {
-  label: string
-  value: string
-  onChange: (v: string) => void
-  placeholder?: string
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
 }) {
   return (
     <Label className="flex flex-col gap-1 font-normal">
@@ -290,7 +267,7 @@ function NumField({
         onValueChange={onChange}
       />
     </Label>
-  )
+  );
 }
 
 function CheckRow({
@@ -298,17 +275,14 @@ function CheckRow({
   onCheckedChange,
   label,
 }: {
-  checked: boolean
-  onCheckedChange: (v: boolean) => void
-  label: string
+  checked: boolean;
+  onCheckedChange: (v: boolean) => void;
+  label: string;
 }) {
   return (
     <Label className="gap-2 font-normal">
-      <Checkbox
-        checked={checked}
-        onCheckedChange={(v) => onCheckedChange(v === true)}
-      />
+      <Checkbox checked={checked} onCheckedChange={(v) => onCheckedChange(v === true)} />
       {label}
     </Label>
-  )
+  );
 }

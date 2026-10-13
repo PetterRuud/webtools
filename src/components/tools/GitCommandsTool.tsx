@@ -1,9 +1,9 @@
-import { CheckIcon, CopyIcon } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { copyText } from '#/lib/clipboard'
+import { CheckIcon, CopyIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { copyText } from "#/lib/clipboard";
 import {
   DEFAULT_GIT_PARAMS,
   GIT_CATEGORIES,
@@ -17,32 +17,30 @@ import {
   type CategoryFilter,
   type GitCategoryId,
   type GitCommandParams,
-} from '#/lib/gitCommands'
-import { cn } from '#/lib/utils'
+} from "#/lib/gitCommands";
+import { cn } from "#/lib/utils";
 
 export function GitCommandsTool() {
-  const [query, setQuery] = useState('')
-  const [category, setCategory] = useState<CategoryFilter>('all')
-  const [params, setParams] = useState<GitCommandParams>(DEFAULT_GIT_PARAMS)
-  const [copiedId, setCopiedId] = useState<string | null>(null)
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<CategoryFilter>("all");
+  const [params, setParams] = useState<GitCommandParams>(DEFAULT_GIT_PARAMS);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const visible = useMemo(
     () => filterGitCommands(GIT_COMMANDS, query, category),
     [query, category],
-  )
+  );
 
-  const groups = useMemo(() => groupCommandsByCategory(visible), [visible])
+  const groups = useMemo(() => groupCommandsByCategory(visible), [visible]);
 
-  const sincePresetActive = SINCE_PRESETS.some(
-    (preset) => preset.value === params.since,
-  )
+  const sincePresetActive = SINCE_PRESETS.some((preset) => preset.value === params.since);
 
   async function copyCommand(id: string, command: string) {
-    await copyText(command, 'command')
-    setCopiedId(id)
+    await copyText(command, "command");
+    setCopiedId(id);
     window.setTimeout(() => {
-      setCopiedId((current) => (current === id ? null : current))
-    }, 1200)
+      setCopiedId((current) => (current === id ? null : current));
+    }, 1200);
   }
 
   return (
@@ -69,24 +67,22 @@ export function GitCommandsTool() {
           <Label className="text-xs text-muted-foreground">Since</Label>
           <div className="flex flex-wrap gap-1">
             {SINCE_PRESETS.map((preset) => {
-              const selected = params.since === preset.value
+              const selected = params.since === preset.value;
               return (
                 <button
                   key={preset.id}
                   type="button"
-                  onClick={() =>
-                    setParams((prev) => ({ ...prev, since: preset.value }))
-                  }
+                  onClick={() => setParams((prev) => ({ ...prev, since: preset.value }))}
                   className={cn(
-                    'inline-flex h-7 items-center rounded-md border px-2 text-[0.7rem] font-medium transition-colors',
+                    "inline-flex h-7 items-center rounded-md border px-2 text-[0.7rem] font-medium transition-colors",
                     selected
-                      ? 'border-transparent bg-primary text-primary-foreground'
-                      : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground',
+                      ? "border-transparent bg-primary text-primary-foreground"
+                      : "border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}
                 >
                   {preset.label}
                 </button>
-              )
+              );
             })}
           </div>
           <Input
@@ -96,7 +92,7 @@ export function GitCommandsTool() {
             spellCheck={false}
             autoComplete="off"
             aria-label="Custom since value"
-            className={cn(!sincePresetActive && 'border-primary/50')}
+            className={cn(!sincePresetActive && "border-primary/50")}
           />
         </div>
 
@@ -104,22 +100,22 @@ export function GitCommandsTool() {
           <Label className="text-xs text-muted-foreground">Head</Label>
           <div className="flex flex-wrap gap-1">
             {HEAD_PRESETS.map((head) => {
-              const selected = params.head === head
+              const selected = params.head === head;
               return (
                 <button
                   key={head}
                   type="button"
                   onClick={() => setParams((prev) => ({ ...prev, head }))}
                   className={cn(
-                    'inline-flex h-7 min-w-10 items-center justify-center rounded-md border px-2 font-mono text-[0.7rem] font-medium tabular-nums transition-colors',
+                    "inline-flex h-7 min-w-10 items-center justify-center rounded-md border px-2 font-mono text-[0.7rem] font-medium tabular-nums transition-colors",
                     selected
-                      ? 'border-transparent bg-primary text-primary-foreground'
-                      : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground',
+                      ? "border-transparent bg-primary text-primary-foreground"
+                      : "border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}
                 >
                   {head}
                 </button>
-              )
+              );
             })}
           </div>
           <Input
@@ -128,12 +124,12 @@ export function GitCommandsTool() {
             max={500}
             value={String(params.head)}
             onValueChange={(value) => {
-              const next = Number(value)
-              if (!Number.isFinite(next)) return
+              const next = Number(value);
+              if (!Number.isFinite(next)) return;
               setParams((prev) => ({
                 ...prev,
                 head: Math.min(500, Math.max(1, Math.floor(next))),
-              }))
+              }));
             }}
             aria-label="Head count"
           />
@@ -146,9 +142,7 @@ export function GitCommandsTool() {
           <Input
             id="bug-grep"
             value={params.bugGrep}
-            onValueChange={(bugGrep) =>
-              setParams((prev) => ({ ...prev, bugGrep }))
-            }
+            onValueChange={(bugGrep) => setParams((prev) => ({ ...prev, bugGrep }))}
             spellCheck={false}
             autoComplete="off"
             className="font-mono text-xs"
@@ -162,9 +156,7 @@ export function GitCommandsTool() {
           <Input
             id="fire-grep"
             value={params.fireGrep}
-            onValueChange={(fireGrep) =>
-              setParams((prev) => ({ ...prev, fireGrep }))
-            }
+            onValueChange={(fireGrep) => setParams((prev) => ({ ...prev, fireGrep }))}
             spellCheck={false}
             autoComplete="off"
             className="font-mono text-xs"
@@ -183,17 +175,10 @@ export function GitCommandsTool() {
       </aside>
 
       <div className="flex min-w-0 flex-col gap-3">
-        <div
-          className="flex flex-wrap gap-1.5"
-          role="tablist"
-          aria-label="Command category"
-        >
+        <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="Command category">
           {GIT_CATEGORIES.map((item) => {
-            const selected = category === item.id
-            const tones =
-              item.id === 'all'
-                ? null
-                : GIT_CATEGORY_STYLES[item.id as GitCategoryId]
+            const selected = category === item.id;
+            const tones = item.id === "all" ? null : GIT_CATEGORY_STYLES[item.id as GitCategoryId];
 
             return (
               <button
@@ -203,19 +188,19 @@ export function GitCommandsTool() {
                 aria-selected={selected}
                 onClick={() => setCategory(item.id)}
                 className={cn(
-                  'inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors',
-                  item.id === 'all'
+                  "inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors",
+                  item.id === "all"
                     ? selected
-                      ? 'border-transparent bg-primary text-primary-foreground'
-                      : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground'
+                      ? "border-transparent bg-primary text-primary-foreground"
+                      : "border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground"
                     : selected
                       ? tones!.chipActive
-                      : cn('bg-card/40', tones!.chip),
+                      : cn("bg-card/40", tones!.chip),
                 )}
               >
                 {item.label}
               </button>
-            )
+            );
           })}
         </div>
 
@@ -226,13 +211,13 @@ export function GitCommandsTool() {
         ) : (
           <div className="flex flex-col gap-4">
             {groups.map((group) => {
-              const tones = GIT_CATEGORY_STYLES[group.category.id as GitCategoryId]
+              const tones = GIT_CATEGORY_STYLES[group.category.id as GitCategoryId];
               return (
                 <section key={group.category.id} className="flex flex-col gap-1.5">
                   <div className="flex items-baseline justify-between gap-2">
                     <h2
                       className={cn(
-                        'font-heading m-0 text-[0.8rem] font-semibold tracking-wide uppercase',
+                        "font-heading m-0 text-[0.8rem] font-semibold tracking-wide uppercase",
                         tones.heading,
                       )}
                     >
@@ -244,13 +229,13 @@ export function GitCommandsTool() {
                   </div>
                   <ul className="m-0 flex list-none flex-col gap-2 p-0">
                     {group.commands.map((item) => {
-                      const command = buildGitCommand(item.id, params)
-                      const copied = copiedId === item.id
+                      const command = buildGitCommand(item.id, params);
+                      const copied = copiedId === item.id;
                       return (
                         <li
                           key={item.id}
                           className={cn(
-                            'rounded-lg border border-border/70 border-l-[3px] bg-card/30 px-3 py-2.5',
+                            "rounded-lg border border-border/70 border-l-[3px] bg-card/30 px-3 py-2.5",
                             tones.rail,
                           )}
                         >
@@ -290,28 +275,28 @@ export function GitCommandsTool() {
                           </button>
                           {item.params.length > 0 ? (
                             <p className="m-0 mt-1.5 text-[0.65rem] text-muted-foreground/80">
-                              Uses{' '}
+                              Uses{" "}
                               {item.params
                                 .map((param) =>
-                                  param === 'bugGrep'
-                                    ? 'bug grep'
-                                    : param === 'fireGrep'
-                                      ? 'firefight grep'
+                                  param === "bugGrep"
+                                    ? "bug grep"
+                                    : param === "fireGrep"
+                                      ? "firefight grep"
                                       : param,
                                 )
-                                .join(' · ')}
+                                .join(" · ")}
                             </p>
                           ) : null}
                         </li>
-                      )
+                      );
                     })}
                   </ul>
                 </section>
-              )
+              );
             })}
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }

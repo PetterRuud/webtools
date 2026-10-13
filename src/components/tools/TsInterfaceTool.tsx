@@ -1,16 +1,13 @@
-import { useMemo, useState } from 'react'
-import { CopyIcon } from 'lucide-react'
-import { DualTextareas } from '#/components/tools/DualTextareas'
-import { Button } from '#/components/ui/button'
-import { Checkbox } from '#/components/ui/checkbox'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { Textarea } from '#/components/ui/textarea'
-import { copyText } from '#/lib/clipboard'
-import {
-  generateTsInterfaces,
-  type OutputKind,
-} from '#/lib/tsInterface'
+import { useMemo, useState } from "react";
+import { CopyIcon } from "lucide-react";
+import { DualTextareas } from "#/components/tools/DualTextareas";
+import { Button } from "#/components/ui/button";
+import { Checkbox } from "#/components/ui/checkbox";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { Textarea } from "#/components/ui/textarea";
+import { copyText } from "#/lib/clipboard";
+import { generateTsInterfaces, type OutputKind } from "#/lib/tsInterface";
 
 const SAMPLE = `{
   "id": 42,
@@ -26,19 +23,19 @@ const SAMPLE = `{
     { "slug": "cli", "stars": 3, "archived": true }
   ],
   "meta": null
-}`
+}`;
 
 export function TsInterfaceTool() {
-  const [input, setInput] = useState('')
-  const [rootName, setRootName] = useState('Root')
-  const [kind, setKind] = useState<OutputKind>('interface')
-  const [optional, setOptional] = useState(false)
-  const [readonly, setReadonly] = useState(false)
-  const [exportTypes, setExportTypes] = useState(true)
+  const [input, setInput] = useState("");
+  const [rootName, setRootName] = useState("Root");
+  const [kind, setKind] = useState<OutputKind>("interface");
+  const [optional, setOptional] = useState(false);
+  const [readonly, setReadonly] = useState(false);
+  const [exportTypes, setExportTypes] = useState(true);
 
   const result = useMemo(() => {
     if (!input.trim()) {
-      return { value: '', error: null as string | null }
+      return { value: "", error: null as string | null };
     }
     try {
       return {
@@ -50,14 +47,14 @@ export function TsInterfaceTool() {
           exportTypes,
         }),
         error: null,
-      }
+      };
     } catch (err) {
       return {
-        value: '',
-        error: err instanceof Error ? err.message : 'Generation failed',
-      }
+        value: "",
+        error: err instanceof Error ? err.message : "Generation failed",
+      };
     }
-  }, [exportTypes, input, kind, optional, readonly, rootName])
+  }, [exportTypes, input, kind, optional, readonly, rootName]);
 
   return (
     <div className="flex flex-col gap-3">
@@ -77,25 +74,20 @@ export function TsInterfaceTool() {
           <Button
             type="button"
             size="sm"
-            variant={kind === 'interface' ? 'default' : 'outline'}
-            onClick={() => setKind('interface')}
+            variant={kind === "interface" ? "default" : "outline"}
+            onClick={() => setKind("interface")}
           >
             interface
           </Button>
           <Button
             type="button"
             size="sm"
-            variant={kind === 'type' ? 'default' : 'outline'}
-            onClick={() => setKind('type')}
+            variant={kind === "type" ? "default" : "outline"}
+            onClick={() => setKind("type")}
           >
             type
           </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => setInput(SAMPLE)}
-          >
+          <Button type="button" variant="ghost" size="sm" onClick={() => setInput(SAMPLE)}>
             Sample
           </Button>
         </div>
@@ -134,7 +126,7 @@ export function TsInterfaceTool() {
               type="button"
               size="sm"
               variant="outline"
-              onClick={() => void copyText(result.value, 'TypeScript')}
+              onClick={() => void copyText(result.value, "TypeScript")}
               disabled={!result.value}
             >
               <CopyIcon data-icon="inline-start" />
@@ -159,9 +151,7 @@ export function TsInterfaceTool() {
             value={result.value}
             readOnly
             spellCheck={false}
-            placeholder={
-              input.trim() ? 'Fix JSON to generate…' : 'Interfaces appear here…'
-            }
+            placeholder={input.trim() ? "Fix JSON to generate…" : "Interfaces appear here…"}
             className="min-h-72 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
           />
         }
@@ -177,5 +167,5 @@ export function TsInterfaceTool() {
         </p>
       ) : null}
     </div>
-  )
+  );
 }

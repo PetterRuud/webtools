@@ -1,57 +1,53 @@
-import { useEffect, useState, type FormEvent } from 'react'
-import { CameraIcon, DownloadIcon, Loader2Icon } from 'lucide-react'
-import { toast } from 'sonner'
-import { Button } from '#/components/ui/button'
-import { Checkbox } from '#/components/ui/checkbox'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import {
-  VIEWPORT_PRESETS,
-  type CaptureMode,
-  type ViewportPreset,
-} from '#/lib/websiteScreenshot'
+import { useEffect, useState, type FormEvent } from "react";
+import { CameraIcon, DownloadIcon, Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "#/components/ui/button";
+import { Checkbox } from "#/components/ui/checkbox";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { VIEWPORT_PRESETS, type CaptureMode, type ViewportPreset } from "#/lib/websiteScreenshot";
 
-const SAMPLE = 'https://example.com'
+const SAMPLE = "https://example.com";
 
 export function WebsiteScreenshotTool() {
-  const [url, setUrl] = useState(SAMPLE)
-  const [preset, setPreset] = useState<ViewportPreset>('desktop')
-  const [width, setWidth] = useState(String(VIEWPORT_PRESETS.desktop.width))
-  const [height, setHeight] = useState(String(VIEWPORT_PRESETS.desktop.height))
-  const [fullPage, setFullPage] = useState(false)
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
-  const [mode, setMode] = useState<CaptureMode | null>(null)
+  const [url, setUrl] = useState(SAMPLE);
+  const [preset, setPreset] = useState<ViewportPreset>("desktop");
+  const [width, setWidth] = useState(String(VIEWPORT_PRESETS.desktop.width));
+  const [height, setHeight] = useState(String(VIEWPORT_PRESETS.desktop.height));
+  const [fullPage, setFullPage] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [mode, setMode] = useState<CaptureMode | null>(null);
 
   useEffect(() => {
     return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl)
-    }
-  }, [previewUrl])
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
 
   function applyPreset(next: ViewportPreset) {
-    setPreset(next)
-    if (next === 'custom') return
-    const dims = VIEWPORT_PRESETS[next]
-    setWidth(String(dims.width))
-    setHeight(String(dims.height))
+    setPreset(next);
+    if (next === "custom") return;
+    const dims = VIEWPORT_PRESETS[next];
+    setWidth(String(dims.width));
+    setHeight(String(dims.height));
   }
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault()
-    setBusy(true)
-    setError(null)
+    event.preventDefault();
+    setBusy(true);
+    setError(null);
     if (previewUrl) {
-      URL.revokeObjectURL(previewUrl)
-      setPreviewUrl(null)
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
     }
-    setMode(null)
+    setMode(null);
 
     try {
-      const res = await fetch('/api/website-screenshot/capture', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/website-screenshot/capture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           url,
           preset,
@@ -59,34 +55,31 @@ export function WebsiteScreenshotTool() {
           height: Number(height) || undefined,
           fullPage,
         }),
-      })
+      });
       if (!res.ok) {
-        let msg = res.statusText
+        let msg = res.statusText;
         try {
-          const j = (await res.json()) as { error?: string }
-          if (j.error) msg = j.error
+          const j = (await res.json()) as { error?: string };
+          if (j.error) msg = j.error;
         } catch {
           /* ignore */
         }
-        throw new Error(msg)
+        throw new Error(msg);
       }
-      const captureMode = res.headers.get('X-Capture-Mode') as CaptureMode | null
-      const blob = await res.blob()
-      setPreviewUrl(URL.createObjectURL(blob))
-      setMode(captureMode)
-      toast.success('Screenshot ready')
+      const captureMode = res.headers.get("X-Capture-Mode") as CaptureMode | null;
+      const blob = await res.blob();
+      setPreviewUrl(URL.createObjectURL(blob));
+      setMode(captureMode);
+      toast.success("Screenshot ready");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Capture failed')
+      setError(err instanceof Error ? err.message : "Capture failed");
     } finally {
-      setBusy(false)
+      setBusy(false);
     }
   }
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className="grid gap-3 lg:grid-cols-2 lg:items-start lg:gap-4"
-    >
+    <form onSubmit={onSubmit} className="grid gap-3 lg:grid-cols-2 lg:items-start lg:gap-4">
       <div className="flex flex-col gap-3 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
         <div className="flex flex-col gap-1">
           <Label htmlFor="screenshot-url" className="text-xs font-normal text-muted-foreground">
@@ -105,17 +98,17 @@ export function WebsiteScreenshotTool() {
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           {(
             [
-              ['desktop', 'Desktop'],
-              ['tablet', 'Tablet'],
-              ['mobile', 'Mobile'],
-              ['custom', 'Custom'],
+              ["desktop", "Desktop"],
+              ["tablet", "Tablet"],
+              ["mobile", "Mobile"],
+              ["custom", "Custom"],
             ] as const
           ).map(([id, label]) => (
             <Button
               key={id}
               type="button"
               size="sm"
-              variant={preset === id ? 'default' : 'outline'}
+              variant={preset === id ? "default" : "outline"}
               onClick={() => applyPreset(id)}
             >
               {label}
@@ -135,13 +128,16 @@ export function WebsiteScreenshotTool() {
               max={1920}
               value={width}
               onValueChange={(v) => {
-                setPreset('custom')
-                setWidth(v)
+                setPreset("custom");
+                setWidth(v);
               }}
             />
           </div>
           <div className="flex flex-col gap-1">
-            <Label htmlFor="screenshot-height" className="text-xs font-normal text-muted-foreground">
+            <Label
+              htmlFor="screenshot-height"
+              className="text-xs font-normal text-muted-foreground"
+            >
               Height
             </Label>
             <Input
@@ -151,18 +147,15 @@ export function WebsiteScreenshotTool() {
               max={4000}
               value={height}
               onValueChange={(v) => {
-                setPreset('custom')
-                setHeight(v)
+                setPreset("custom");
+                setHeight(v);
               }}
             />
           </div>
         </div>
 
         <Label className="gap-2 font-normal">
-          <Checkbox
-            checked={fullPage}
-            onCheckedChange={(v) => setFullPage(v === true)}
-          />
+          <Checkbox checked={fullPage} onCheckedChange={(v) => setFullPage(v === true)} />
           Full page
         </Label>
 
@@ -172,7 +165,7 @@ export function WebsiteScreenshotTool() {
           ) : (
             <CameraIcon data-icon="inline-start" />
           )}
-          {busy ? 'Capturing…' : 'Capture'}
+          {busy ? "Capturing…" : "Capture"}
         </Button>
 
         {error ? (
@@ -201,9 +194,7 @@ export function WebsiteScreenshotTool() {
               className="max-h-[32rem] max-w-full object-contain"
             />
           ) : (
-            <span className="text-sm text-muted-foreground">
-              Preview after capture
-            </span>
+            <span className="text-sm text-muted-foreground">Preview after capture</span>
           )}
         </div>
         {previewUrl ? (
@@ -212,9 +203,7 @@ export function WebsiteScreenshotTool() {
             variant="outline"
             size="sm"
             className="self-start"
-            render={
-              <a href={previewUrl} download="website-screenshot.png" />
-            }
+            render={<a href={previewUrl} download="website-screenshot.png" />}
           >
             <DownloadIcon data-icon="inline-start" />
             Download PNG
@@ -222,5 +211,5 @@ export function WebsiteScreenshotTool() {
         ) : null}
       </section>
     </form>
-  )
+  );
 }

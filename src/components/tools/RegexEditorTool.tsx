@@ -1,57 +1,50 @@
-import { useMemo, useState, type ReactNode } from 'react'
-import { Button } from '#/components/ui/button'
-import { Label } from '#/components/ui/label'
-import {
-  RegexGroupLegend,
-  RegexHighlightField,
-} from '#/components/tools/RegexHighlightField'
-import { RegexPatternField } from '#/components/tools/RegexPatternField'
-import {
-  breakdownRegex,
-  matchCoverage,
-  tokenKindStyle,
-} from '#/lib/regexBreakdown'
+import { useMemo, useState, type ReactNode } from "react";
+import { Button } from "#/components/ui/button";
+import { Label } from "#/components/ui/label";
+import { RegexGroupLegend, RegexHighlightField } from "#/components/tools/RegexHighlightField";
+import { RegexPatternField } from "#/components/tools/RegexPatternField";
+import { breakdownRegex, matchCoverage, tokenKindStyle } from "#/lib/regexBreakdown";
 import {
   REGEX_GROUP_ACTIVE_RING,
   buildHighlightSegments,
   collectRegexMatches,
   groupBgClass,
   type RegexMatchInfo,
-} from '#/lib/regexHighlight'
+} from "#/lib/regexHighlight";
 import {
   COMMON_REGEX_PATTERNS,
   type CommonRegexPattern,
   type RegexFlagId,
-} from '#/lib/regexPatterns'
-import { cn } from '#/lib/utils'
+} from "#/lib/regexPatterns";
+import { cn } from "#/lib/utils";
 
 const FLAG_OPTIONS = [
-  { id: 'g', label: 'g', hint: 'Global' },
-  { id: 'i', label: 'i', hint: 'Ignore case' },
-  { id: 'm', label: 'm', hint: 'Multiline' },
-  { id: 's', label: 's', hint: 'DotAll' },
-  { id: 'u', label: 'u', hint: 'Unicode' },
-] as const satisfies ReadonlyArray<{ id: RegexFlagId; label: string; hint: string }>
+  { id: "g", label: "g", hint: "Global" },
+  { id: "i", label: "i", hint: "Ignore case" },
+  { id: "m", label: "m", hint: "Multiline" },
+  { id: "s", label: "s", hint: "DotAll" },
+  { id: "u", label: "u", hint: "Unicode" },
+] as const satisfies ReadonlyArray<{ id: RegexFlagId; label: string; hint: string }>;
 
 function emptyFlags(): Record<RegexFlagId, boolean> {
-  return { g: true, i: false, m: false, s: false, u: false }
+  return { g: true, i: false, m: false, s: false, u: false };
 }
 
 function flagsFromList(list: RegexFlagId[]): Record<RegexFlagId, boolean> {
-  const next = emptyFlags()
+  const next = emptyFlags();
   for (const id of Object.keys(next) as RegexFlagId[]) {
-    next[id] = false
+    next[id] = false;
   }
-  for (const id of list) next[id] = true
-  return next
+  for (const id of list) next[id] = true;
+  return next;
 }
 
 function buildRegex(pattern: string, flags: string): RegExp | null {
-  if (!pattern) return null
+  if (!pattern) return null;
   try {
-    return new RegExp(pattern, flags)
+    return new RegExp(pattern, flags);
   } catch {
-    return null
+    return null;
   }
 }
 
@@ -61,131 +54,125 @@ function renderHighlighted(
   activeIndex: number | null,
 ): ReactNode {
   if (!text) {
-    return <span className="text-muted-foreground">Add a test string…</span>
+    return <span className="text-muted-foreground">Add a test string…</span>;
   }
   if (matches.length === 0) {
-    return <span>{text}</span>
+    return <span>{text}</span>;
   }
 
-  const segments = buildHighlightSegments(matches)
-  const nodes: ReactNode[] = []
-  let cursor = 0
+  const segments = buildHighlightSegments(matches);
+  const nodes: ReactNode[] = [];
+  let cursor = 0;
   segments.forEach((segment, i) => {
     if (segment.start > cursor) {
-      nodes.push(<span key={`t-${i}`}>{text.slice(cursor, segment.start)}</span>)
+      nodes.push(<span key={`t-${i}`}>{text.slice(cursor, segment.start)}</span>);
     }
-    const active = activeIndex === segment.matchIndex
+    const active = activeIndex === segment.matchIndex;
     nodes.push(
       <mark
         key={`m-${i}-${segment.start}`}
         className={cn(
-          'rounded-sm px-0.5 text-foreground dark:text-foreground',
+          "rounded-sm px-0.5 text-foreground dark:text-foreground",
           groupBgClass(segment.group),
           active && REGEX_GROUP_ACTIVE_RING,
         )}
       >
-        {text.slice(segment.start, segment.end) || '∅'}
+        {text.slice(segment.start, segment.end) || "∅"}
       </mark>,
-    )
-    cursor = segment.end
-  })
+    );
+    cursor = segment.end;
+  });
   if (cursor < text.length) {
-    nodes.push(<span key="tail">{text.slice(cursor)}</span>)
+    nodes.push(<span key="tail">{text.slice(cursor)}</span>);
   }
-  return nodes
+  return nodes;
 }
 
 function formatGroups(groups: Array<string | undefined>): ReactNode {
   const parts = groups
     .map((value, index) => {
-      if (value === undefined) return null
+      if (value === undefined) return null;
       return (
         <span key={index} className="inline-flex items-center gap-1">
           <span
-            className={cn(
-              'inline-block size-1.5 rounded-sm',
-              groupBgClass(index + 1),
-            )}
+            className={cn("inline-block size-1.5 rounded-sm", groupBgClass(index + 1))}
             aria-hidden
           />
           <span>
             ${index + 1}: {JSON.stringify(value)}
           </span>
         </span>
-      )
+      );
     })
-    .filter(Boolean)
-  if (parts.length === 0) return null
+    .filter(Boolean);
+  if (parts.length === 0) return null;
   return (
     <span className="mt-0.5 flex flex-wrap gap-x-2 gap-y-0.5 font-mono text-[0.7rem] text-muted-foreground">
       {parts}
     </span>
-  )
+  );
 }
 
 export function RegexEditorTool() {
-  const [pattern, setPattern] = useState('\\b([A-Z][a-z]+)\\b')
+  const [pattern, setPattern] = useState("\\b([A-Z][a-z]+)\\b");
   const [testString, setTestString] = useState(
-    'WebTools ships JSON, Regex, Base64, and Diff helpers.',
-  )
-  const [flags, setFlags] = useState<Record<RegexFlagId, boolean>>(emptyFlags)
-  const [activePresetId, setActivePresetId] = useState<string | null>(null)
-  const [activeMatch, setActiveMatch] = useState<number | null>(null)
+    "WebTools ships JSON, Regex, Base64, and Diff helpers.",
+  );
+  const [flags, setFlags] = useState<Record<RegexFlagId, boolean>>(emptyFlags);
+  const [activePresetId, setActivePresetId] = useState<string | null>(null);
+  const [activeMatch, setActiveMatch] = useState<number | null>(null);
 
   const flagString = FLAG_OPTIONS.filter((flag) => flags[flag.id])
     .map((flag) => flag.id)
-    .join('')
+    .join("");
 
   const regexError = useMemo(() => {
-    if (!pattern) return null
+    if (!pattern) return null;
     try {
-      void new RegExp(pattern, flagString)
-      return null
+      void new RegExp(pattern, flagString);
+      return null;
     } catch (err) {
-      return err instanceof Error ? err.message : 'Invalid regular expression'
+      return err instanceof Error ? err.message : "Invalid regular expression";
     }
-  }, [flagString, pattern])
+  }, [flagString, pattern]);
 
   const regex = useMemo(
     () => (regexError ? null : buildRegex(pattern, flagString)),
     [flagString, pattern, regexError],
-  )
+  );
 
   const matches = useMemo(
     () => (regex && testString ? collectRegexMatches(regex, testString) : []),
     [regex, testString],
-  )
+  );
 
-  const tokens = useMemo(() => breakdownRegex(pattern), [pattern])
-  const coverage = useMemo(
-    () => matchCoverage(testString, matches),
-    [matches, testString],
-  )
+  const tokens = useMemo(() => breakdownRegex(pattern), [pattern]);
+  const coverage = useMemo(() => matchCoverage(testString, matches), [matches, testString]);
 
   function toggleFlag(id: RegexFlagId) {
-    setActivePresetId(null)
-    setFlags((prev) => ({ ...prev, [id]: !prev[id] }))
+    setActivePresetId(null);
+    setFlags((prev) => ({ ...prev, [id]: !prev[id] }));
   }
 
   function applyPreset(preset: CommonRegexPattern) {
-    setPattern(preset.pattern)
-    setFlags(flagsFromList(preset.flags))
-    setTestString(preset.sample)
-    setActivePresetId(preset.id)
-    setActiveMatch(null)
+    setPattern(preset.pattern);
+    setFlags(flagsFromList(preset.flags));
+    setTestString(preset.sample);
+    setActivePresetId(preset.id);
+    setActiveMatch(null);
   }
 
   const matchSummary = regexError
-    ? 'Fix pattern'
+    ? "Fix pattern"
     : !pattern
-      ? '—'
+      ? "—"
       : !testString
-        ? '—'
-        : `${matches.length} match${matches.length === 1 ? '' : 'es'}${
+        ? "—"
+        : `${matches.length} match${matches.length === 1 ? "" : "es"}${
             matches.length > 0
               ? ` · ${coverage.covered}/${coverage.total} (${coverage.percent}%)`
-              : ''
-          }`
+              : ""
+          }`;
 
   return (
     <div className="flex flex-col gap-3">
@@ -195,7 +182,7 @@ export function RegexEditorTool() {
             key={preset.id}
             type="button"
             size="sm"
-            variant={activePresetId === preset.id ? 'default' : 'outline'}
+            variant={activePresetId === preset.id ? "default" : "outline"}
             title={preset.description}
             onClick={() => applyPreset(preset)}
             aria-pressed={activePresetId === preset.id}
@@ -211,15 +198,15 @@ export function RegexEditorTool() {
             <div className="flex flex-wrap items-end justify-between gap-2">
               <Label htmlFor="regex-pattern">Pattern</Label>
               <p className="m-0 font-mono text-xs text-muted-foreground">
-                /{pattern || '…'}/{flagString}
+                /{pattern || "…"}/{flagString}
               </p>
             </div>
             <RegexPatternField
               id="regex-pattern"
               value={pattern}
               onValueChange={(value) => {
-                setActivePresetId(null)
-                setPattern(value)
+                setActivePresetId(null);
+                setPattern(value);
               }}
               placeholder="Regular expression"
               aria-invalid={Boolean(regexError)}
@@ -230,7 +217,7 @@ export function RegexEditorTool() {
                   key={flag.id}
                   type="button"
                   size="sm"
-                  variant={flags[flag.id] ? 'default' : 'outline'}
+                  variant={flags[flag.id] ? "default" : "outline"}
                   onClick={() => toggleFlag(flag.id)}
                   title={flag.hint}
                   aria-pressed={flags[flag.id]}
@@ -239,9 +226,7 @@ export function RegexEditorTool() {
                 </Button>
               ))}
             </div>
-            {regexError ? (
-              <p className="m-0 text-sm text-destructive">{regexError}</p>
-            ) : null}
+            {regexError ? <p className="m-0 text-sm text-destructive">{regexError}</p> : null}
           </div>
 
           <div className="flex flex-col gap-1.5">
@@ -255,9 +240,9 @@ export function RegexEditorTool() {
               matches={matches}
               activeMatch={activeMatch}
               onValueChange={(value) => {
-                setActivePresetId(null)
-                setActiveMatch(null)
-                setTestString(value)
+                setActivePresetId(null);
+                setActiveMatch(null);
+                setTestString(value);
               }}
               placeholder="Text to match…"
               aria-invalid={Boolean(regexError)}
@@ -272,9 +257,7 @@ export function RegexEditorTool() {
                 Breakdown
               </h2>
               <p className="m-0 text-xs text-muted-foreground">
-                {!pattern
-                  ? '—'
-                  : `${tokens.length} token${tokens.length === 1 ? '' : 's'}`}
+                {!pattern ? "—" : `${tokens.length} token${tokens.length === 1 ? "" : "s"}`}
               </p>
             </div>
             {!pattern ? (
@@ -290,7 +273,7 @@ export function RegexEditorTool() {
                   >
                     <code
                       className={cn(
-                        'shrink-0 rounded border px-1 py-0.5 font-mono text-[0.75rem]',
+                        "shrink-0 rounded border px-1 py-0.5 font-mono text-[0.75rem]",
                         tokenKindStyle(token.kind),
                       )}
                     >
@@ -329,20 +312,18 @@ export function RegexEditorTool() {
             {matches.length > 0 ? (
               <ul className="m-0 flex max-h-52 list-none flex-col gap-1 overflow-y-auto p-0">
                 {matches.slice(0, 40).map((match, index) => {
-                  const groups = formatGroups(match.groups)
-                  const selected = activeMatch === index
+                  const groups = formatGroups(match.groups);
+                  const selected = activeMatch === index;
                   return (
                     <li key={`${match.index}-${index}`}>
                       <button
                         type="button"
-                        onClick={() =>
-                          setActiveMatch((prev) => (prev === index ? null : index))
-                        }
+                        onClick={() => setActiveMatch((prev) => (prev === index ? null : index))}
                         className={cn(
-                          'flex w-full items-start gap-2 rounded-md border px-2 py-1.5 text-left text-sm transition-colors',
+                          "flex w-full items-start gap-2 rounded-md border px-2 py-1.5 text-left text-sm transition-colors",
                           selected
-                            ? 'border-primary/70 bg-primary/15'
-                            : 'border-border/70 bg-transparent hover:bg-muted/40',
+                            ? "border-primary/70 bg-primary/15"
+                            : "border-border/70 bg-transparent hover:bg-muted/40",
                         )}
                       >
                         <span className="mt-0.5 inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded bg-muted px-1 font-mono text-[0.65rem] text-muted-foreground">
@@ -350,28 +331,19 @@ export function RegexEditorTool() {
                         </span>
                         <span className="min-w-0 flex-1">
                           <span className="font-mono text-sm text-foreground">
-                            <mark
-                              className={cn(
-                                'rounded-sm px-0.5',
-                                groupBgClass(0),
-                              )}
-                            >
-                              {match.text || '(empty)'}
+                            <mark className={cn("rounded-sm px-0.5", groupBgClass(0))}>
+                              {match.text || "(empty)"}
                             </mark>
-                            <span className="ml-2 text-muted-foreground">
-                              @{match.index}
-                            </span>
+                            <span className="ml-2 text-muted-foreground">@{match.index}</span>
                           </span>
                           {groups}
                         </span>
                       </button>
                     </li>
-                  )
+                  );
                 })}
                 {matches.length > 40 ? (
-                  <li className="text-xs text-muted-foreground">
-                    First 40 of {matches.length}
-                  </li>
+                  <li className="text-xs text-muted-foreground">First 40 of {matches.length}</li>
                 ) : null}
               </ul>
             ) : !regexError && pattern && testString ? (
@@ -383,5 +355,5 @@ export function RegexEditorTool() {
         </div>
       </div>
     </div>
-  )
+  );
 }

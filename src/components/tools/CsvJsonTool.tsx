@@ -1,70 +1,68 @@
-import { useMemo, useState } from 'react'
-import { CopyIcon } from 'lucide-react'
-import { DualTextareas } from '#/components/tools/DualTextareas'
-import { Button } from '#/components/ui/button'
-import { Checkbox } from '#/components/ui/checkbox'
-import { Label } from '#/components/ui/label'
-import { Textarea } from '#/components/ui/textarea'
-import { copyText } from '#/lib/clipboard'
-import { csvToJson, jsonToCsv } from '#/lib/csvJson'
+import { useMemo, useState } from "react";
+import { CopyIcon } from "lucide-react";
+import { DualTextareas } from "#/components/tools/DualTextareas";
+import { Button } from "#/components/ui/button";
+import { Checkbox } from "#/components/ui/checkbox";
+import { Label } from "#/components/ui/label";
+import { Textarea } from "#/components/ui/textarea";
+import { copyText } from "#/lib/clipboard";
+import { csvToJson, jsonToCsv } from "#/lib/csvJson";
 
-type Mode = 'csv-to-json' | 'json-to-csv'
+type Mode = "csv-to-json" | "json-to-csv";
 
 const SAMPLE_CSV = `name,ready,note
 WebTools,true,"CSV, JSON"
-Regex,false,Pattern test`
+Regex,false,Pattern test`;
 
 const SAMPLE_JSON = `[
   { "name": "WebTools", "ready": true, "note": "CSV, JSON" },
   { "name": "Regex", "ready": false, "note": "Pattern test" }
-]`
+]`;
 
 export function CsvJsonTool() {
-  const [mode, setMode] = useState<Mode>('csv-to-json')
-  const [input, setInput] = useState('')
-  const [headerRow, setHeaderRow] = useState(true)
+  const [mode, setMode] = useState<Mode>("csv-to-json");
+  const [input, setInput] = useState("");
+  const [headerRow, setHeaderRow] = useState(true);
 
   const result = useMemo(() => {
     if (!input.trim()) {
-      return { value: '', error: null as string | null }
+      return { value: "", error: null as string | null };
     }
     try {
       const value =
-        mode === 'csv-to-json'
+        mode === "csv-to-json"
           ? csvToJson(input, { headerRow, pretty: true })
-          : jsonToCsv(input, { headerRow })
-      return { value, error: null }
+          : jsonToCsv(input, { headerRow });
+      return { value, error: null };
     } catch (err) {
       return {
-        value: '',
-        error: err instanceof Error ? err.message : 'Conversion failed',
-      }
+        value: "",
+        error: err instanceof Error ? err.message : "Conversion failed",
+      };
     }
-  }, [headerRow, input, mode])
+  }, [headerRow, input, mode]);
 
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-1.5">
         <Button
           type="button"
-          variant={mode === 'csv-to-json' ? 'default' : 'outline'}
-          onClick={() => setMode('csv-to-json')}
+          variant={mode === "csv-to-json" ? "default" : "outline"}
+          onClick={() => setMode("csv-to-json")}
         >
           CSV → JSON
         </Button>
         <Button
           type="button"
-          variant={mode === 'json-to-csv' ? 'default' : 'outline'}
-          onClick={() => setMode('json-to-csv')}
+          variant={mode === "json-to-csv" ? "default" : "outline"}
+          onClick={() => setMode("json-to-csv")}
         >
           JSON → CSV
         </Button>
         <Button
           type="button"
           variant="ghost"
-          onClick={() =>
-            setInput(mode === 'csv-to-json' ? SAMPLE_CSV : SAMPLE_JSON)
-          }
+          onClick={() => setInput(mode === "csv-to-json" ? SAMPLE_CSV : SAMPLE_JSON)}
         >
           Sample
         </Button>
@@ -79,26 +77,17 @@ export function CsvJsonTool() {
 
       <DualTextareas
         leftHeader={
-          <Label htmlFor="csv-json-input">
-            {mode === 'csv-to-json' ? 'CSV' : 'JSON'}
-          </Label>
+          <Label htmlFor="csv-json-input">{mode === "csv-to-json" ? "CSV" : "JSON"}</Label>
         }
         rightHeader={
           <>
-            <Label htmlFor="csv-json-output">
-              {mode === 'csv-to-json' ? 'JSON' : 'CSV'}
-            </Label>
+            <Label htmlFor="csv-json-output">{mode === "csv-to-json" ? "JSON" : "CSV"}</Label>
             <Button
               type="button"
               size="sm"
               variant="outline"
               disabled={!result.value}
-              onClick={() =>
-                void copyText(
-                  result.value,
-                  mode === 'csv-to-json' ? 'JSON' : 'CSV',
-                )
-              }
+              onClick={() => void copyText(result.value, mode === "csv-to-json" ? "JSON" : "CSV")}
             >
               <CopyIcon data-icon="inline-start" />
               Copy
@@ -111,9 +100,7 @@ export function CsvJsonTool() {
             value={input}
             onChange={(event) => setInput(event.target.value)}
             spellCheck={false}
-            placeholder={
-              mode === 'csv-to-json' ? 'Paste CSV…' : 'Paste JSON…'
-            }
+            placeholder={mode === "csv-to-json" ? "Paste CSV…" : "Paste JSON…"}
             className="min-h-56 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
             aria-invalid={Boolean(result.error)}
           />
@@ -124,9 +111,7 @@ export function CsvJsonTool() {
             value={result.value}
             readOnly
             spellCheck={false}
-            placeholder={
-              !input.trim() ? 'Result…' : result.error ? 'Fix input…' : ''
-            }
+            placeholder={!input.trim() ? "Result…" : result.error ? "Fix input…" : ""}
             className="min-h-56 field-sizing-fixed font-mono text-[0.85rem] leading-6 flex-1"
           />
         }
@@ -138,5 +123,5 @@ export function CsvJsonTool() {
         </p>
       ) : null}
     </div>
-  )
+  );
 }

@@ -1,47 +1,42 @@
-import { useEffect, useState } from 'react'
-import { DownloadIcon, Loader2Icon } from 'lucide-react'
-import { toast } from 'sonner'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import { Slider } from '#/components/ui/slider'
-import { Textarea } from '#/components/ui/textarea'
-import {
-  downloadDataUrl,
-  generateQrDataUrl,
-  type QrErrorCorrection,
-} from '#/lib/qrcode'
+import { useEffect, useState } from "react";
+import { DownloadIcon, Loader2Icon } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import { Slider } from "#/components/ui/slider";
+import { Textarea } from "#/components/ui/textarea";
+import { downloadDataUrl, generateQrDataUrl, type QrErrorCorrection } from "#/lib/qrcode";
 
-const SAMPLE = 'https://example.com'
+const SAMPLE = "https://example.com";
 const ECC_LEVELS: Array<{ id: QrErrorCorrection; label: string }> = [
-  { id: 'L', label: 'L' },
-  { id: 'M', label: 'M' },
-  { id: 'Q', label: 'Q' },
-  { id: 'H', label: 'H' },
-]
+  { id: "L", label: "L" },
+  { id: "M", label: "M" },
+  { id: "Q", label: "Q" },
+  { id: "H", label: "H" },
+];
 
 export function QrCodeTool() {
-  const [text, setText] = useState(SAMPLE)
-  const [size, setSize] = useState(256)
-  const [margin, setMargin] = useState(2)
-  const [errorCorrection, setErrorCorrection] =
-    useState<QrErrorCorrection>('M')
-  const [darkColor, setDarkColor] = useState('#0f172a')
-  const [lightColor, setLightColor] = useState('#ffffff')
-  const [dataUrl, setDataUrl] = useState<string | null>(null)
-  const [error, setError] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
+  const [text, setText] = useState(SAMPLE);
+  const [size, setSize] = useState(256);
+  const [margin, setMargin] = useState(2);
+  const [errorCorrection, setErrorCorrection] = useState<QrErrorCorrection>("M");
+  const [darkColor, setDarkColor] = useState("#0f172a");
+  const [lightColor, setLightColor] = useState("#ffffff");
+  const [dataUrl, setDataUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    let cancelled = false
-    const trimmed = text.trim()
+    let cancelled = false;
+    const trimmed = text.trim();
     if (!trimmed) {
-      setDataUrl(null)
-      setError(null)
-      return
+      setDataUrl(null);
+      setError(null);
+      return;
     }
 
-    setBusy(true)
+    setBusy(true);
     const handle = window.setTimeout(() => {
       void generateQrDataUrl({
         text: trimmed,
@@ -52,33 +47,33 @@ export function QrCodeTool() {
         lightColor,
       })
         .then((url) => {
-          if (cancelled) return
-          setDataUrl(url)
-          setError(null)
+          if (cancelled) return;
+          setDataUrl(url);
+          setError(null);
         })
         .catch((err: unknown) => {
-          if (cancelled) return
-          setDataUrl(null)
-          setError(err instanceof Error ? err.message : 'Could not generate QR')
+          if (cancelled) return;
+          setDataUrl(null);
+          setError(err instanceof Error ? err.message : "Could not generate QR");
         })
         .finally(() => {
-          if (!cancelled) setBusy(false)
-        })
-    }, 120)
+          if (!cancelled) setBusy(false);
+        });
+    }, 120);
 
     return () => {
-      cancelled = true
-      window.clearTimeout(handle)
-    }
-  }, [text, size, margin, errorCorrection, darkColor, lightColor])
+      cancelled = true;
+      window.clearTimeout(handle);
+    };
+  }, [text, size, margin, errorCorrection, darkColor, lightColor]);
 
   function downloadPng() {
     if (!dataUrl) {
-      toast.error('Nothing to download')
-      return
+      toast.error("Nothing to download");
+      return;
     }
-    downloadDataUrl(dataUrl, 'qrcode.png')
-    toast.success('Downloaded PNG')
+    downloadDataUrl(dataUrl, "qrcode.png");
+    toast.success("Downloaded PNG");
   }
 
   return (
@@ -87,12 +82,7 @@ export function QrCodeTool() {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-2">
             <Label htmlFor="qr-text">Text / URL</Label>
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              onClick={() => setText(SAMPLE)}
-            >
+            <Button type="button" size="sm" variant="ghost" onClick={() => setText(SAMPLE)}>
               Sample
             </Button>
           </div>
@@ -109,9 +99,7 @@ export function QrCodeTool() {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
             <Label id="qr-size-label">Size</Label>
-            <span className="text-sm tabular-nums text-muted-foreground">
-              {size}px
-            </span>
+            <span className="text-sm tabular-nums text-muted-foreground">{size}px</span>
           </div>
           <Slider
             aria-labelledby="qr-size-label"
@@ -120,8 +108,8 @@ export function QrCodeTool() {
             step={8}
             value={[size]}
             onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value
-              if (typeof next === 'number') setSize(next)
+              const next = Array.isArray(value) ? value[0] : value;
+              if (typeof next === "number") setSize(next);
             }}
           />
         </div>
@@ -129,9 +117,7 @@ export function QrCodeTool() {
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center justify-between gap-3">
             <Label id="qr-margin-label">Margin</Label>
-            <span className="text-sm tabular-nums text-muted-foreground">
-              {margin}
-            </span>
+            <span className="text-sm tabular-nums text-muted-foreground">{margin}</span>
           </div>
           <Slider
             aria-labelledby="qr-margin-label"
@@ -140,8 +126,8 @@ export function QrCodeTool() {
             step={1}
             value={[margin]}
             onValueChange={(value) => {
-              const next = Array.isArray(value) ? value[0] : value
-              if (typeof next === 'number') setMargin(next)
+              const next = Array.isArray(value) ? value[0] : value;
+              if (typeof next === "number") setMargin(next);
             }}
           />
         </div>
@@ -154,7 +140,7 @@ export function QrCodeTool() {
                 key={level.id}
                 type="button"
                 size="sm"
-                variant={errorCorrection === level.id ? 'default' : 'outline'}
+                variant={errorCorrection === level.id ? "default" : "outline"}
                 onClick={() => setErrorCorrection(level.id)}
               >
                 {level.label}
@@ -202,20 +188,13 @@ export function QrCodeTool() {
           </div>
         </div>
 
-        {error ? (
-          <p className="m-0 text-sm text-destructive">{error}</p>
-        ) : null}
+        {error ? <p className="m-0 text-sm text-destructive">{error}</p> : null}
       </div>
 
       <div className="flex flex-col gap-3 rounded-xl border border-border/80 bg-card/50 p-3 sm:p-4">
         <div className="flex items-center justify-between gap-2">
           <Label>Preview</Label>
-          <Button
-            type="button"
-            size="sm"
-            disabled={!dataUrl || busy}
-            onClick={downloadPng}
-          >
+          <Button type="button" size="sm" disabled={!dataUrl || busy} onClick={downloadPng}>
             {busy ? (
               <Loader2Icon data-icon="inline-start" className="animate-spin" />
             ) : (
@@ -238,20 +217,20 @@ export function QrCodeTool() {
                 />
               </div>
               <p className="m-0 mt-3 truncate text-center font-mono text-[0.65rem] tracking-wide text-muted-foreground">
-                {text.trim() || '—'}
+                {text.trim() || "—"}
               </p>
               <p className="m-0 mt-1 text-center font-mono text-[0.6rem] tabular-nums text-muted-foreground/80">
                 {size}×{size} · ECC {errorCorrection}
-                {busy ? ' · …' : ''}
+                {busy ? " · …" : ""}
               </p>
             </div>
           ) : (
             <p className="m-0 text-sm text-muted-foreground">
-              {busy ? 'Generating…' : 'Enter text to generate'}
+              {busy ? "Generating…" : "Enter text to generate"}
             </p>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }

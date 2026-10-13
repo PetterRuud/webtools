@@ -1,43 +1,43 @@
-import { useEffect, useState } from 'react'
-import { CopyIcon, DownloadIcon } from 'lucide-react'
-import { DualTextareas } from '#/components/tools/DualTextareas'
-import { Button } from '#/components/ui/button'
-import { Label } from '#/components/ui/label'
-import { Textarea } from '#/components/ui/textarea'
-import { copyText } from '#/lib/clipboard'
+import { useEffect, useState } from "react";
+import { CopyIcon, DownloadIcon } from "lucide-react";
+import { DualTextareas } from "#/components/tools/DualTextareas";
+import { Button } from "#/components/ui/button";
+import { Label } from "#/components/ui/label";
+import { Textarea } from "#/components/ui/textarea";
+import { copyText } from "#/lib/clipboard";
 import {
   SAMPLE_MARKDOWN,
   downloadTextFile,
   markdownToHtml,
   wrapHtmlDocument,
-} from '#/lib/markdown'
-import { cn } from 'cn'
+} from "#/lib/markdown";
+import { cn } from "cn";
 
-type ViewMode = 'edit' | 'split' | 'preview' | 'html'
+type ViewMode = "edit" | "split" | "preview" | "html";
 
 export function MarkdownTool() {
-  const [source, setSource] = useState(SAMPLE_MARKDOWN)
-  const [view, setView] = useState<ViewMode>('split')
-  const [html, setHtml] = useState('')
+  const [source, setSource] = useState(SAMPLE_MARKDOWN);
+  const [view, setView] = useState<ViewMode>("split");
+  const [html, setHtml] = useState("");
 
   useEffect(() => {
     if (!source.trim()) {
-      setHtml('')
-      return
+      setHtml("");
+      return;
     }
-    setHtml(markdownToHtml(source))
-  }, [source])
+    setHtml(markdownToHtml(source));
+  }, [source]);
 
-  const charCount = source.length.toLocaleString()
-  const hasSource = source.trim().length > 0
+  const charCount = source.length.toLocaleString();
+  const hasSource = source.trim().length > 0;
 
   function downloadHtml() {
-    if (!hasSource) return
+    if (!hasSource) return;
     downloadTextFile(
-      'preview.html',
-      wrapHtmlDocument(html, 'Markdown preview'),
-      'text/html;charset=utf-8',
-    )
+      "preview.html",
+      wrapHtmlDocument(html, "Markdown preview"),
+      "text/html;charset=utf-8",
+    );
   }
 
   return (
@@ -46,17 +46,17 @@ export function MarkdownTool() {
         <div className="flex flex-wrap gap-1.5">
           {(
             [
-              ['edit', 'Edit'],
-              ['split', 'Split'],
-              ['preview', 'Preview'],
-              ['html', 'HTML'],
+              ["edit", "Edit"],
+              ["split", "Split"],
+              ["preview", "Preview"],
+              ["html", "HTML"],
             ] as const
           ).map(([mode, label]) => (
             <Button
               key={mode}
               type="button"
               size="sm"
-              variant={view === mode ? 'default' : 'outline'}
+              variant={view === mode ? "default" : "outline"}
               onClick={() => setView(mode)}
             >
               {label}
@@ -68,7 +68,7 @@ export function MarkdownTool() {
             type="button"
             size="sm"
             variant="outline"
-            onClick={() => void copyText(source, 'Markdown')}
+            onClick={() => void copyText(source, "Markdown")}
             disabled={!hasSource}
           >
             <CopyIcon data-icon="inline-start" />
@@ -78,7 +78,7 @@ export function MarkdownTool() {
             type="button"
             size="sm"
             variant="outline"
-            onClick={() => void copyText(html, 'HTML')}
+            onClick={() => void copyText(html, "HTML")}
             disabled={!html}
           >
             <CopyIcon data-icon="inline-start" />
@@ -106,7 +106,7 @@ export function MarkdownTool() {
             type="button"
             size="sm"
             variant="ghost"
-            onClick={() => setSource('')}
+            onClick={() => setSource("")}
             disabled={!hasSource}
           >
             Clear
@@ -114,7 +114,7 @@ export function MarkdownTool() {
         </div>
       </div>
 
-      {view === 'split' ? (
+      {view === "split" ? (
         <DualTextareas
           leftHeader={
             <>
@@ -137,7 +137,7 @@ export function MarkdownTool() {
         />
       ) : null}
 
-      {view === 'edit' ? (
+      {view === "edit" ? (
         <div className="flex flex-col gap-1.5">
           <div className="flex h-8 items-center justify-between gap-2">
             <Label htmlFor="md-input-full">Markdown</Label>
@@ -154,7 +154,7 @@ export function MarkdownTool() {
         </div>
       ) : null}
 
-      {view === 'preview' ? (
+      {view === "preview" ? (
         <div className="flex flex-col gap-1.5">
           <div className="flex h-8 items-center">
             <Label>Preview</Label>
@@ -163,7 +163,7 @@ export function MarkdownTool() {
         </div>
       ) : null}
 
-      {view === 'html' ? (
+      {view === "html" ? (
         <DualTextareas
           leftHeader={
             <>
@@ -178,7 +178,7 @@ export function MarkdownTool() {
                 type="button"
                 size="sm"
                 variant="outline"
-                onClick={() => void copyText(html, 'HTML')}
+                onClick={() => void copyText(html, "HTML")}
                 disabled={!html}
               >
                 <CopyIcon data-icon="inline-start" />
@@ -202,14 +202,14 @@ export function MarkdownTool() {
               value={html}
               readOnly
               spellCheck={false}
-              placeholder={hasSource ? '' : 'Rendered HTML…'}
+              placeholder={hasSource ? "" : "Rendered HTML…"}
               className="min-h-[28rem] field-sizing-fixed flex-1 font-mono text-[0.8rem] leading-5"
             />
           }
         />
       ) : null}
     </div>
-  )
+  );
 }
 
 function PreviewPane({
@@ -217,15 +217,15 @@ function PreviewPane({
   empty,
   tall = false,
 }: {
-  html: string
-  empty: boolean
-  tall?: boolean
+  html: string;
+  empty: boolean;
+  tall?: boolean;
 }) {
   return (
     <div
       className={cn(
-        'bg-card min-h-[28rem] flex-1 overflow-auto rounded-lg border border-border/80 px-4 py-3',
-        tall && 'min-h-[32rem]',
+        "bg-card min-h-[28rem] flex-1 overflow-auto rounded-lg border border-border/80 px-4 py-3",
+        tall && "min-h-[32rem]",
       )}
     >
       {empty ? (
@@ -238,5 +238,5 @@ function PreviewPane({
         />
       )}
     </div>
-  )
+  );
 }

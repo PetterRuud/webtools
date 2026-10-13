@@ -1,30 +1,30 @@
-import { Loader2Icon, SearchIcon } from 'lucide-react'
-import { useState } from 'react'
-import { useServerFn } from '@tanstack/react-start'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { Label } from '#/components/ui/label'
-import type { CheckStatus } from '#/lib/emailDns'
-import { checkEmailDnsFn, lookupDnsFn } from '#/lib/networkFns'
-import { cn } from 'cn'
+import { Loader2Icon, SearchIcon } from "lucide-react";
+import { useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { Label } from "#/components/ui/label";
+import type { CheckStatus } from "#/lib/emailDns";
+import { checkEmailDnsFn, lookupDnsFn } from "#/lib/networkFns";
+import { cn } from "cn";
 
-const RECORD_TYPES = ['A', 'AAAA', 'CNAME', 'MX', 'TXT', 'NS', 'SOA', 'SRV', 'CAA'] as const
+const RECORD_TYPES = ["A", "AAAA", "CNAME", "MX", "TXT", "NS", "SOA", "SRV", "CAA"] as const;
 
-type Mode = 'records' | 'email'
+type Mode = "records" | "email";
 
-type DnsResult = Awaited<ReturnType<typeof lookupDnsFn>>
-type DnsRecord = DnsResult['answer'][number]
-type EmailResult = Awaited<ReturnType<typeof checkEmailDnsFn>>
+type DnsResult = Awaited<ReturnType<typeof lookupDnsFn>>;
+type DnsRecord = DnsResult["answer"][number];
+type EmailResult = Awaited<ReturnType<typeof checkEmailDnsFn>>;
 
 const STATUS_STYLE: Record<CheckStatus, string> = {
-  pass: 'border-emerald-500/35 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200',
-  warn: 'border-amber-500/35 bg-amber-500/15 text-amber-900 dark:text-amber-100',
-  fail: 'border-destructive/40 bg-destructive/10 text-destructive',
-  info: 'border-border bg-muted/50 text-muted-foreground',
-}
+  pass: "border-emerald-500/35 bg-emerald-500/10 text-emerald-800 dark:text-emerald-200",
+  warn: "border-amber-500/35 bg-amber-500/15 text-amber-900 dark:text-amber-100",
+  fail: "border-destructive/40 bg-destructive/10 text-destructive",
+  info: "border-border bg-muted/50 text-muted-foreground",
+};
 
 function RecordTable({ title, rows }: { title: string; rows: DnsRecord[] }) {
-  if (rows.length === 0) return null
+  if (rows.length === 0) return null;
   return (
     <div className="flex flex-col gap-2">
       <h3 className="m-0 text-xs font-semibold tracking-wide text-muted-foreground uppercase">
@@ -51,22 +51,16 @@ function RecordTable({ title, rows }: { title: string; rows: DnsRecord[] }) {
         </table>
       </div>
     </div>
-  )
+  );
 }
 
-function ModeToggle({
-  mode,
-  onChange,
-}: {
-  mode: Mode
-  onChange: (mode: Mode) => void
-}) {
+function ModeToggle({ mode, onChange }: { mode: Mode; onChange: (mode: Mode) => void }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {(
         [
-          { id: 'records', label: 'Records' },
-          { id: 'email', label: 'Email setup' },
+          { id: "records", label: "Records" },
+          { id: "email", label: "Email setup" },
         ] as const
       ).map((item) => (
         <button
@@ -75,15 +69,15 @@ function ModeToggle({
           onClick={() => onChange(item.id)}
           className={
             mode === item.id
-              ? 'inline-flex h-7 items-center rounded-md bg-primary px-2.5 text-xs font-medium text-primary-foreground'
-              : 'inline-flex h-7 items-center rounded-md border border-border/80 bg-card/40 px-2.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground'
+              ? "inline-flex h-7 items-center rounded-md bg-primary px-2.5 text-xs font-medium text-primary-foreground"
+              : "inline-flex h-7 items-center rounded-md border border-border/80 bg-card/40 px-2.5 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
           }
         >
           {item.label}
         </button>
       ))}
     </div>
-  )
+  );
 }
 
 function EmailChecks({ result }: { result: EmailResult }) {
@@ -92,23 +86,19 @@ function EmailChecks({ result }: { result: EmailResult }) {
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <span className="font-mono text-sm text-foreground">{result.domain}</span>
         <span className="text-xs text-muted-foreground">
-          {result.summary.pass} pass · {result.summary.warn} warn · {result.summary.fail}{' '}
-          fail
-          {result.summary.info ? ` · ${result.summary.info} info` : ''}
+          {result.summary.pass} pass · {result.summary.warn} warn · {result.summary.fail} fail
+          {result.summary.info ? ` · ${result.summary.info} info` : ""}
         </span>
         <span className="text-xs text-muted-foreground">{result.resolver}</span>
       </div>
 
       <ul className="m-0 flex list-none flex-col gap-1.5 p-0">
         {result.checks.map((check) => (
-          <li
-            key={check.id}
-            className="rounded-lg border border-border/70 bg-card/40 px-3 py-2"
-          >
+          <li key={check.id} className="rounded-lg border border-border/70 bg-card/40 px-3 py-2">
             <div className="flex flex-wrap items-center gap-2">
               <span
                 className={cn(
-                  'inline-flex h-5 min-w-10 items-center justify-center rounded px-1.5 text-[0.65rem] font-semibold tracking-wide uppercase',
+                  "inline-flex h-5 min-w-10 items-center justify-center rounded px-1.5 text-[0.65rem] font-semibold tracking-wide uppercase",
                   STATUS_STYLE[check.status],
                 )}
               >
@@ -134,48 +124,48 @@ function EmailChecks({ result }: { result: EmailResult }) {
       </ul>
 
       <p className="m-0 text-[0.7rem] text-muted-foreground">
-        DNS only — does not prove mailbox exists, keys publish correctly to all
-        selectors, or inbox placement.
+        DNS only — does not prove mailbox exists, keys publish correctly to all selectors, or inbox
+        placement.
       </p>
     </div>
-  )
+  );
 }
 
 export function DnsLookupTool() {
-  const lookupDns = useServerFn(lookupDnsFn)
-  const checkEmail = useServerFn(checkEmailDnsFn)
-  const [mode, setMode] = useState<Mode>('records')
-  const [name, setName] = useState('cloudflare.com')
-  const [type, setType] = useState<(typeof RECORD_TYPES)[number]>('A')
-  const [result, setResult] = useState<DnsResult | null>(null)
-  const [emailResult, setEmailResult] = useState<EmailResult | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const lookupDns = useServerFn(lookupDnsFn);
+  const checkEmail = useServerFn(checkEmailDnsFn);
+  const [mode, setMode] = useState<Mode>("records");
+  const [name, setName] = useState("cloudflare.com");
+  const [type, setType] = useState<(typeof RECORD_TYPES)[number]>("A");
+  const [result, setResult] = useState<DnsResult | null>(null);
+  const [emailResult, setEmailResult] = useState<EmailResult | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function run() {
-    const host = name.trim()
+    const host = name.trim();
     if (!host) {
-      setError('Enter a hostname')
-      return
+      setError("Enter a hostname");
+      return;
     }
-    setLoading(true)
-    setError(null)
+    setLoading(true);
+    setError(null);
     try {
-      if (mode === 'email') {
-        const data = await checkEmail({ data: { domain: host } })
-        setEmailResult(data)
-        setResult(null)
+      if (mode === "email") {
+        const data = await checkEmail({ data: { domain: host } });
+        setEmailResult(data);
+        setResult(null);
       } else {
-        const data = await lookupDns({ data: { name: host, type } })
-        setResult(data)
-        setEmailResult(null)
+        const data = await lookupDns({ data: { name: host, type } });
+        setResult(data);
+        setEmailResult(null);
       }
     } catch (err) {
-      setResult(null)
-      setEmailResult(null)
-      setError(err instanceof Error ? err.message : 'Lookup failed')
+      setResult(null);
+      setEmailResult(null);
+      setError(err instanceof Error ? err.message : "Lookup failed");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -185,7 +175,7 @@ export function DnsLookupTool() {
 
       <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="dns-name">{mode === 'email' ? 'Domain' : 'Name'}</Label>
+          <Label htmlFor="dns-name">{mode === "email" ? "Domain" : "Name"}</Label>
           <Input
             id="dns-name"
             value={name}
@@ -193,9 +183,9 @@ export function DnsLookupTool() {
             spellCheck={false}
             autoComplete="off"
             className="font-mono"
-            placeholder={mode === 'email' ? 'example.com or user@example.com' : undefined}
+            placeholder={mode === "email" ? "example.com or user@example.com" : undefined}
             onKeyDown={(event) => {
-              if (event.key === 'Enter') void run()
+              if (event.key === "Enter") void run();
             }}
           />
         </div>
@@ -205,11 +195,11 @@ export function DnsLookupTool() {
           ) : (
             <SearchIcon data-icon="inline-start" />
           )}
-          {mode === 'email' ? 'Check' : 'Lookup'}
+          {mode === "email" ? "Check" : "Lookup"}
         </Button>
       </div>
 
-      {mode === 'records' ? (
+      {mode === "records" ? (
         <div className="flex flex-wrap gap-1.5">
           {RECORD_TYPES.map((item) => (
             <button
@@ -218,8 +208,8 @@ export function DnsLookupTool() {
               onClick={() => setType(item)}
               className={
                 type === item
-                  ? 'inline-flex h-7 items-center rounded-md bg-primary px-2.5 font-mono text-xs font-medium text-primary-foreground'
-                  : 'inline-flex h-7 items-center rounded-md border border-border/80 bg-card/40 px-2.5 font-mono text-xs text-muted-foreground hover:bg-muted hover:text-foreground'
+                  ? "inline-flex h-7 items-center rounded-md bg-primary px-2.5 font-mono text-xs font-medium text-primary-foreground"
+                  : "inline-flex h-7 items-center rounded-md border border-border/80 bg-card/40 px-2.5 font-mono text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
               }
             >
               {item}
@@ -234,9 +224,9 @@ export function DnsLookupTool() {
         </p>
       ) : null}
 
-      {mode === 'email' && emailResult ? <EmailChecks result={emailResult} /> : null}
+      {mode === "email" && emailResult ? <EmailChecks result={emailResult} /> : null}
 
-      {mode === 'records' && result ? (
+      {mode === "records" && result ? (
         <div className="grid gap-4 lg:grid-cols-[220px_1fr]">
           <div className="flex flex-col gap-2">
             <div className="rounded-lg border border-border/70 bg-card/40 px-3 py-2">
@@ -275,5 +265,5 @@ export function DnsLookupTool() {
         </div>
       ) : null}
     </div>
-  )
+  );
 }

@@ -1,26 +1,26 @@
-import { CopyIcon } from 'lucide-react'
-import { useMemo, useState } from 'react'
-import { Button } from '#/components/ui/button'
-import { Input } from '#/components/ui/input'
-import { copyText } from '#/lib/clipboard'
+import { CopyIcon } from "lucide-react";
+import { useMemo, useState } from "react";
+import { Button } from "#/components/ui/button";
+import { Input } from "#/components/ui/input";
+import { copyText } from "#/lib/clipboard";
 import {
   MIME_CATEGORIES,
   MIME_ENTRIES,
   filterMimeEntries,
   type MimeCategory,
-} from '#/lib/mimeTypes'
-import { cn } from '#/lib/utils'
+} from "#/lib/mimeTypes";
+import { cn } from "#/lib/utils";
 
-type CategoryFilter = MimeCategory | 'all'
+type CategoryFilter = MimeCategory | "all";
 
 export function MimeLookupTool() {
-  const [query, setQuery] = useState('')
-  const [category, setCategory] = useState<CategoryFilter>('all')
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<CategoryFilter>("all");
 
   const visible = useMemo(
     () => filterMimeEntries(MIME_ENTRIES, { query, category }),
     [query, category],
-  )
+  );
 
   return (
     <div className="flex flex-col gap-3">
@@ -40,7 +40,7 @@ export function MimeLookupTool() {
 
       <div className="flex flex-wrap gap-1.5" role="tablist" aria-label="MIME category">
         {MIME_CATEGORIES.map((item) => {
-          const selected = category === item.id
+          const selected = category === item.id;
           return (
             <button
               key={item.id}
@@ -49,15 +49,15 @@ export function MimeLookupTool() {
               aria-selected={selected}
               onClick={() => setCategory(item.id)}
               className={cn(
-                'inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors',
+                "inline-flex h-7 items-center rounded-md border px-2.5 text-xs font-medium transition-colors",
                 selected
-                  ? 'border-transparent bg-primary text-primary-foreground'
-                  : 'border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground',
+                  ? "border-transparent bg-primary text-primary-foreground"
+                  : "border-border/80 bg-card/40 text-muted-foreground hover:bg-muted hover:text-foreground",
               )}
             >
               {item.label}
             </button>
-          )
+          );
         })}
       </div>
 
@@ -82,7 +82,7 @@ export function MimeLookupTool() {
                 <button
                   type="button"
                   className="m-0 w-fit border-0 bg-transparent p-0 text-left font-mono text-sm font-medium text-foreground hover:text-primary"
-                  onClick={() => void copyText(`.${item.ext}`, 'extension')}
+                  onClick={() => void copyText(`.${item.ext}`, "extension")}
                   title="Copy extension"
                 >
                   .{item.ext}
@@ -90,7 +90,7 @@ export function MimeLookupTool() {
                 <button
                   type="button"
                   className="m-0 min-w-0 border-0 bg-transparent p-0 text-left font-mono text-xs break-all text-muted-foreground hover:text-foreground md:text-[0.8rem]"
-                  onClick={() => void copyText(item.mime, 'MIME type')}
+                  onClick={() => void copyText(item.mime, "MIME type")}
                   title="Copy MIME type"
                 >
                   {item.mime}
@@ -107,7 +107,7 @@ export function MimeLookupTool() {
                     variant="ghost"
                     size="icon-xs"
                     aria-label={`Copy ${item.mime}`}
-                    onClick={() => void copyText(item.mime, 'MIME type')}
+                    onClick={() => void copyText(item.mime, "MIME type")}
                   >
                     <CopyIcon />
                   </Button>
@@ -118,5 +118,5 @@ export function MimeLookupTool() {
         </div>
       )}
     </div>
-  )
+  );
 }
