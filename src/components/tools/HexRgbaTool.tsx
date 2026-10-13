@@ -127,7 +127,7 @@ export function HexRgbaTool() {
       </div>
 
       <div className="bg-card flex flex-col gap-4 rounded-xl border border-border/80 p-3 sm:p-4">
-        <p className="m-0 text-sm font-medium text-ink">Channels</p>
+        <p className="m-0 text-sm font-medium text-foreground">Channels</p>
         {(
           [
             ['r', 'Red', 255],

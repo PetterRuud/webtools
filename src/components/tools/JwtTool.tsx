@@ -114,7 +114,7 @@ export function JwtTool() {
                       {decoded.signed ? 'present (not verified)' : 'empty'}
                     </span>
                   </div>
-                  <p className="m-0 break-all font-mono text-[0.75rem] text-ink">
+                  <p className="m-0 break-all font-mono text-[0.75rem] text-foreground">
                     {decoded.signature || '—'}
                   </p>
                 </div>

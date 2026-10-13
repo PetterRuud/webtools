@@ -82,7 +82,7 @@ export function HttpStatusTool() {
                 )}
               >
                 <div className="flex items-baseline justify-between gap-2">
-                  <span className="font-heading text-base text-ink">
+                  <span className="font-heading text-base text-foreground">
                     <span
                       className={cn(
                         'inline-block rounded-sm border border-border/60 px-1.5 py-0.5 font-mono text-[0.95rem] font-bold tabular-nums tracking-tight',

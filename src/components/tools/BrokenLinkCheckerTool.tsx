@@ -108,7 +108,7 @@ export function BrokenLinkCheckerTool() {
           {result ? (
             <>
               <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
-                <span className="font-mono text-ink">{result.finalUrl}</span>
+                <span className="font-mono text-foreground">{result.finalUrl}</span>
                 <span className="font-mono">HTTP {result.status}</span>
                 <span>
                   {result.checked} checked
@@ -200,7 +200,7 @@ export function BrokenLinkCheckerTool() {
                           </span>
                         ) : null}
                       </div>
-                      <p className="m-0 mt-1 truncate text-sm text-ink" title={link.text}>
+                      <p className="m-0 mt-1 truncate text-sm text-foreground" title={link.text}>
                         {link.text}
                       </p>
                       <p

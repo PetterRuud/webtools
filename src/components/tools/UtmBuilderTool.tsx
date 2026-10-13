@@ -88,7 +88,7 @@ export function UtmBuilderTool() {
           <p className="m-0 text-sm text-destructive">{result.error}</p>
         ) : result.url ? (
           <>
-            <p className="m-0 break-all font-mono text-sm text-ink">{result.url}</p>
+            <p className="m-0 break-all font-mono text-sm text-foreground">{result.url}</p>
             <Button
               type="button"
               variant="outline"

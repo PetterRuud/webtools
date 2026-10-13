@@ -131,9 +131,9 @@ export function RegexHighlightField({
   return (
     <div
       className={cn(
-        'relative rounded-lg border border-input transition-colors',
+        // Match shadcn Textarea chrome — inner Textarea is transparent for match highlights.
+        'relative rounded-lg border border-border bg-input shadow-xs transition-[color,box-shadow]',
         'focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50',
-        'dark:bg-input/30',
         ariaInvalid &&
           'border-destructive ring-3 ring-destructive/20 dark:border-destructive/50 dark:ring-destructive/40',
         className,

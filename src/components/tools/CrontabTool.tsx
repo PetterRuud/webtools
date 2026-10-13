@@ -265,7 +265,7 @@ export function CrontabTool() {
           <p className="m-0 text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
             Summary
           </p>
-          <p className="mt-1 mb-0 text-sm leading-5 text-ink">{summary}</p>
+          <p className="mt-1 mb-0 text-sm leading-5 text-foreground">{summary}</p>
           <p className="mt-2 mb-0 font-mono text-xs text-muted-foreground">
             {expression}
           </p>
@@ -287,7 +287,7 @@ export function CrontabTool() {
               {runs.dates.map((date) => (
                 <li
                   key={date.toISOString()}
-                  className="font-mono text-xs tabular-nums text-ink"
+                  className="font-mono text-xs tabular-nums text-foreground"
                 >
                   {formatRun(date, state.withSeconds)}
                 </li>
@@ -318,7 +318,7 @@ function FieldEditor({
   return (
     <div className="rounded-lg border border-border/70 bg-card/30 px-2.5 py-2">
       <div className="mb-1.5 flex items-center justify-between gap-2">
-        <span className="text-xs font-medium text-ink">{spec.label}</span>
+        <span className="text-xs font-medium text-foreground">{spec.label}</span>
         <span className="font-mono text-[0.65rem] text-muted-foreground">
           {state.raw}
         </span>

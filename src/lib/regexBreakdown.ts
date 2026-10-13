@@ -19,10 +19,10 @@ export type RegexToken = {
 /** Chip styles for the Breakdown list (border + bg + text). */
 export const REGEX_TOKEN_KIND_STYLES: Record<RegexTokenKind, string> = {
   group: 'border-primary/30 bg-primary/10 text-primary',
-  class: 'border-spark/40 bg-spark/20 text-ink dark:text-foreground',
+  class: 'border-primary/40 bg-primary/20 text-foreground dark:text-foreground',
   escape: 'border-sky-500/30 bg-sky-500/10 text-sky-800 dark:text-sky-200',
   quantifier:
-    'border-violet-500/30 bg-violet-500/10 text-violet-800 dark:text-violet-200',
+ 'border-violet-500/30 bg-violet-500/10 text-violet-800 dark:text-violet-200',
   anchor: 'border-amber-500/35 bg-amber-500/15 text-amber-900 dark:text-amber-100',
   literal: 'border-border bg-muted/50 text-foreground',
   meta: 'border-rose-500/30 bg-rose-500/10 text-rose-800 dark:text-rose-200',
@@ -36,7 +36,7 @@ export const REGEX_TOKEN_KIND_STYLES: Record<RegexTokenKind, string> = {
  */
 export const REGEX_TOKEN_KIND_INLINE: Record<RegexTokenKind, string> = {
   group: 'bg-primary/10 text-primary',
-  class: 'bg-spark/20 text-ink dark:text-foreground',
+  class: 'bg-primary/20 text-foreground dark:text-foreground',
   escape: 'bg-sky-500/10 text-sky-800 dark:text-sky-200',
   quantifier: 'bg-violet-500/10 text-violet-800 dark:text-violet-200',
   anchor: 'bg-amber-500/15 text-amber-900 dark:text-amber-100',
@@ -68,7 +68,7 @@ const ESCAPE_MEANINGS: Record<string, { label: string; meaning: string }> = {
   t: { label: 'Tab', meaning: 'Matches a tab (\\t)' },
   f: { label: 'Form feed', meaning: 'Matches a form feed (\\f)' },
   v: { label: 'Vertical tab', meaning: 'Matches a vertical tab (\\v)' },
-  '0': { label: 'NUL', meaning: 'Matches a null character' },
+ '0': { label: 'NUL', meaning: 'Matches a null character' },
 }
 
 function describeEscape(escaped: string): { label: string; meaning: string; kind: RegexToken['kind'] } {

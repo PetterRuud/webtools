@@ -49,7 +49,7 @@ export default function Header() {
             <BreadcrumbItem className="min-w-0">
               <BreadcrumbLink
                 render={<Link to="/" />}
-                className="font-heading inline-flex items-center gap-1.5 text-lg tracking-tight text-ink no-underline transition-opacity hover:opacity-80 hover:text-ink"
+                className="font-heading inline-flex items-center gap-1.5 text-lg tracking-tight text-foreground no-underline transition-opacity hover:opacity-80 hover:text-foreground"
               >
                 <CodeIcon className="size-5 shrink-0" aria-hidden />
                 WebTools
@@ -66,7 +66,7 @@ export default function Header() {
       ) : (
         <Link
           to="/"
-          className="font-heading inline-flex items-center gap-1.5 text-lg tracking-tight text-ink no-underline transition-opacity hover:opacity-80"
+          className="font-heading inline-flex items-center gap-1.5 text-lg tracking-tight text-foreground no-underline transition-opacity hover:opacity-80"
         >
           <CodeIcon className="size-5 shrink-0" aria-hidden />
           WebTools
@@ -152,12 +152,12 @@ function ToolSheetLink({
     >
       <ItemMedia
         variant="icon"
-        className="size-7 translate-y-0 self-center rounded-md bg-mist text-primary dark:text-violet-300"
+        className="size-7 translate-y-0 self-center rounded-md bg-muted text-primary"
       >
         <Icon aria-hidden />
       </ItemMedia>
       <ItemContent className="min-w-0 gap-0">
-        <ItemTitle className="font-heading text-ink">{tool.name}</ItemTitle>
+        <ItemTitle className="font-heading text-foreground">{tool.name}</ItemTitle>
         <ItemDescription className="line-clamp-1 text-xs leading-4">
           {tool.blurb}
         </ItemDescription>

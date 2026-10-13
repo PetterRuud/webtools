@@ -256,7 +256,7 @@ export function ImageCropper({
                 type="button"
                 aria-label={`Resize crop ${handle}`}
                 className={cn(
-                  'absolute z-10 size-3.5 -translate-x-1/2 -translate-y-1/2 touch-none rounded-sm border-2 border-white bg-[var(--ink)] shadow-sm',
+                  'absolute z-10 size-3.5 -translate-x-1/2 -translate-y-1/2 touch-none rounded-sm border-2 border-white bg-[var(--foreground)] shadow-sm',
                   handleCursor(handle),
                 )}
                 style={handleStyle(handle)}

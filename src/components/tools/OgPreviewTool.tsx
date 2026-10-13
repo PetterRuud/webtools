@@ -50,7 +50,7 @@ function FacebookCard({ fields }: { fields: OgPreviewFields }) {
         <p className="m-0 truncate text-[0.7rem] tracking-wide text-muted-foreground uppercase">
           {host}
         </p>
-        <p className="m-0 truncate text-sm font-semibold text-ink">
+        <p className="m-0 truncate text-sm font-semibold text-foreground">
           {fields.title || 'Title'}
         </p>
         <p className="m-0 line-clamp-2 text-xs text-muted-foreground">
@@ -81,7 +81,7 @@ function XCard({ fields }: { fields: OgPreviewFields }) {
         </div>
       )}
       <div className="space-y-0.5 px-3 py-2">
-        <p className="m-0 truncate text-sm font-semibold text-ink">
+        <p className="m-0 truncate text-sm font-semibold text-foreground">
           {fields.title || 'Title'}
         </p>
         <p className="m-0 line-clamp-2 text-xs text-muted-foreground">
@@ -115,7 +115,7 @@ function LinkedInCard({ fields }: { fields: OgPreviewFields }) {
         </div>
       )}
       <div className="space-y-0.5 px-3 py-2">
-        <p className="m-0 truncate text-sm font-semibold text-ink">
+        <p className="m-0 truncate text-sm font-semibold text-foreground">
           {fields.title || 'Title'}
         </p>
         <p className="m-0 truncate text-xs text-muted-foreground">

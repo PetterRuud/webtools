@@ -16,7 +16,7 @@ function Field({ label, value }: { label: string; value?: string | number | null
       <span className="text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
         {label}
       </span>
-      <span className="break-all font-mono text-sm text-ink">{value}</span>
+      <span className="break-all font-mono text-sm text-foreground">{value}</span>
     </div>
   )
 }
@@ -98,9 +98,9 @@ export function IpLookupTool() {
         <div className="flex flex-col gap-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-baseline gap-2">
-              <span className="font-heading text-xl text-ink">{result.ip}</span>
+              <span className="font-heading text-xl text-foreground">{result.ip}</span>
               {result.yours ? (
-                <span className="rounded-md bg-mist px-1.5 py-0.5 text-[0.7rem] font-medium text-primary">
+                <span className="rounded-md bg-muted px-1.5 py-0.5 text-[0.7rem] font-medium text-primary">
                   you
                 </span>
               ) : null}

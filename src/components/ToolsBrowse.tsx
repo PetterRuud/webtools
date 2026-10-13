@@ -189,7 +189,7 @@ function CategoryGroup({
 }) {
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+      <h3 className="font-heading m-0 text-sm font-semibold tracking-wide text-foreground uppercase">
         {label}
       </h3>
       <ToolGrid tools={tools} />
@@ -221,12 +221,12 @@ function ToolGrid({ tools }: { tools: ToolLink[] }) {
             >
               <ItemMedia
                 variant="icon"
-                className="size-7 translate-y-0 self-center rounded-md bg-mist text-primary dark:text-violet-300"
+                className="size-7 translate-y-0 self-center rounded-md bg-muted text-primary"
               >
                 <Icon aria-hidden />
               </ItemMedia>
               <ItemContent className="min-w-0 gap-0">
-                <ItemTitle className="font-heading text-ink">
+                <ItemTitle className="font-heading text-foreground">
                   {tool.name}
                 </ItemTitle>
                 <ItemDescription className="line-clamp-1 text-xs leading-4">

@@ -81,7 +81,7 @@ export function MimeLookupTool() {
               >
                 <button
                   type="button"
-                  className="m-0 w-fit border-0 bg-transparent p-0 text-left font-mono text-sm font-medium text-ink hover:text-primary"
+                  className="m-0 w-fit border-0 bg-transparent p-0 text-left font-mono text-sm font-medium text-foreground hover:text-primary"
                   onClick={() => void copyText(`.${item.ext}`, 'extension')}
                   title="Copy extension"
                 >

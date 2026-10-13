@@ -90,7 +90,7 @@ function EmailChecks({ result }: { result: EmailResult }) {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <span className="font-mono text-sm text-ink">{result.domain}</span>
+        <span className="font-mono text-sm text-foreground">{result.domain}</span>
         <span className="text-xs text-muted-foreground">
           {result.summary.pass} pass · {result.summary.warn} warn · {result.summary.fail}{' '}
           fail
@@ -114,7 +114,7 @@ function EmailChecks({ result }: { result: EmailResult }) {
               >
                 {check.status}
               </span>
-              <span className="text-sm font-medium text-ink">{check.label}</span>
+              <span className="text-sm font-medium text-foreground">{check.label}</span>
               <span className="text-sm text-muted-foreground">{check.detail}</span>
             </div>
             {check.records && check.records.length > 0 ? (
@@ -243,7 +243,7 @@ export function DnsLookupTool() {
               <p className="m-0 text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
                 Status
               </p>
-              <p className="m-0 font-mono text-sm text-ink">
+              <p className="m-0 font-mono text-sm text-foreground">
                 {result.statusText} ({result.status})
               </p>
             </div>
@@ -251,7 +251,7 @@ export function DnsLookupTool() {
               <p className="m-0 text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
                 Query
               </p>
-              <p className="m-0 break-all font-mono text-sm text-ink">
+              <p className="m-0 break-all font-mono text-sm text-foreground">
                 {result.name} · {result.type}
               </p>
             </div>
@@ -259,7 +259,7 @@ export function DnsLookupTool() {
               <p className="m-0 text-[0.7rem] font-medium tracking-wide text-muted-foreground uppercase">
                 Resolver
               </p>
-              <p className="m-0 font-mono text-sm text-ink">{result.resolver}</p>
+              <p className="m-0 font-mono text-sm text-foreground">{result.resolver}</p>
             </div>
             {result.answer.length === 0 &&
             result.authority.length === 0 &&

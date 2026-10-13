@@ -79,7 +79,7 @@ function renderHighlighted(
       <mark
         key={`m-${i}-${segment.start}`}
         className={cn(
-          'rounded-sm px-0.5 text-ink dark:text-foreground',
+          'rounded-sm px-0.5 text-foreground dark:text-foreground',
           groupBgClass(segment.group),
           active && REGEX_GROUP_ACTIVE_RING,
         )}
@@ -268,7 +268,7 @@ export function RegexEditorTool() {
         <div className="flex flex-col gap-3">
           <section className="flex flex-col gap-1.5" aria-label="Pattern breakdown">
             <div className="flex items-baseline justify-between gap-3">
-              <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+              <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-foreground uppercase">
                 Breakdown
               </h2>
               <p className="m-0 text-xs text-muted-foreground">
@@ -297,7 +297,7 @@ export function RegexEditorTool() {
                       {token.text}
                     </code>
                     <span className="min-w-0">
-                      <span className="block text-xs font-medium text-ink">
+                      <span className="block text-xs font-medium text-foreground">
                         {token.label}
                       </span>
                       <span className="block text-[0.7rem] leading-4 text-muted-foreground">
@@ -312,7 +312,7 @@ export function RegexEditorTool() {
 
           <section className="flex flex-col gap-1.5" aria-label="Matches">
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+              <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-foreground uppercase">
                 Matches
               </h2>
               <p className="m-0 text-xs text-muted-foreground">{matchSummary}</p>
@@ -341,7 +341,7 @@ export function RegexEditorTool() {
                         className={cn(
                           'flex w-full items-start gap-2 rounded-md border px-2 py-1.5 text-left text-sm transition-colors',
                           selected
-                            ? 'border-spark/70 bg-spark/15'
+                            ? 'border-primary/70 bg-primary/15'
                             : 'border-border/70 bg-transparent hover:bg-muted/40',
                         )}
                       >
@@ -349,7 +349,7 @@ export function RegexEditorTool() {
                           {index + 1}
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="font-mono text-sm text-ink">
+                          <span className="font-mono text-sm text-foreground">
                             <mark
                               className={cn(
                                 'rounded-sm px-0.5',

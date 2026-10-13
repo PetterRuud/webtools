@@ -16,7 +16,7 @@ export type HighlightSegment = {
 
 /** Background classes for full match (0) then $1, $2, … (cycle). */
 export const REGEX_GROUP_BG = [
-  'bg-spark/45 dark:bg-spark/35',
+  'bg-primary/45 dark:bg-primary/35',
   'bg-sky-500/35 dark:bg-sky-400/30',
   'bg-violet-500/35 dark:bg-violet-400/30',
   'bg-emerald-500/35 dark:bg-emerald-400/30',
@@ -27,7 +27,7 @@ export const REGEX_GROUP_BG = [
 ] as const
 
 export const REGEX_GROUP_ACTIVE_RING =
-  'ring-2 ring-inset ring-spark/70 dark:ring-spark/50'
+  'ring-2 ring-inset ring-primary/70 dark:ring-primary/50'
 
 export function groupBgClass(group: number): string {
   return REGEX_GROUP_BG[group % REGEX_GROUP_BG.length] ?? REGEX_GROUP_BG[0]

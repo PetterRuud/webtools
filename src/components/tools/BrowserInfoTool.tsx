@@ -127,7 +127,7 @@ export function BrowserInfoTool() {
             </span>
             <span
               className={cn(
-                'break-all font-mono text-[0.8rem] leading-5 text-ink',
+                'break-all font-mono text-[0.8rem] leading-5 text-foreground',
                 booleanValueClass(row.value),
               )}
             >

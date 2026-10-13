@@ -639,7 +639,7 @@ export function AppIconGeneratorTool() {
         {assets.length > 0 ? (
           <>
             <div className="flex flex-col gap-0.5 sm:flex-row sm:items-baseline sm:justify-between">
-              <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+              <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-foreground uppercase">
                 Pack
               </h2>
               <p className="m-0 text-xs text-muted-foreground">

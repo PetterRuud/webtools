@@ -24,8 +24,8 @@ const PREVIEW_TONES = [
   'bg-primary/35 border-primary/55 text-foreground',
   'bg-secondary border-border text-secondary-foreground',
   'bg-accent/45 border-accent/60 text-foreground',
-  'bg-mist border-border text-foreground',
-  'bg-spark/40 border-spark/55 text-foreground',
+  'bg-muted border-border text-foreground',
+  'bg-primary/40 border-primary/55 text-foreground',
 ]
 
 function TrackList({

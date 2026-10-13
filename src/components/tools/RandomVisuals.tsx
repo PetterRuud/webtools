@@ -50,7 +50,7 @@ function CoinFace(props: {
   return (
     <div
       className={cn(
-        'absolute inset-0 flex flex-col items-center justify-center rounded-full',
+ 'absolute inset-0 flex flex-col items-center justify-center rounded-full',
         props.className,
       )}
       style={{
@@ -403,11 +403,11 @@ export function RouletteVisual(props: {
               <li
                 key={`${row.index}-${row.text}-${row.center ? 'c' : 's'}`}
                 className={cn(
-                  'relative z-0 flex h-9 items-center justify-center truncate px-3 font-mono text-sm transition-colors',
+ 'relative z-0 flex h-9 items-center justify-center truncate px-3 font-mono text-sm transition-colors',
                   row.center
                     ? 'z-30 text-foreground'
                     : 'text-muted-foreground/45',
-                  won && 'font-semibold text-primary dark:text-violet-300',
+                  won && 'font-semibold text-primary ',
                 )}
               >
                 {row.text}
@@ -421,7 +421,7 @@ export function RouletteVisual(props: {
         />
       </div>
       {props.winner && !props.spinning ? (
-        <p className="m-0 text-lg font-semibold tracking-tight text-foreground dark:text-violet-300">
+        <p className="m-0 text-lg font-semibold tracking-tight text-foreground ">
           {props.winner}
         </p>
       ) : (

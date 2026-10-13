@@ -133,13 +133,13 @@ export function SeoAuditTool() {
               </div>
               <div className="col-span-2">
                 <dt className="text-muted-foreground">Title</dt>
-                <dd className="m-0 line-clamp-2 text-ink">
+                <dd className="m-0 line-clamp-2 text-foreground">
                   {result.title || '—'}
                 </dd>
               </div>
               <div className="col-span-2">
                 <dt className="text-muted-foreground">Canonical</dt>
-                <dd className="m-0 break-all font-mono text-[0.7rem] text-ink">
+                <dd className="m-0 break-all font-mono text-[0.7rem] text-foreground">
                   {result.canonical || '—'}
                 </dd>
               </div>
@@ -184,7 +184,7 @@ export function SeoAuditTool() {
                   >
                     {GRADE_STYLE[result.grade].label}
                   </p>
-                  <p className="m-0 break-all font-mono text-[0.75rem] text-ink">
+                  <p className="m-0 break-all font-mono text-[0.75rem] text-foreground">
                     {result.finalUrl}
                   </p>
                   <p className="m-0 text-xs text-muted-foreground">
@@ -247,7 +247,7 @@ export function SeoAuditTool() {
                         {issue.category}
                       </span>
                     </div>
-                    <p className="m-0 mt-1 text-sm font-medium text-ink">
+                    <p className="m-0 mt-1 text-sm font-medium text-foreground">
                       {issue.title}
                     </p>
                     <p className="m-0 mt-0.5 text-xs opacity-90">{issue.detail}</p>

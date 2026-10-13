@@ -195,7 +195,7 @@ function ResultRow({
       <span
         className={
           emphasize
-            ? 'font-heading text-xl tabular-nums tracking-tight text-ink sm:text-2xl'
+            ? 'font-heading text-xl tabular-nums tracking-tight text-foreground sm:text-2xl'
             : 'font-mono text-base tabular-nums text-foreground'
         }
       >

@@ -222,9 +222,11 @@ function buildRows(left: string, right: string, view: ViewMode): DiffRow[] {
   return rows
 }
 
-/** Shared highlight fills — used by row cells, inline marks, and legend swatches. */
-const DIFF_ADDED = 'bg-primary/35 dark:bg-primary/45'
-const DIFF_REMOVED = 'bg-destructive/30 dark:bg-destructive/40'
+/** Shared highlight fills — fixed hues so added/removed stay distinct from theme primary. */
+const DIFF_ADDED =
+  'bg-emerald-500/25 text-emerald-950 dark:bg-emerald-400/25 dark:text-emerald-50'
+const DIFF_REMOVED =
+  'bg-rose-500/25 text-rose-950 dark:bg-rose-400/25 dark:text-rose-50'
 const DIFF_SAME = 'bg-transparent'
 
 function lineClass(type: LineKind, segments?: Segment[]) {
@@ -398,7 +400,7 @@ export function TextDiffTool() {
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-ink uppercase">
+            <h2 className="font-heading m-0 text-sm font-semibold tracking-wide text-foreground uppercase">
               Diff
             </h2>
             <DiffLegend />

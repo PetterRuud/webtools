@@ -256,7 +256,7 @@ export function GitCommandsTool() {
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div className="min-w-0">
-                              <h3 className="font-heading m-0 text-sm font-semibold tracking-tight text-ink">
+                              <h3 className="font-heading m-0 text-sm font-semibold tracking-tight text-foreground">
                                 {item.title}
                               </h3>
                               <p className="m-0 mt-0.5 text-xs leading-4 text-muted-foreground">

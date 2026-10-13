@@ -101,7 +101,7 @@ export function RedirectCheckerTool() {
                 <p className="m-0 text-[0.65rem] font-semibold tracking-wide text-muted-foreground uppercase">
                   Final destination
                 </p>
-                <p className="m-0 mt-0.5 break-all font-mono text-sm text-ink">
+                <p className="m-0 mt-0.5 break-all font-mono text-sm text-foreground">
                   {result.finalUrl}
                 </p>
               </div>
@@ -156,7 +156,7 @@ export function RedirectCheckerTool() {
                             </span>
                           ) : null}
                         </div>
-                        <p className="m-0 mt-1 break-all font-mono text-[0.75rem] text-ink">
+                        <p className="m-0 mt-1 break-all font-mono text-[0.75rem] text-foreground">
                           {hop.url}
                         </p>
                         {hop.location ? (

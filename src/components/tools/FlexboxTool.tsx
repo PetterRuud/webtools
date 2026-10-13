@@ -164,7 +164,7 @@ export function FlexboxTool() {
             return (
               <div
                 key={index}
-                className="flex min-h-12 min-w-12 items-center justify-center rounded-lg border border-border/60 px-3 py-2 text-sm font-medium tabular-nums text-ink shadow-sm"
+                className="flex min-h-12 min-w-12 items-center justify-center rounded-lg border border-border/60 px-3 py-2 text-sm font-medium tabular-nums text-foreground shadow-sm"
                 style={{
                   background: `oklch(0.78 0.1 ${hue} / 0.55)`,
                   flex: grow ? '1 1 4.5rem' : '0 0 auto',
@@ -199,7 +199,7 @@ export function FlexboxTool() {
               Copy CSS
             </Button>
           </div>
-          <pre className="m-0 overflow-x-auto rounded-lg border border-border/60 bg-background/70 p-3 font-mono text-xs leading-5 text-ink sm:text-sm">
+          <pre className="m-0 overflow-x-auto rounded-lg border border-border/60 bg-background/70 p-3 font-mono text-xs leading-5 text-foreground sm:text-sm">
             {css}
           </pre>
         </div>

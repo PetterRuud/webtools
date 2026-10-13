@@ -65,9 +65,9 @@ export function RegexPatternField({
   return (
     <div
       className={cn(
-        'relative h-8 overflow-hidden rounded-lg border border-input transition-colors',
+        // Match shadcn Input chrome — inner Input is transparent for the token overlay.
+        'relative h-8 overflow-hidden rounded-lg border border-border bg-input shadow-xs transition-[color,box-shadow]',
         'focus-within:border-ring focus-within:ring-3 focus-within:ring-ring/50',
-        'dark:bg-input/30',
         ariaInvalid &&
           'border-destructive ring-3 ring-destructive/20 dark:border-destructive/50 dark:ring-destructive/40',
         className,
