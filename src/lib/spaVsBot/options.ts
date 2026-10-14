@@ -48,3 +48,24 @@ export const BROWSER_USER_AGENT =
 
 export const FETCH_TIMEOUT_MS = 20_000;
 export const MAX_HTML_BYTES = 2_000_000;
+
+/** Compact viewport for the With-JS preview image (keeps compare JSON smaller). */
+export const JS_SCREENSHOT = {
+  width: 960,
+  height: 540,
+  deviceScaleFactor: 1,
+  fullPage: false,
+} as const;
+
+export function bytesToBase64(bytes: Uint8Array): string {
+  if (typeof Buffer !== "undefined") {
+    return Buffer.from(bytes).toString("base64");
+  }
+  let binary = "";
+  const chunk = 0x2000;
+  for (let i = 0; i < bytes.length; i += chunk) {
+    const slice = bytes.subarray(i, i + chunk);
+    binary += String.fromCharCode.apply(null, slice as unknown as number[]);
+  }
+  return btoa(binary);
+}

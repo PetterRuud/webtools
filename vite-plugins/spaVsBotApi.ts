@@ -76,7 +76,7 @@ function attach(middlewares: {
 /**
  * Serves POST /api/crawler-simulator/compare from the Vite Node process.
  * Legacy alias: /api/spa-vs-bot/compare.
- * No-JS: raw fetch. JS: system Chrome --dump-dom → Playwright → unavailable.
+ * No-JS: raw fetch. JS: Chrome dump-dom + screenshot → Playwright → unavailable.
  */
 export function spaVsBotApiPlugin(): Plugin {
   return {

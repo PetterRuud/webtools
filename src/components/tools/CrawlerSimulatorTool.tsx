@@ -55,11 +55,14 @@ function SnapshotPanel({
   mode,
   snapshot,
   emptyHint,
+  screenshotPngBase64,
 }: {
   label: string;
   mode?: string | null;
   snapshot: ViewSnapshot | null;
   emptyHint?: string | null;
+  /** With-JS viewport PNG (base64). Omitted for No-JS. */
+  screenshotPngBase64?: string | null;
 }) {
   return (
     <section className="flex min-w-0 flex-col gap-3 rounded-xl border border-border/70 bg-card/40 p-3 sm:p-4">
@@ -187,6 +190,19 @@ function SnapshotPanel({
               className="min-h-28 font-mono text-xs leading-relaxed"
             />
           </div>
+
+          {screenshotPngBase64 ? (
+            <div className="flex flex-col gap-1">
+              <Label className="text-xs font-normal text-muted-foreground">Screenshot</Label>
+              <div className="overflow-hidden rounded-lg border border-border/70 bg-muted/30">
+                <img
+                  src={`data:image/png;base64,${screenshotPngBase64}`}
+                  alt={`${label} viewport screenshot`}
+                  className="block h-auto w-full"
+                />
+              </div>
+            </div>
+          ) : null}
 
           <div className="flex flex-col gap-1">
             <Label className="text-xs font-normal text-muted-foreground">HTML preview</Label>
@@ -329,6 +345,7 @@ export function CrawlerSimulatorTool() {
           mode={result?.jsMode ?? null}
           snapshot={result?.withJs ?? null}
           emptyHint={result?.jsError ?? "Crawl to see JS-rendered view"}
+          screenshotPngBase64={result?.jsScreenshotPngBase64}
         />
       </div>
     </form>

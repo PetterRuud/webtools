@@ -27,6 +27,7 @@ export async function runCompare(
     withJs: js.snapshot,
     jsMode: js.mode,
     jsError: js.error,
+    jsScreenshotPngBase64: js.screenshotPngBase64,
     likelySpa: detectLikelySpa(noJs, js.snapshot),
   };
 }

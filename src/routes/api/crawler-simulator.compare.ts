@@ -6,8 +6,8 @@ import { fetchWithJsWorkers, parseCompareRequest, readJsonBody, runCompare } fro
  * Production / workerd path. Local `vp run dev` usually hits the Vite Node
  * middleware first (vite-plugins/spaVsBotApi.ts).
  *
- * JS view: Cloudflare Browser Rendering `quickAction('content')`.
- * No-JS: raw HTTP fetch + HTML SEO extraction.
+ * JS view: Cloudflare Browser Rendering `quickAction('snapshot')`
+ * (HTML + best-effort viewport screenshot). No-JS: raw HTTP fetch + SEO extract.
  */
 export const Route = createFileRoute("/api/crawler-simulator/compare")({
   server: {

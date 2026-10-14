@@ -39,6 +39,8 @@ export type JsFetchResult = {
   snapshot: ViewSnapshot | null;
   mode: JsFetchMode;
   error: string | null;
+  /** Best-effort viewport PNG (base64, no data: prefix). Null when capture failed. */
+  screenshotPngBase64: string | null;
 };
 
 export type CompareRequest = {
@@ -51,6 +53,8 @@ export type CompareResult = {
   withJs: ViewSnapshot | null;
   jsMode: JsFetchMode;
   jsError: string | null;
+  /** Best-effort With-JS viewport screenshot (base64 PNG). */
+  jsScreenshotPngBase64: string | null;
   /** Rough signal: with-JS text longer / different enough to look client-rendered. */
   likelySpa: boolean | null;
 };
